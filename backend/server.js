@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
+import userRoutes from './routes/userRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -14,6 +15,8 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use('/api/users', userRoutes);
 
 const __dirname = path.resolve();
 
