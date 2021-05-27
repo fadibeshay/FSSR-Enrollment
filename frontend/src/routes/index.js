@@ -1,16 +1,11 @@
-import { ROUTE } from '../Constants/Routes';
-import { Home, Login } from '../views';
+import { ROUTE } from "../Constants/Routes";
+import { Home } from "../Views";
 
 const routes = [
   {
     path: ROUTE.HOME,
     exact: true,
-    component: Home
+    component: Home,
   },
-  {
-    path: ROUTE.LOGIN,
-    exact: true,
-    component: Login
-  }
 ];
 export default routes;
