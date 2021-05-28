@@ -1,16 +1,24 @@
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
+import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { connect } from "react-redux";
+import { LoginUser } from "../redux/actions/userAction";
+
+const authSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,8 +40,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+// const authSchema = Yup.object().shape({
+//   email: Yup.email().required(),
+//   password: Yup.required(),
+// });
+
+function Login({ loadingLogin, LoginUser, errorMessage, token }) {
   const classes = useStyles();
+  const history = useHistory();
+
+  // This field is required
+  // invalid Email!
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(authSchema),
+  });
+
+  const onSubmit = (data) => {
+    LoginUser(data);
+
+    // if (token) {
+    //   console.log("Hello");
+    //     history.push('/login')
+
+    // }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -43,9 +78,14 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          تسجيل الدخول للنظام
+          FSSR Enrollment System
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          className={classes.form}
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
+          {errorMessage && <Alert severity="error">{errorMessage} </Alert>}
           <TextField
             variant="outlined"
             margin="normal"
@@ -56,7 +96,13 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            {...register("email")}
           />
+
+          {errors.email && (
+            <Alert severity="error">{errors.email?.message} </Alert>
+          )}
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -66,12 +112,14 @@ export default function SignIn() {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            autoComplete="password"
+            {...register("password", { required: true })}
           />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
+
+          {errors.password && (
+            <Alert severity="error">{errors.password?.message} </Alert>
+          )}
+
           <Button
             type="submit"
             fullWidth
@@ -86,3 +134,11 @@ export default function SignIn() {
     </Container>
   );
 }
+
+const mapStateToProps = (state) => ({
+  loadingLogin: state.user.isLoading,
+  errorMessage: state.errors.message,
+  token: state.user.user?.token,
+});
+
+export default connect(mapStateToProps, { LoginUser })(Login);
