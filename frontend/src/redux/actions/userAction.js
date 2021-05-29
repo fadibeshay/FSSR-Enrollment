@@ -45,6 +45,11 @@ export const LoginUser =
   };
 
 // LOGOUT
+export const LogoutUser = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT_SUCCESS,
+  });
+};
 
 // Send With Token
 export const headerConfig = (getState) => {
