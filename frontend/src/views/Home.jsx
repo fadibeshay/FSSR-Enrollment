@@ -1,20 +1,13 @@
+import { Typography } from "@material-ui/core";
 import React from "react";
-import { connect } from "react-redux";
-// import { Navbar } from "../components";
+import Layout from "../container/Layout";
 
-function Home({ user }) {
+function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-      {user && <h1>Welcome {user.name}</h1>}
-
-      {JSON.stringify(user)}
-    </div>
+    <Layout>
+      <h1>Home Page</h1>
+    </Layout>
   );
 }
 
-const mapStateToProps = (state) => ({
-  user: state.user.user,
-});
-
-export default connect(mapStateToProps, {})(Home);
+export default Home;
