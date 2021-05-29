@@ -4,7 +4,9 @@ import {
   studentValidations,
   getStudents,
   createStudent,
-  getStudentById
+  getStudentById,
+  updateStudent,
+  deleteStudent
 } from '../controllers/studentController.js';
 
 const router = express.Router();
@@ -14,6 +16,10 @@ router
   .get(protect, admin, getStudents)
   .post(protect, admin, studentValidations, createStudent);
 
-router.route('/:id').get(protect, admin, getStudentById);
+router
+  .route('/:id')
+  .get(protect, admin, getStudentById)
+  .put(protect, admin, studentValidations, updateStudent)
+  .delete(protect, admin, deleteStudent);
 
 export default router;

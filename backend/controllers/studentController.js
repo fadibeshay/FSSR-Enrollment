@@ -128,14 +128,99 @@ const getStudents = asyncHandler(async (req, res) => {
 // @route  GET /api/students/:id
 // @acess  Private/Admin
 const getStudentById = asyncHandler(async (req, res) => {
-  const student = await Student.findOne({ _id: req.params.id });
+  const student = await Student.findById(req.params.id);
 
   if (student) {
     res.json(student);
+  } else {
+    res.status(404);
+    throw new Error('Student not found.');
+  }
+});
+
+// @desc   Create student
+// @route  POST /api/students/:id
+// @acess  Private/Admin
+const updateStudent = asyncHandler(async (req, res) => {
+  const student = await Student.findById(req.params.id);
+  if (!student) {
+    res.status(404);
+    throw new Error('Student not found');
+  }
+
+  console.log(student.toObject());
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(
+      errors
+        .array()
+        .map((err) => err.msg)
+        .join(' ')
+    );
+  }
+
+  const {
+    fullNameEn,
+    fullNameAr,
+    nid,
+    birthday,
+    gender,
+    militaryStatus,
+    photo,
+    degree,
+    gradYear,
+    address,
+    phoneNumber,
+    email,
+    department,
+    password
+  } = req.body;
+
+  const user = await User.findById(student.user);
+  // console.log(user.toObject());
+  user.email = email;
+  user.password = password;
+  await user.save();
+
+  student.fullNameEn = fullNameEn;
+  student.fullNameAr = fullNameAr;
+  student.nid = nid;
+  student.birthday = birthday;
+  student.gender = gender;
+  student.militaryStatus = militaryStatus;
+  student.photo = photo;
+  student.degree = degree;
+  student.gradYear = gradYear;
+  student.address = address;
+  student.phoneNumber = phoneNumber;
+  student.department = department;
+
+  await student.save();
+
+  res.status(201).json({ ...student.toObject(), email });
+});
+
+// @desc   Delete student
+// @route  DELETE /api/students/:id
+// @acess  Private/Admin
+const deleteStudent = asyncHandler(async (req, res) => {
+  const student = await Student.findById(req.params.id);
+
+  if (student) {
+    await student.remove();
+    res.json({ message: 'Student removed.' });
   } else {
     res.status(404);
     throw new Error('Student not found');
   }
 });
 
-export { getStudents, createStudent, getStudentById };
+export {
+  getStudents,
+  createStudent,
+  getStudentById,
+  updateStudent,
+  deleteStudent
+};
