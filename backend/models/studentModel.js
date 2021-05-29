@@ -59,7 +59,8 @@ const studentSchema = mongoose.Schema(
     },
     level: {
       type: Number,
-      required: true
+      required: true,
+      default: 1
     }
   },
   { timestamps: true }
