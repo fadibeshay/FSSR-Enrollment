@@ -115,8 +115,6 @@ const getStudents = asyncHandler(async (req, res) => {
       }
     : {};
 
-  console.log(keyword);
-
   const students = await Student.find({ ...keyword })
     .sort({ createdAt: -1 })
     .limit(10);
@@ -148,8 +146,6 @@ const updateStudent = asyncHandler(async (req, res) => {
     throw new Error('Student not found');
   }
 
-  console.log(student.toObject());
-
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400);
@@ -179,7 +175,6 @@ const updateStudent = asyncHandler(async (req, res) => {
   } = req.body;
 
   const user = await User.findById(student.user);
-  // console.log(user.toObject());
   user.email = email;
   user.password = password;
   await user.save();
@@ -199,7 +194,7 @@ const updateStudent = asyncHandler(async (req, res) => {
 
   await student.save();
 
-  res.status(201).json({ ...student.toObject(), email });
+  res.json({ ...student.toObject(), email });
 });
 
 // @desc   Delete student
