@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 //   password: Yup.required(),
 // });
 
-function Login({ loadingLogin, LoginUser, errorMessage, token }) {
+function Login({ loadingLogin, LoginUser, errorMessage }) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -62,14 +62,9 @@ function Login({ loadingLogin, LoginUser, errorMessage, token }) {
 
   const onSubmit = (data) => {
     LoginUser(data);
-
-    // console.log("onSubmit:>> ", token);
-    // if (token) {
-    //   return <Redirect to={{ pathname: "/" }} />;
-    // }
   };
 
-  if (token) {
+  if (localStorage.getItem("token")) {
     return <Redirect to={{ pathname: "/" }} />;
   }
 
@@ -141,7 +136,6 @@ function Login({ loadingLogin, LoginUser, errorMessage, token }) {
 const mapStateToProps = (state) => ({
   loadingLogin: state.user.isLoading,
   errorMessage: state.errors.message,
-  token: state.user.token,
 });
 
 export default connect(mapStateToProps, { LoginUser })(Login);
