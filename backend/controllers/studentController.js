@@ -54,6 +54,18 @@ const createStudent = asyncHandler(async (req, res) => {
     password
   } = req.body;
 
+  const studentExists = await Student.findOne({ nid });
+  if (studentExists) {
+    res.status(400);
+    throw new Error('Student already exists.');
+  }
+
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    res.status(400);
+    throw new Error('Email already exists.');
+  }
+
   const user = new User({
     name: fullNameEn && fullNameEn.split(' ')[0],
     email,
@@ -88,7 +100,42 @@ const createStudent = asyncHandler(async (req, res) => {
 // @route  GET /api/students
 // @acess  Private/Admin
 const getStudents = asyncHandler(async (req, res) => {
-  const students = await Student.find({});
+  const keyword = req.query.nid
+    ? {
+        nid: {
+          $regex: req.query.nid
+        }
+      }
+    : req.query.name
+    ? {
+        fullNameEn: {
+          $regex: req.query.name,
+          $options: 'i'
+        }
+      }
+    : {};
+
+  console.log(keyword);
+
+  const students = await Student.find({ ...keyword })
+    .sort({ createdAt: -1 })
+    .limit(10);
+
+  res.json(students);
 });
 
-export { createStudent };
+// @desc   Get a student by id
+// @route  GET /api/students/:id
+// @acess  Private/Admin
+const getStudentById = asyncHandler(async (req, res) => {
+  const student = await Student.findOne({ _id: req.params.id });
+
+  if (student) {
+    res.json(student);
+  } else {
+    res.status(404);
+    throw new Error('Student not found');
+  }
+});
+
+export { getStudents, createStudent, getStudentById };

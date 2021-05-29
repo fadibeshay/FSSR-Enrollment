@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
+import uploadRoutes from './routes/uploadRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -19,8 +20,11 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/upload', uploadRoutes);
 
 const __dirname = path.resolve();
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')));
