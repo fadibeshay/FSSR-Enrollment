@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   USER_LOADING,
   USER_LOADED,
@@ -6,9 +6,9 @@ import {
   LOGIN_FALL,
   LOGOUT_SUCCESS,
   GET_ERRORS,
-  CLEAR_ERRORS
-} from './actionTypes';
-import { getErrors, clearErrors } from './errorsAction';
+  CLEAR_ERRORS,
+} from "./actionTypes";
+import { getErrors, clearErrors } from "./errorsAction";
 
 // LoadUser
 
@@ -18,24 +18,27 @@ export const LoginUser =
   (dispatch) => {
     const config = {
       Headers: {
-        'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-      }
+        "Content-type": "application/json",
+      },
     };
 
     axios
-      .post('/api/users/login', { email, password }, config)
+      .post("/api/users/login", { email, password }, config)
       .then((res) => {
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: res.data
+          payload: res.data,
         });
         dispatch({ type: CLEAR_ERRORS });
       })
       .catch((err) => {
-        // console.log("err :>> ", err.message);
-        dispatch({ type: GET_ERRORS, payload: err.message });
+        dispatch({
+          type: GET_ERRORS,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
         dispatch({ type: LOGIN_FALL });
       });
   };
@@ -53,13 +56,12 @@ export const headerConfig = (getState) => {
   // Header Config
   const config = {
     Headers: {
-      'Content-type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-    }
+      "Content-type": "application/json",
+    },
   };
   if (token) {
-    config.header['x-auth-token'] = token;
+    // config.header["x-auth-token"] = token;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
 
   return config;
