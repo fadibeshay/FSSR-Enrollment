@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import subjectRoutes from './routes/subjectRoutes.js';
+import departmentRoutes from './routes/departmentRoutes.js';
 import uploadRoutes from './routes/uploadRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/subjects', subjectRoutes);
+app.use('/api/departments', departmentRoutes);
 app.use('/api/upload', uploadRoutes);
 
 const __dirname = path.resolve();

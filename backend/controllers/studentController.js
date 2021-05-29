@@ -24,7 +24,7 @@ export const studentValidations = [
 
 // @desc   Create student
 // @route  POST /api/students
-// @acess  Private/Admin
+// @access  Private/Admin
 const createStudent = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -98,7 +98,7 @@ const createStudent = asyncHandler(async (req, res) => {
 
 // @desc   Get the last 10 created students
 // @route  GET /api/students
-// @acess  Private/Admin
+// @access  Private/Admin
 const getStudents = asyncHandler(async (req, res) => {
   const keyword = req.query.nid
     ? {
@@ -124,7 +124,7 @@ const getStudents = asyncHandler(async (req, res) => {
 
 // @desc   Get a student by id
 // @route  GET /api/students/:id
-// @acess  Private/Admin
+// @access  Private/Admin
 const getStudentById = asyncHandler(async (req, res) => {
   const student = await Student.findById(req.params.id);
 
@@ -138,7 +138,7 @@ const getStudentById = asyncHandler(async (req, res) => {
 
 // @desc   Create student
 // @route  POST /api/students/:id
-// @acess  Private/Admin
+// @access  Private/Admin
 const updateStudent = asyncHandler(async (req, res) => {
   const student = await Student.findById(req.params.id);
   if (!student) {
@@ -199,7 +199,7 @@ const updateStudent = asyncHandler(async (req, res) => {
 
 // @desc   Delete student
 // @route  DELETE /api/students/:id
-// @acess  Private/Admin
+// @access  Private/Admin
 const deleteStudent = asyncHandler(async (req, res) => {
   const student = await Student.findById(req.params.id);
 

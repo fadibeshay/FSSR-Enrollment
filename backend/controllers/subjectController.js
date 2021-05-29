@@ -10,7 +10,7 @@ const subjectValidations = [
 
 // @desc   Create a subject
 // @route  POST /api/subjects
-// @acess  Private/Admin
+// @access  Private/Admin
 const createSubject = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -51,7 +51,7 @@ const createSubject = asyncHandler(async (req, res) => {
 
 // @desc   Update a subject
 // @route  PUT /api/subjects
-// @acess  Private/Admin
+// @access  Private/Admin
 const updateSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
   if (!subject) {
@@ -95,7 +95,7 @@ const updateSubject = asyncHandler(async (req, res) => {
 
 // @desc   Delete a subject
 // @route  DELETE /api/subjects
-// @acess  Private/Admin
+// @access  Private/Admin
 const deleteSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
 
@@ -110,7 +110,7 @@ const deleteSubject = asyncHandler(async (req, res) => {
 
 // @desc   Get a subject by id
 // @route  GET /api/subjects
-// @acess  Private/Admin
+// @access  Private/Admin
 const getSubjectById = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
 
@@ -124,7 +124,7 @@ const getSubjectById = asyncHandler(async (req, res) => {
 
 // @desc   Get all subjects
 // @route  GET /api/subjects
-// @acess  Private/Admin
+// @access  Private/Admin
 const getSubjects = asyncHandler(async (req, res) => {
   const keyword = req.query.code
     ? {

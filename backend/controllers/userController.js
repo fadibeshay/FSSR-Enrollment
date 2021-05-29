@@ -4,7 +4,7 @@ import User from '../models/userModel.js';
 
 // @desc   Auth user & get token
 // @route  POST /api/users/login
-// @acess  Public
+// @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -26,7 +26,7 @@ const authUser = asyncHandler(async (req, res) => {
 
 // @desc   Get user
 // @route  GET /api/users
-// @acess  Private
+// @access  Private
 const getUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
