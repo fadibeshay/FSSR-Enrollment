@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-function Home(user) {
+function Home({ user }) {
   return (
     <div>
       <h1>Home</h1>
@@ -13,7 +13,7 @@ function Home(user) {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user?.user,
+  user: state.user.user,
 });
 
 export default connect(mapStateToProps, {})(Home);

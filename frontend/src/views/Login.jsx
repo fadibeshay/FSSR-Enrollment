@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -63,12 +63,15 @@ function Login({ loadingLogin, LoginUser, errorMessage, token }) {
   const onSubmit = (data) => {
     LoginUser(data);
 
+    // console.log("onSubmit:>> ", token);
     // if (token) {
-    //   console.log("Hello");
-    //     history.push('/login')
-
+    //   return <Redirect to={{ pathname: "/" }} />;
     // }
   };
+
+  if (token) {
+    return <Redirect to={{ pathname: "/" }} />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -138,7 +141,7 @@ function Login({ loadingLogin, LoginUser, errorMessage, token }) {
 const mapStateToProps = (state) => ({
   loadingLogin: state.user.isLoading,
   errorMessage: state.errors.message,
-  token: state.user.user?.token,
+  token: state.user.token,
 });
 
 export default connect(mapStateToProps, { LoginUser })(Login);
