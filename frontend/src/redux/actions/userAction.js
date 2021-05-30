@@ -1,52 +1,72 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   USER_LOADING,
   USER_LOADED,
+  USER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FALL,
-  LOGOUT_SUCCESS,
-  GET_ERRORS,
-  CLEAR_ERRORS,
-} from "./actionTypes";
-import { getErrors, clearErrors } from "./errorsAction";
+  LOGOUT_SUCCESS
+} from './actionTypes';
+import { getErrors, clearErrors } from './errorsAction';
 
 // LoadUser
+export const LoadUser = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_LOADING });
+
+    const config = headerConfig(getState);
+
+    const { data } = await axios.get('/api/users/profile', config);
+
+    dispatch({
+      type: USER_LOADED,
+      payload: data
+    });
+
+    dispatch(clearErrors());
+  } catch (err) {
+    dispatch(getErrors(err));
+    dispatch({ type: USER_FAIL });
+  }
+};
 
 // LOGIN
 export const LoginUser =
   ({ email, password }) =>
-  (dispatch) => {
-    const config = {
-      Headers: {
-        "Content-type": "application/json",
-      },
-    };
-
-    axios
-      .post("/api/users/login", { email, password }, config)
-      .then((res) => {
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: res.data,
-        });
-        dispatch({ type: CLEAR_ERRORS });
-      })
-      .catch((err) => {
-        dispatch({
-          type: GET_ERRORS,
-          payload:
-            err.response && err.response.data.message
-              ? err.response.data.message
-              : err.message,
-        });
-        dispatch({ type: LOGIN_FALL });
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_LOADING
       });
+
+      const config = {
+        Headers: {
+          'Content-type': 'application/json'
+        }
+      };
+
+      const { data } = await axios.post(
+        '/api/users/login',
+        { email, password },
+        config
+      );
+
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: data
+      });
+
+      dispatch(clearErrors());
+    } catch (err) {
+      dispatch(getErrors(err));
+      dispatch({ type: LOGIN_FALL });
+    }
   };
 
 // LOGOUT
 export const LogoutUser = () => (dispatch) => {
   dispatch({
-    type: LOGOUT_SUCCESS,
+    type: LOGOUT_SUCCESS
   });
 };
 
@@ -56,12 +76,11 @@ export const headerConfig = (getState) => {
   // Header Config
   const config = {
     Headers: {
-      "Content-type": "application/json",
-    },
+      'Content-type': 'application/json'
+    }
   };
   if (token) {
-    // config.header["x-auth-token"] = token;
-    config.headers["Authorization"] = `Bearer ${token}`;
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
 
   return config;

@@ -1,24 +1,25 @@
 import {
   USER_LOADING,
   USER_LOADED,
+  USER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FALL,
-  LOGOUT_SUCCESS,
-} from "../actions/actionTypes";
+  LOGOUT_SUCCESS
+} from '../actions/actionTypes';
 
 const initialState = {
-  token: localStorage.getItem("token"),
+  token: localStorage.getItem('token'),
   isAuth: null,
   user: {},
-  isLoading: false,
+  isLoading: false
 };
 
-export default function (state = initialState, action) {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOADING:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       };
 
     case USER_LOADED:
@@ -26,28 +27,31 @@ export default function (state = initialState, action) {
         ...state,
         isLoading: false,
         isAuth: true,
-        user: action.payload,
+        user: action.payload
       };
 
     case LOGIN_SUCCESS:
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem('token', action.payload.token);
       return {
         ...state,
         user: { ...action.payload },
         isAuth: true,
-        isLoading: false,
+        isLoading: false
       };
 
     case LOGIN_FALL:
     case LOGOUT_SUCCESS:
+    case USER_FAIL:
       return {
-        token: localStorage.removeItem("token"),
+        token: localStorage.removeItem('token'),
         isAuth: null,
         user: null,
-        isLoading: false,
+        isLoading: false
       };
 
     default:
       return state;
   }
-}
+};
+
+export default userReducer;

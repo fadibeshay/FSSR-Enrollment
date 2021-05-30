@@ -1,20 +1,22 @@
-import { GET_ERRORS, CLEAR_ERRORS } from "../actions/actionTypes";
+import { GET_ERRORS, CLEAR_ERRORS } from '../actions/actionTypes';
 
 const initialState = {
-  message: "",
+  message: ''
 };
 
-export default function (state = initialState, action) {
+const errorsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ERRORS:
       return {
-        message: action.payload,
+        message: action.payload
       };
     case CLEAR_ERRORS:
       return {
-        message: "",
+        message: ''
       };
     default:
       return state;
   }
-}
+};
+
+export default errorsReducer;

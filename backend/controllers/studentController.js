@@ -127,9 +127,11 @@ const getStudents = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getStudentById = asyncHandler(async (req, res) => {
   const student = await Student.findById(req.params.id);
+  const user = await User.findById(student.user).select('email');
+  const email = user.toObject().email;
 
   if (student) {
-    res.json(student);
+    res.json({ ...student.toObject(), email });
   } else {
     res.status(404);
     throw new Error('Student not found.');

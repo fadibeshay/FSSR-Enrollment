@@ -1,8 +1,10 @@
-import { combineReducers } from "redux";
-import userReducer from "./userReducer";
-import errorsReducer from "./errorsReducer";
+import { combineReducers } from 'redux';
+import userReducer from './userReducer';
+import studentReducer from './studentReducer';
+import errorsReducer from './errorsReducer';
 
 export default combineReducers({
   user: userReducer,
-  errors: errorsReducer,
+  student: studentReducer,
+  errors: errorsReducer
 });
