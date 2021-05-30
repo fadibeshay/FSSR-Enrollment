@@ -50,7 +50,7 @@ const createSubject = asyncHandler(async (req, res) => {
 });
 
 // @desc   Update a subject
-// @route  PUT /api/subjects
+// @route  PUT /api/subjects/Id
 // @access  Private/Admin
 const updateSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
@@ -94,7 +94,7 @@ const updateSubject = asyncHandler(async (req, res) => {
 });
 
 // @desc   Delete a subject
-// @route  DELETE /api/subjects
+// @route  DELETE /api/subjects/:id
 // @access  Private/Admin
 const deleteSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
@@ -109,7 +109,7 @@ const deleteSubject = asyncHandler(async (req, res) => {
 });
 
 // @desc   Get a subject by id
-// @route  GET /api/subjects
+// @route  GET /api/subjects/:id
 // @access  Private/Admin
 const getSubjectById = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);

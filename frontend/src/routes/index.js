@@ -1,4 +1,4 @@
-import { ROUTE } from '../Constants/Routes';
+import { ROUTE } from '../constants/Routes';
 import { Home } from '../views';
 
 const routes = [

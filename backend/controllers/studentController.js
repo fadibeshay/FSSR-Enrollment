@@ -7,7 +7,7 @@ export const studentValidations = [
   check('fullNameEn', 'English name is required.').notEmpty(),
   check('fullNameAr', 'Arabic name is required.').notEmpty(),
   check('nid', 'National id is required.').notEmpty(),
-  check('birthday', 'Birthday is required.').notEmpty(),
+  check('birthday', 'Birthday is required.').isDate(),
   check('gender', 'gender is required.').notEmpty(),
   check('militaryStatus', 'Military Status is required.').notEmpty(),
   check('photo', 'Photo is required.').notEmpty(),
