@@ -19,6 +19,11 @@ const semesterSchema = mongoose.Schema(
       type: Boolean,
       default: false
     },
+    acadYear: {
+      type: mongoose.Types.ObjectId,
+      ref: 'AcadYear',
+      required: true
+    },
     courses: [
       {
         type: mongoose.Types.ObjectId,

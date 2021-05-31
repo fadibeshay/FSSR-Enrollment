@@ -9,6 +9,7 @@ import studentRoutes from './routes/studentRoutes.js';
 import subjectRoutes from './routes/subjectRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 import acadYearRoutes from './routes/acadYearRoutes.js';
+import semesterRoutes from './routes/semesterRoutes.js';
 import uploadRoutes from './routes/uploadRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -26,6 +27,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/acadyears', acadYearRoutes);
+app.use('/api/semesters', semesterRoutes);
 app.use('/api/upload', uploadRoutes);
 
 const __dirname = path.resolve();
