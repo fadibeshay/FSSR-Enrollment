@@ -10,6 +10,7 @@ import subjectRoutes from './routes/subjectRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 import acadYearRoutes from './routes/acadYearRoutes.js';
 import semesterRoutes from './routes/semesterRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
 import uploadRoutes from './routes/uploadRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -28,6 +29,7 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/acadyears', acadYearRoutes);
 app.use('/api/semesters', semesterRoutes);
+app.use('/api/courses', courseRoutes);
 app.use('/api/upload', uploadRoutes);
 
 const __dirname = path.resolve();
