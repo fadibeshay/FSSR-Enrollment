@@ -40,11 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const authSchema = Yup.object().shape({
-//   email: Yup.email().required(),
-//   password: Yup.required(),
-// });
-
 function Login({ loadingLogin, LoginUser, errorMessage }) {
   const classes = useStyles();
   const history = useHistory();

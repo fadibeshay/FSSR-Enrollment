@@ -1,11 +1,10 @@
-import { Typography } from "@material-ui/core";
 import React from "react";
-import Layout from "../container/Layout";
+import { Layout } from "../container";
 
 function Home() {
   return (
     <Layout>
-      <h1>Home Page</h1>
+      <h1>Welcome in FSSR Enrollment System</h1>
     </Layout>
   );
 }

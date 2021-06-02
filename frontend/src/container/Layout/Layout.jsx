@@ -17,8 +17,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { LogoutMenu } from "../components";
-
+import { LogoutMenu } from "../../components";
+import { NavLink } from "react-router-dom";
+import style from "./Layout.module.css";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -70,31 +71,42 @@ function Layout({ window, children, user }) {
     setMobileOpen(!mobileOpen);
   };
 
+  let sideBarLinks = [
+    {
+      text: "Home",
+      role: "admin",
+      route: "/",
+      icon: <InboxIcon />,
+    },
+    {
+      text: "Students",
+      role: "admin",
+      route: "/students",
+      icon: <InboxIcon />,
+    },
+  ];
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
+        {sideBarLinks.map((sideLink, index) => (
+          <NavLink
+            to={sideLink.route}
+            key={index}
+            className={style.navLinks}
+            activeClassName={style.active}
+            exact
+          >
+            <ListItem button>
+              <ListItemIcon>{sideLink.icon}</ListItemIcon>
+              <ListItemText primary={sideLink.text} />
+            </ListItem>
+          </NavLink>
         ))}
       </List>
       <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 
@@ -159,7 +171,6 @@ function Layout({ window, children, user }) {
     </div>
   );
 }
-
 Layout.propTypes = {
   window: PropTypes.func,
 };

@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
-function PrivateRoute({ component: Component, ...rest }) {
+import { connect } from "react-redux";
+import { LoadUser } from "../redux/actions/userAction";
+function PrivateRoute({ component: Component, LoadUser, userState, ...rest }) {
+  useEffect(() => {
+    if (Object.keys(userState).length == "") {
+      LoadUser();
+    }
+  }, []);
   return (
     <Route
       {...rest}
@@ -17,4 +24,8 @@ function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
-export default PrivateRoute;
+const mapStateToProps = (state) => ({
+  userState: state.user.user,
+});
+
+export default connect(mapStateToProps, { LoadUser })(PrivateRoute);
