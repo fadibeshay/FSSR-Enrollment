@@ -13,7 +13,16 @@ const courseValidations = [
 // @route  GET /api/semesters/:id
 // @access  Private/Admin
 const getSemById = asyncHandler(async (req, res) => {
-  const semester = await Semester.findById(req.params.id).populate('courses');
+  const semester = await Semester.findById(req.params.id)
+    .populate({
+      path: 'courses',
+      select: 'subject instructor',
+      populate: {
+        path: 'subject',
+        select: 'code title'
+      }
+    })
+    .populate('acadYear', 'year');
 
   if (semester) {
     res.json(semester);

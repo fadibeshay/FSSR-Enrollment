@@ -3,7 +3,11 @@ import { courseValidations } from '../controllers/semesterController.js';
 import {
   getCourseById,
   updateCourse,
-  deleteCourse
+  deleteCourse,
+  getEnrolledStudents,
+  gradeStudents,
+  getGrades,
+  gradesValidations
 } from '../controllers/courseController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -14,5 +18,12 @@ router
   .get(protect, admin, getCourseById)
   .put(protect, admin, courseValidations, updateCourse)
   .delete(protect, admin, deleteCourse);
+
+router.route('/:id/students').get(protect, admin, getEnrolledStudents);
+
+router
+  .route('/:id/grades')
+  .get(protect, admin, getGrades)
+  .post(protect, admin, gradesValidations, gradeStudents);
 
 export default router;

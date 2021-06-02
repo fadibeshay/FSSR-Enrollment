@@ -11,6 +11,7 @@ import departmentRoutes from './routes/departmentRoutes.js';
 import acadYearRoutes from './routes/acadYearRoutes.js';
 import semesterRoutes from './routes/semesterRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
+import gradeRoutes from './routes/gradeRoutes.js';
 import enrolRoutes from './routes/enrolRoutes.js';
 import uploadRoutes from './routes/uploadRoute.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
@@ -31,6 +32,7 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/acadyears', acadYearRoutes);
 app.use('/api/semesters', semesterRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/grades', gradeRoutes);
 app.use('/api/enrols', enrolRoutes);
 app.use('/api/upload', uploadRoutes);
 
