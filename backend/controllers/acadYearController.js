@@ -51,7 +51,10 @@ const createAcadYear = asyncHandler(async (req, res) => {
 // @route  PUT /api/acadYears/:id
 // @access  Private/Admin
 const updateAcadYear = asyncHandler(async (req, res) => {
-  const acadYear = await AcadYear.findById(req.params.id);
+  const acadYear = await AcadYear.findById(req.params.id).populate(
+    'semesters',
+    'name startDate endDate'
+  );
   if (!acadYear) {
     res.status(404);
     throw new Error('Academic year not found.');
@@ -81,7 +84,8 @@ const updateAcadYear = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getAcadYearById = asyncHandler(async (req, res) => {
   const acadYear = await AcadYear.findById(req.params.id).populate(
-    'semesters -courses'
+    'semesters',
+    'name startDate endDate'
   );
 
   if (acadYear) {
@@ -140,13 +144,18 @@ const addSemToYear = asyncHandler(async (req, res) => {
     throw new Error('Semester already exists.');
   }
 
-  const semester = new Semester({ name, startDate, endDate });
+  const semester = new Semester({
+    name,
+    startDate,
+    endDate,
+    acadYear: acadYear._id
+  });
   const createdSem = await semester.save();
 
   acadYear.semesters.push(createdSem);
   await acadYear.save();
 
-  res.json({ message: 'Semester added.' });
+  res.json(createdSem);
 });
 
 export {

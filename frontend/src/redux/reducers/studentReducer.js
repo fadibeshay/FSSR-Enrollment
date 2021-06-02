@@ -49,6 +49,9 @@ const studentReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        students: state.students.map((student) =>
+          student._id === action.payload._id ? action.payload : student
+        ),
         student: action.payload,
         message: 'Student updated successfully'
       };
