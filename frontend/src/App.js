@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
-import routes from './routes';
-import { ROUTE } from './constants/Routes';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
+import routes from "./routes";
+import { ROUTE } from "./constants/Routes";
 
-import PrivateRoute from './routes/PrivateRoute';
-import { Login } from './views';
+import PrivateRoute from "./routes/PrivateRoute";
+import { Login } from "./views";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         ))}
 
         {/* Public Routes */}
-        <Route path={ROUTE.LOGIN} component={Login} />
+        <Route path={ROUTE.LOGIN} exact component={Login} />
       </Switch>
     </Router>
   );

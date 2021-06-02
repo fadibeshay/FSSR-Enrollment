@@ -1,4 +1,4 @@
-import { GET_ERRORS, CLEAR_ERRORS } from './actionTypes';
+import { GET_ERRORS, CLEAR_ERRORS } from "./actionTypes";
 
 export const getErrors = (err) => {
   return {
@@ -6,12 +6,12 @@ export const getErrors = (err) => {
     payload:
       err.response && err.response.data.message
         ? err.response.data.message
-        : err.message
+        : err.message,
   };
 };
 
 export const clearErrors = () => {
   return {
-    type: CLEAR_ERRORS
+    type: CLEAR_ERRORS,
   };
 };
