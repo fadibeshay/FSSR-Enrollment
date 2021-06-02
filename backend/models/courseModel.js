@@ -15,14 +15,7 @@ const courseSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'Semester',
       required: true
-    },
-    students: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: 'Student',
-        uniqure: true
-      }
-    ]
+    }
   },
   { timestamps: true }
 );

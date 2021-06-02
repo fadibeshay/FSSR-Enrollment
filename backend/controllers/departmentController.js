@@ -42,9 +42,9 @@ const createDepart = asyncHandler(async (req, res) => {
 const getDepartById = asyncHandler(async (req, res) => {
   const depart = await Department.findById(req.params.id)
     .populate('generalSubjects', 'code title')
-    .populate('majorSubjects')
-    .populate('electiveSubjects')
-    .populate('minorSubjects');
+    .populate('majorSubjects', 'code title')
+    .populate('electiveSubjects', 'code title')
+    .populate('minorSubjects', 'code title');
 
   if (depart) {
     res.json(depart);
@@ -139,7 +139,7 @@ const addSubToDepart = asyncHandler(async (req, res) => {
   }
 
   await depart.save();
-  res.json({ message: 'Subject added.' });
+  res.json(subject);
 });
 
 // @desc   Remove a subject from department

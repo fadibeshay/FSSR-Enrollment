@@ -206,11 +206,12 @@ const deleteStudent = asyncHandler(async (req, res) => {
   const student = await Student.findById(req.params.id);
 
   if (student) {
+    await User.findOneAndRemove({ _id: student.user });
     await student.remove();
     res.json({ message: 'Student removed.' });
   } else {
     res.status(404);
-    throw new Error('Student not found');
+    throw new Error('Student not found.');
   }
 });
 

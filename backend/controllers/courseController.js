@@ -11,8 +11,7 @@ import Subject from '../models/subjectModel.js';
 const getCourseById = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id)
     .populate('subject', 'code title')
-    .populate('semester', 'name acadYear')
-    .populate('students', 'fullNameEn department');
+    .populate('semester', 'name acadYear');
 
   if (course) {
     const acadYear = await AcadYear.findById(course.semester.acadYear).select(
