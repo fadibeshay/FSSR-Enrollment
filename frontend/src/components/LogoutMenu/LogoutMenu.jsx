@@ -23,10 +23,6 @@ function LogoutMenu({ user, LogoutUser }) {
     handleClose();
   };
 
-  if (!localStorage.getItem("token")) {
-    return <Redirect to={{ pathname: "/login" }} />;
-  }
-
   return (
     <div>
       <Button

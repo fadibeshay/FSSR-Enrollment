@@ -16,3 +16,12 @@
   color: #fff !important;
   background: #4051b5 !important;
 }
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  max-width: 40%;
+}

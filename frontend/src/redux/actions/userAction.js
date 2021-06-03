@@ -76,16 +76,16 @@ export const LogoutUser = () => (dispatch) => {
 // Send With Token
 export const headerConfig = () => {
   const token = localStorage.getItem("token");
+
   // Header Config
   const config = {
-    Headers: {
+    headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
   };
-  // if (token) {
-  //   config.headers["Authorization"] = `Bearer ${token}`;
-  // }
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
 
   return config;
 };
