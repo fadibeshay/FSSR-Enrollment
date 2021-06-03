@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { check, validationResult } from 'express-validator';
 import User from '../models/userModel.js';
 import Student from '../models/studentModel.js';
+import Department from '../models/departmentModel.js';
 
 export const studentValidations = [
   check('fullNameEn', 'English name is required.').notEmpty(),
@@ -16,6 +17,7 @@ export const studentValidations = [
   check('address', 'Address is required.').notEmpty(),
   check('phoneNumber', 'Phone number is required.').notEmpty(),
   check('department', 'Department is required.').notEmpty(),
+  check('level', 'Level should be between 1 and 4.').isInt({ min: 1, max: 4 }),
   check('email', 'Email address is not valid.').isEmail(),
   check('password', 'Password should be 6 or more characters.').isLength({
     min: 6
@@ -51,6 +53,7 @@ const createStudent = asyncHandler(async (req, res) => {
     phoneNumber,
     email,
     department,
+    minor,
     password
   } = req.body;
 
@@ -64,6 +67,21 @@ const createStudent = asyncHandler(async (req, res) => {
   if (emailExists) {
     res.status(400);
     throw new Error('Email already exists.');
+  }
+
+  const majorDepart = await Department.findOne({ name: department });
+  if (!majorDepart) {
+    res.status(404);
+    throw new Error('Department not found.');
+  }
+
+  let minDepart;
+  if (minor) {
+    minDepart = await Department.findOne({ name: minor });
+    if (!minDepart) {
+      res.status(404);
+      throw new Error('Minor not found.');
+    }
   }
 
   const user = new User({
@@ -88,8 +106,12 @@ const createStudent = asyncHandler(async (req, res) => {
     gradYear,
     address,
     phoneNumber,
-    department
+    major: majorDepart._id
   });
+
+  if (minor) {
+    student.minor = minDepart._id;
+  }
 
   const createdStudent = await student.save();
 
@@ -116,6 +138,8 @@ const getStudents = asyncHandler(async (req, res) => {
     : {};
 
   const students = await Student.find({ ...keyword })
+    .populate('major', 'name')
+    .populate('minor', 'name')
     .sort({ createdAt: -1 })
     .limit(10);
 
@@ -126,7 +150,9 @@ const getStudents = asyncHandler(async (req, res) => {
 // @route  GET /api/students/:id
 // @access  Private/Admin
 const getStudentById = asyncHandler(async (req, res) => {
-  const student = await Student.findById(req.params.id);
+  const student = await Student.findById(req.params.id)
+    .populate('major', 'name')
+    .populate('minor', 'name');
   const user = await User.findById(student.user).select('email');
   const email = user.toObject().email;
 
@@ -173,8 +199,25 @@ const updateStudent = asyncHandler(async (req, res) => {
     phoneNumber,
     email,
     department,
+    minor,
+    level,
     password
   } = req.body;
+
+  const majorDepart = await Department.findOne({ name: department });
+  if (!majorDepart) {
+    res.status(404);
+    throw new Error('Department not found.');
+  }
+
+  let minDepart;
+  if (minor) {
+    minDepart = await Department.findOne({ name: minor });
+    if (!minDepart) {
+      res.status(404);
+      throw new Error('Minor not found.');
+    }
+  }
 
   const user = await User.findById(student.user);
   user.email = email;
@@ -192,7 +235,9 @@ const updateStudent = asyncHandler(async (req, res) => {
   student.gradYear = gradYear;
   student.address = address;
   student.phoneNumber = phoneNumber;
-  student.department = department;
+  student.level = level;
+  student.major = majorDepart._id;
+  if (minor) student.minor = minDepart._id;
 
   await student.save();
 

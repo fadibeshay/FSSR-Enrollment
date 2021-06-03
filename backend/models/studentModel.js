@@ -53,14 +53,21 @@ const studentSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    department: {
-      type: String,
+    major: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Department',
       required: true
+    },
+    minor: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Department',
+      default: null
     },
     level: {
       type: Number,
       required: true,
-      default: 1
+      default: 1,
+      enum: [1, 2, 3, 4]
     }
   },
   { timestamps: true }
