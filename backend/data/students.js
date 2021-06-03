@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-
 const students = [
   {
     fullNameEn: 'John Doe',
@@ -13,7 +11,9 @@ const students = [
     gradYear: '2017',
     address: 'Giza, Cairo',
     phoneNumber: '01012345678',
-    department: 'CS'
+    major: 'Computer Sciences',
+    minor: null,
+    level: 1
   },
   {
     fullNameEn: 'Jane Doe',
@@ -27,7 +27,9 @@ const students = [
     gradYear: '2017',
     address: 'Giza, Cairo',
     phoneNumber: '01212345678',
-    department: 'CS'
+    major: 'Computer Sciences',
+    minor: null,
+    level: 1
   }
 ];
 

@@ -9,6 +9,7 @@ const derpartmentSchema = mongoose.Schema(
     },
     subjects: [
       {
+        _id: false,
         subject: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Subject',

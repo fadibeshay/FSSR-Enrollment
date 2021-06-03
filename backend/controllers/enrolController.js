@@ -2,8 +2,16 @@ import asyncHandler from 'express-async-handler';
 import { check, validationResult } from 'express-validator';
 import Student from '../models/studentModel.js';
 import Enrolment from '../models/enrolModel.js';
+import Semester from '../models/semesterModel.js';
+import Department from '../models/departmentModel.js';
+import Grade from '../models/gradeModel.js';
 
-const enrolValidations = [check('courses', 'No courses submitted.').notEmpty()];
+const enrolValidations = [
+  check('courses', 'You can submit up to 5 courses only.').isArray({
+    min: 1,
+    max: 5
+  })
+];
 
 // @desc   Create an enrolment
 // @route  POST /api/enrolments
@@ -48,21 +56,76 @@ const getMyEnrol = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const student = await Student.findOne({ user: userId });
 
+  // Get all the subjects <= student's level from his departement
+  const depart = await Department.findById(student.major);
+  const stdLvlSubs = depart.subjects.filter((s) => s.level <= student.level);
+
+  // Get student's passed subjects.
+  const stdPassedGrades = await Grade.find({
+    student: student._id,
+    percent: { $gte: 60 }
+  }).populate('course', 'subject');
+  let stdPassedSubs = [];
+  stdPassedGrades.forEach((g) => {
+    stdPassedSubs.push(g.course.subject._id.toString());
+  });
+
+  // Get student's new & failed subjects
+  let stdNewSubs = stdLvlSubs;
+  if (stdPassedSubs.length > 0) {
+    stdNewSubs = stdLvlSubs.filter(
+      (s) => stdPassedSubs.indexOf(s.subject.toString()) < 0
+    );
+  }
+
+  const stdNewSubsIds = stdNewSubs.map((s) => s.subject);
+
+  // Get current semester's courses
+  const currentSem = await Semester.findOne({ isEnrollAvail: true }).populate({
+    path: 'courses',
+    select: 'subject instructor',
+    populate: { path: 'subject', select: 'code title credit' }
+  });
+  if (!currentSem) {
+    res.status(403);
+    throw new Error('Enrollment is not available.');
+  }
+
+  // select the suitable courses for the student
+  let suitableCourses = currentSem.courses.filter(
+    (c) => stdNewSubsIds.indexOf(c.subject._id) >= 0
+  );
+  suitableCourses = suitableCourses.map((c) => {
+    return {
+      _id: c._id,
+      code: c.subject.code,
+      title: c.subject.title,
+      credit: c.subject.credit,
+      type: stdNewSubs.find(
+        (ns) => ns.subject.toString() === c.subject._id.toString()
+      ).type,
+      instructor: c.instructor,
+      selected: false
+    };
+  });
+
+  // Get the student enrolment
   const enrol = await Enrolment.findOne({
     student: student._id,
     isActive: true
-  }).populate({
-    path: 'courses',
-    select: 'subject instructor',
-    populate: { path: 'subject', select: 'code title' }
-  });
+  }).populate('courses', 'subject');
 
   if (enrol) {
-    res.json(enrol);
-  } else {
-    res.status(404);
-    throw new Error('Enrollment request not found.');
+    const selectedCourses = enrol.courses.map((c) => c._id);
+    suitableCourses = suitableCourses.map((c) => {
+      return {
+        ...c,
+        selected: selectedCourses.indexOf(c._id) >= 0
+      };
+    });
   }
+
+  res.json(suitableCourses);
 });
 
 // @desc   Update logged in student active enrolment
