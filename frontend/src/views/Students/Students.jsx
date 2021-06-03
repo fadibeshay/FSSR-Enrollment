@@ -14,7 +14,8 @@ import style from "./Students.module.css";
 import { connect } from "react-redux";
 import { LoadStudents } from "../../redux/actions/studentAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -33,6 +34,12 @@ const rows = [
 ];
 function Students({ students, LoadStudents, isLoading }) {
   const classes = useStyles();
+
+  const deleteStudent = (id) => {
+    console.log("id :>> ", id);
+
+    window.confirm("Are You Sure?") && alert("Hello");
+  };
 
   useEffect(() => {
     LoadStudents();
@@ -70,8 +77,16 @@ function Students({ students, LoadStudents, isLoading }) {
                   <TableCell align="left">{student.phoneNumber}</TableCell>
                   <TableCell align="left">{student.department}</TableCell>
                   <TableCell align="left">{student.gender}</TableCell>
-                  <TableCell align="left">ssss</TableCell>
-                  <TableCell align="left">ssss</TableCell>
+                  <TableCell align="left">
+                    <Button>
+                      <EditIcon />
+                    </Button>
+                  </TableCell>
+                  <TableCell align="left">
+                    <Button onClick={() => deleteStudent(student._id)}>
+                      <DeleteIcon />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
