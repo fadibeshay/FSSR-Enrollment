@@ -12,7 +12,7 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import style from "./Students.module.css";
 import { connect } from "react-redux";
-import { LoadStudents } from "../../redux/actions/studentAction";
+import { LoadStudents, deleteStudent } from "../../redux/actions/studentAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -26,9 +26,7 @@ function Students({ students, LoadStudents, isLoading }) {
   const classes = useStyles();
 
   const deleteStudent = (id) => {
-    console.log("id :>> ", id);
-
-    window.confirm("Are You Sure?") && alert("Hello");
+    window.confirm("Are You Sure?") && deleteStudent(id);
   };
 
   useEffect(() => {
