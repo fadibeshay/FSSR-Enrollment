@@ -7,28 +7,22 @@ const derpartmentSchema = mongoose.Schema(
       required: true,
       unique: true
     },
-    generalSubjects: [
+    subjects: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject'
-      }
-    ],
-    majorSubjects: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject'
-      }
-    ],
-    electiveSubjects: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject'
-      }
-    ],
-    minorSubjects: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject'
+        subject: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subject',
+          required: true
+        },
+        type: {
+          type: String,
+          required: true,
+          enum: ['general', 'major', 'elective', 'minor']
+        },
+        level: {
+          type: Number,
+          enum: [1, 2, 3, 4]
+        }
       }
     ]
   },

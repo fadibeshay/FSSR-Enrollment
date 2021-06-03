@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   departValidations,
+  subjectValidations,
   createDepart,
   getDepartById,
   updateDepart,
@@ -26,7 +27,10 @@ router
 
 router
   .route('/:id/subjects')
-  .put(protect, admin, addSubToDepart)
+  .post(protect, admin, subjectValidations, addSubToDepart);
+
+router
+  .route('/:departId/subjects/:subjectId')
   .delete(protect, admin, removeSubFromDepart);
 
 export default router;

@@ -7,6 +7,15 @@ const departValidations = [
   check('name', 'Department name is required.').notEmpty()
 ];
 
+const subjectValidations = [
+  check('code', 'Subject code is required.').notEmpty(),
+  check(
+    'type',
+    'Type should be either general, major, elective, or minor.'
+  ).isIn(['general', 'major', 'elective', 'minor']),
+  check('level', 'Level should be between 1 and 4.').isInt({ min: 1, max: 4 })
+];
+
 // @desc   Create a department
 // @route  POST /api/departments
 // @access  Private/Admin
@@ -40,11 +49,10 @@ const createDepart = asyncHandler(async (req, res) => {
 // @route  GET /api/departments
 // @access  Private/Admin
 const getDepartById = asyncHandler(async (req, res) => {
-  const depart = await Department.findById(req.params.id)
-    .populate('generalSubjects', 'code title')
-    .populate('majorSubjects', 'code title')
-    .populate('electiveSubjects', 'code title')
-    .populate('minorSubjects', 'code title');
+  const depart = await Department.findById(req.params.id).populate(
+    'subjects.subject',
+    'code title'
+  );
 
   if (depart) {
     res.json(depart);
@@ -99,16 +107,27 @@ const deleteDepart = asyncHandler(async (req, res) => {
 });
 
 // @desc   Add a subject to department
-// @route  PUT /api/departments/:id/subjects
+// @route  POST /api/departments/:id/subjects
 // @access  Private/Admin
 const addSubToDepart = asyncHandler(async (req, res) => {
-  const { code, type } = req.body;
-
   const depart = await Department.findById(req.params.id);
   if (!depart) {
     res.status(404);
     throw new Error('Department not found.');
   }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error(
+      errors
+        .array()
+        .map((err) => err.msg)
+        .join(' ')
+    );
+  }
+
+  const { code, type, level } = req.body;
 
   const subject = await Subject.findOne({ code });
   if (!subject) {
@@ -116,80 +135,33 @@ const addSubToDepart = asyncHandler(async (req, res) => {
     throw new Error('Subject not found.');
   }
 
-  switch (type) {
-    case 'general':
-      if (!depart.generalSubjects.find((s) => s._id === subject._id))
-        depart.generalSubjects.push(subject._id);
-      break;
-    case 'major':
-      if (!depart.majorSubjects.find((s) => s._id === subject._id))
-        depart.majorSubjects.push(subject._id);
-      break;
-    case 'elective':
-      if (!depart.electiveSubjects.find((s) => s._id === subject._id))
-        depart.electiveSubjects.push(subject._id);
-      break;
-    case 'minor':
-      if (!depart.minorSubjects.find((s) => s._id === subject._id))
-        depart.minorSubjects.push(subject._id);
-      break;
-    default:
-      res.status(400);
-      throw new Error('Subject type is not correct.');
-  }
+  depart.subjects.push({
+    subject: subject._id,
+    type,
+    level
+  });
 
   await depart.save();
   res.json(subject);
 });
 
 // @desc   Remove a subject from department
-// @route  DELETE /api/departments/:id/subjects
+// @route  DELETE /api/departments/:departId/subjects/:subjectId
 // @access  Private/Admin
 const removeSubFromDepart = asyncHandler(async (req, res) => {
-  const { _id, type } = req.body;
+  const departId = req.params.departId;
+  const subjectId = req.params.subjectId;
 
-  const depart = await Department.findById(req.params.id);
+  const depart = await Department.findById(departId);
   if (!depart) {
     res.status(404);
     throw new Error('Department not found.');
   }
 
-  const subject = await Subject.findById(_id);
-  if (!subject) {
-    res.status(404);
-    throw new Error('Subject not found.');
-  }
-
-  let subjects;
-  switch (type) {
-    case 'general':
-      subjects = depart.generalSubjects.filter(
-        (s) => s._id.toString() !== subject._id.toString()
-      );
-      depart.generalSubjects = subjects;
-      break;
-    case 'major':
-      subjects = depart.majorSubjects.filter(
-        (s) => s._id.toString() !== subject._id.toString()
-      );
-      depart.majorSubjects = subjects;
-      break;
-    case 'elective':
-      subjects = depart.electiveSubjects.filter(
-        (s) => s._id.toString() !== subject._id.toString()
-      );
-      depart.electiveSubjects = subjects;
-      break;
-    case 'minor':
-      subjects = depart.minorSubjects.filter(
-        (s) => s._id.toString() !== subject._id.toString()
-      );
-      depart.minorSubjects = subjects;
-      break;
-    default:
-      res.status(400);
-      throw new Error('Subject type is not correct.');
-  }
+  const updatedSubjects = depart.subjects.filter(
+    (s) => s._id.toString() !== subjectId.toString()
+  );
+  depart.subjects = updatedSubjects;
 
   await depart.save();
   res.json({ message: 'Subject removed.' });
@@ -206,6 +178,7 @@ const getDeparts = asyncHandler(async (req, res) => {
 
 export {
   departValidations,
+  subjectValidations,
   createDepart,
   getDepartById,
   updateDepart,
