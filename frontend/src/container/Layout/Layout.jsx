@@ -10,7 +10,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -19,11 +18,13 @@ import { connect } from "react-redux";
 import { LogoutMenu } from "../../components";
 import { NavLink } from "react-router-dom";
 import style from "./Layout.module.css";
+import logo from "../../assets/logo.jpeg";
 
 // Icons
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
+import { Avatar } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -93,7 +94,9 @@ function Layout({ window, children, user }) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className={`${classes.toolbar} ${style.logoContainer}`}>
+        <img src={logo} loading="lazy" className={style.logo} alt="logo" />
+      </div>
       <Divider />
       <List>
         {sideBarLinks.map((sideLink, index) => (
