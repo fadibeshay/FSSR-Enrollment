@@ -147,8 +147,7 @@ const addSemToYear = asyncHandler(async (req, res) => {
   const semester = new Semester({
     name,
     startDate,
-    endDate,
-    acadYear: acadYear._id
+    endDate
   });
   const createdSem = await semester.save();
 

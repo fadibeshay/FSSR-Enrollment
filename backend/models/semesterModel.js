@@ -21,8 +21,7 @@ const semesterSchema = mongoose.Schema(
     },
     acadYear: {
       type: mongoose.Types.ObjectId,
-      ref: 'AcadYear',
-      required: true
+      ref: 'AcadYear'
     },
     courses: [
       {

@@ -14,8 +14,15 @@ const courseValidations = [
 // @access  Private/Admin
 const getSemById = asyncHandler(async (req, res) => {
   const semester = await Semester.findById(req.params.id)
-    .populate('acadYear', 'year')
-    .populate('courses', '-students');
+    .populate({
+      path: 'courses',
+      select: 'subject instructor',
+      populate: {
+        path: 'subject',
+        select: 'code title'
+      }
+    })
+    .populate('acadYear', 'year');
 
   if (semester) {
     res.json(semester);
@@ -29,9 +36,7 @@ const getSemById = asyncHandler(async (req, res) => {
 // @route  PUT /api/semesters/:id
 // @access  Private/Admin
 const updateSem = asyncHandler(async (req, res) => {
-  const semester = await Semester.findById(req.params.id)
-    .populate('acadYear', 'year')
-    .populate('courses', '-students');
+  const semester = await Semester.findById(req.params.id);
 
   if (!semester) {
     res.status(404);
@@ -64,9 +69,10 @@ const updateSem = asyncHandler(async (req, res) => {
 // @route   POST /api/semesters/:id/courses
 // @access  Private/Admin
 const addCourseToSem = asyncHandler(async (req, res) => {
-  const semester = await Semester.findById(req.params.id)
-    .populate('acadYear', 'year')
-    .populate('courses', '-students');
+  const semester = await Semester.findById(req.params.id).populate(
+    'courses',
+    'subject'
+  );
 
   if (!semester) {
     res.status(404);
