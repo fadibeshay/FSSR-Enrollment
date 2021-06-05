@@ -5,6 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -82,12 +83,14 @@ function Layout({ window, children, user }) {
       text: "Home",
       role: "admin",
       route: "/",
+      isAdmin: false,
       icon: <HomeIcon />,
     },
     {
       text: "Students",
       role: "admin",
       route: "/students",
+      isAdmin: true,
       icon: <PeopleIcon />,
     },
   ];
@@ -99,20 +102,35 @@ function Layout({ window, children, user }) {
       </div>
       <Divider />
       <List>
-        {sideBarLinks.map((sideLink, index) => (
-          <NavLink
-            to={sideLink.route}
-            key={index}
-            className={style.navLinks}
-            activeClassName={style.active}
-            exact
-          >
-            <ListItem button>
-              <ListItemIcon>{sideLink.icon}</ListItemIcon>
-              <ListItemText primary={sideLink.text} />
-            </ListItem>
-          </NavLink>
-        ))}
+        {user.role && (
+          <>
+            {sideBarLinks.map((sideLink, index) => (
+              <NavLink
+                to={sideLink.route}
+                key={index}
+                className={style.navLinks}
+                activeClassName={style.active}
+                exact
+                style={
+                  user.role == "student" && sideLink.isAdmin
+                    ? { display: "none" }
+                    : null
+                }
+              >
+                <ListItem button>
+                  <ListItemIcon>{sideLink.icon}</ListItemIcon>
+                  <ListItemText primary={sideLink.text} />
+                </ListItem>
+              </NavLink>
+            ))}
+          </>
+        )}
+
+        {!user.role && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </List>
       <Divider />
     </div>

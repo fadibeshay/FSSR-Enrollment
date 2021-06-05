@@ -1,13 +1,37 @@
 import React, { useEffect } from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { LoadUser } from "../redux/actions/userAction";
-function PrivateRoute({ component: Component, LoadUser, userState, ...rest }) {
+function PrivateRoute({
+  component: Component,
+  LoadUser,
+  userState,
+  isAdmin,
+  ...rest
+}) {
+  const history = useHistory();
+
   useEffect(() => {
-    if (Object.keys(userState).length == "") {
-      LoadUser();
-    }
+    getAndRedirectUser();
   }, []);
+
+  const getAndRedirectUser = async () => {
+    if (Object.keys(userState).length == "") {
+      await LoadUser();
+      await ifUserAdmin();
+    }
+  };
+
+  const ifUserAdmin = () => {
+    if (
+      isAdmin &&
+      Object.keys(userState).length !== "" &&
+      userState.role !== "admin"
+    ) {
+      history.push("/");
+    }
+  };
+
   return (
     <Route
       {...rest}

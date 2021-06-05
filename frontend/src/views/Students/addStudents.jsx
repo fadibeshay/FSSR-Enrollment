@@ -61,8 +61,10 @@ function AddStudents({ errorMessage, CreateStudent }) {
     if (!errorMessage) {
       history.push("/students");
       reset(data);
+      console.log(`errorMessage if`, errorMessage);
     } else {
       window.scrollTo(0, 0);
+      console.log(`errorMessage else `, errorMessage);
     }
   };
   const handleSelectChange = (e) => {
@@ -197,17 +199,6 @@ function AddStudents({ errorMessage, CreateStudent }) {
             <Alert severity="error">{errors.gender?.message} </Alert>
           )}
         </FormControl>
-        {/* <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="gender"
-          label="gender"
-          name="gender"
-           
-          {...register("gender")}
-        /> */}
 
         <TextField
           variant="outlined"

@@ -19,6 +19,7 @@ function App() {
             path={route.path}
             exact={route.exact}
             component={route.component}
+            isAdmin={route.isAdmin}
           />
         ))}
 
