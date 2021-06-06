@@ -6,14 +6,14 @@ import {
   STUDENT_CREATED,
   STUDENT_UPDATED,
   STUDENT_DELETED,
-  LOGOUT_SUCCESS
-} from '../actions/actionTypes';
+  LOGOUT_SUCCESS,
+} from "../actions/actionTypes";
 
 const initialState = {
   students: [],
   student: {},
-  message: '',
-  isLoading: false
+  message: "",
+  isLoading: false,
 };
 
 const studentReducer = (state = initialState, action) => {
@@ -21,29 +21,30 @@ const studentReducer = (state = initialState, action) => {
     case STUDENT_LOADING:
       return {
         ...state,
-        message: '',
-        isLoading: true
+        message: "",
+        isLoading: true,
+        student: {},
       };
     case STUDENTS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
-        students: action.payload
+        message: "",
+        students: action.payload,
       };
     case STUDENT_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
-        student: action.payload
+        message: "",
+        student: action.payload,
       };
     case STUDENT_CREATED:
       return {
         ...state,
         isLoading: false,
         student: action.payload,
-        message: 'Student created successfully'
+        message: "Student created successfully",
       };
     case STUDENT_UPDATED:
       return {
@@ -53,7 +54,7 @@ const studentReducer = (state = initialState, action) => {
           student._id === action.payload._id ? action.payload : student
         ),
         student: action.payload,
-        message: 'Student updated successfully'
+        message: "Student updated successfully",
       };
     case STUDENT_DELETED:
       return {
@@ -61,13 +62,13 @@ const studentReducer = (state = initialState, action) => {
         isLoading: false,
         students: state.students.filter((s) => s._id !== action.payload),
         student: {},
-        message: 'Student deleted successfully'
+        message: "Student deleted successfully",
       };
     case STUDENT_FAIL:
       return {
         ...state,
-        message: '',
-        isLoading: false
+        message: "",
+        isLoading: false,
       };
     case LOGOUT_SUCCESS:
       return initialState;

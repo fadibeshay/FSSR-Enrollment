@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   STUDENT_LOADING,
   STUDENTS_LOADED,
@@ -6,18 +6,18 @@ import {
   STUDENT_CREATED,
   STUDENT_UPDATED,
   STUDENT_DELETED,
-  STUDENT_FAIL
-} from './actionTypes';
-import { getErrors, clearErrors } from './errorsAction';
-import { headerConfig } from './userAction';
+  STUDENT_FAIL,
+} from "./actionTypes";
+import { getErrors, clearErrors } from "./errorsAction";
+import { headerConfig } from "./userAction";
 
 // Load students
 export const LoadStudents =
-  (name = '', nid = '') =>
+  (name = "", nid = "") =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: STUDENT_LOADING
+        type: STUDENT_LOADING,
       });
 
       const config = headerConfig(getState);
@@ -29,7 +29,7 @@ export const LoadStudents =
 
       dispatch({
         type: STUDENTS_LOADED,
-        payload: data
+        payload: data,
       });
 
       dispatch(clearErrors());
@@ -43,7 +43,7 @@ export const LoadStudents =
 export const LoadStudent = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: STUDENT_LOADING
+      type: STUDENT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -52,7 +52,7 @@ export const LoadStudent = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: STUDENT_LOADED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -66,16 +66,16 @@ export const LoadStudent = (_id) => async (dispatch, getState) => {
 export const CreateStudent = (student) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: STUDENT_LOADING
+      type: STUDENT_LOADING,
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post('/api/students', student, config);
+    const { data } = await axios.post("/api/students", student, config);
 
     dispatch({
       type: STUDENT_CREATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -89,7 +89,7 @@ export const CreateStudent = (student) => async (dispatch, getState) => {
 export const UpdateStudent = (student) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: STUDENT_LOADING
+      type: STUDENT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -102,7 +102,7 @@ export const UpdateStudent = (student) => async (dispatch, getState) => {
 
     dispatch({
       type: STUDENT_UPDATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -116,7 +116,7 @@ export const UpdateStudent = (student) => async (dispatch, getState) => {
 export const DeleteStudent = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: STUDENT_LOADING
+      type: STUDENT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -125,7 +125,7 @@ export const DeleteStudent = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: STUDENT_DELETED,
-      payload: _id
+      payload: _id,
     });
 
     dispatch(clearErrors());

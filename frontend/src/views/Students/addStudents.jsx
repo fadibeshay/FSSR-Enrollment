@@ -10,11 +10,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import { CreateStudent } from "../../redux/actions/studentAction";
 import { useHistory } from "react-router";
 import style from "./Students.module.css";
 import placeholderUser from "../../assets/placeholder.png";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+
+import { CreateStudent } from "../../redux/actions/studentAction";
+import { LoadDepartments } from "../../redux/actions/departmentAction";
+
 // Validation
 const studentSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -30,6 +33,7 @@ const studentSchema = yup.object().shape({
   address: yup.string().required(),
   phoneNumber: yup.string().required(),
   department: yup.string().required(),
+  level: yup.string().required(),
   password: yup.string().min(6).required(),
 });
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +46,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddStudents({ errorMessage, CreateStudent }) {
+function AddStudents({
+  errorMessage,
+  departments,
+  CreateStudent,
+  LoadDepartments,
+  isLoading,
+}) {
   const classes = useStyles();
   const history = useHistory();
   // const fileInput = useRef(null);
@@ -56,19 +66,22 @@ function AddStudents({ errorMessage, CreateStudent }) {
     resolver: yupResolver(studentSchema),
   });
 
-  const onSubmit = async (data) => {
+  useEffect(() => {
+    LoadDepartments();
+  }, []);
+
+  const onSubmitForm = async (data) => {
+    // console.log("data :>> ", data);
     await CreateStudent(data);
+
     if (!errorMessage) {
-      history.push("/students");
-      reset(data);
+      // history.push("/students");
+      // reset(data);
       console.log(`errorMessage if`, errorMessage);
     } else {
       window.scrollTo(0, 0);
       console.log(`errorMessage else `, errorMessage);
     }
-  };
-  const handleSelectChange = (e) => {
-    setValue("gender", e.value);
   };
 
   return (
@@ -78,7 +91,7 @@ function AddStudents({ errorMessage, CreateStudent }) {
       </Typography>
       <form
         className={classes.form}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmitForm)}
         noValidate
       >
         {errorMessage && <Alert severity="error">{errorMessage} </Alert>}
@@ -177,7 +190,7 @@ function AddStudents({ errorMessage, CreateStudent }) {
           <Alert severity="error">{errors.address?.message} </Alert>
         )}
 
-        <FormControl fullWidth>
+        <FormControl fullWidth style={{ marginBottom: "1rem" }}>
           <InputLabel id="demo-controlled-open-select-label">gender</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -188,7 +201,7 @@ function AddStudents({ errorMessage, CreateStudent }) {
             fullWidth
             name="gender"
             variant="outlined"
-            onChange={handleSelectChange}
+            // onChange={handleSelectChange}
             {...register("gender")}
           >
             <MenuItem value={"male"}>male</MenuItem>
@@ -197,6 +210,31 @@ function AddStudents({ errorMessage, CreateStudent }) {
 
           {errors.gender && (
             <Alert severity="error">{errors.gender?.message} </Alert>
+          )}
+        </FormControl>
+
+        <FormControl fullWidth style={{ marginBottom: "1rem" }}>
+          <InputLabel id="demo-controlled-open-select-label">level</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            id="level"
+            label="level"
+            required
+            fullWidth
+            name="level"
+            variant="outlined"
+            // onChange={handleSelectChange}
+            {...register("level")}
+          >
+            <MenuItem value={"1"}>1</MenuItem>
+            <MenuItem value={"2"}>2</MenuItem>
+            <MenuItem value={"3"}>3</MenuItem>
+            <MenuItem value={"4"}>4</MenuItem>
+          </Select>
+
+          {errors.level && (
+            <Alert severity="error">{errors.level?.message} </Alert>
           )}
         </FormControl>
 
@@ -265,20 +303,35 @@ function AddStudents({ errorMessage, CreateStudent }) {
           <Alert severity="error">{errors.gradYear?.message} </Alert>
         )}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="department"
-          label="department"
-          name="department"
-          {...register("department")}
-        />
+        <FormControl fullWidth>
+          <InputLabel id="demo-controlled-open-select-label">
+            Department
+          </InputLabel>
 
-        {errors.department && (
-          <Alert severity="error">{errors.department?.message} </Alert>
-        )}
+          {departments && (
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              id="department"
+              label="department"
+              required
+              fullWidth
+              name="department"
+              variant="outlined"
+              {...register("department")}
+            >
+              {departments.map((dep) => (
+                <MenuItem value={dep.name} key={dep._id}>
+                  {dep.name}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+
+          {errors.department && (
+            <Alert severity="error">{errors.department?.message} </Alert>
+          )}
+        </FormControl>
 
         <TextField
           variant="outlined"
@@ -329,6 +382,10 @@ function AddStudents({ errorMessage, CreateStudent }) {
 
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
+  departments: state.department.departments,
+  isLoading: state.student.isLoading,
 });
 
-export default connect(mapStateToProps, { CreateStudent })(AddStudents);
+export default connect(mapStateToProps, { CreateStudent, LoadDepartments })(
+  AddStudents
+);
