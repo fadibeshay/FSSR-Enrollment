@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import colors from 'colors';
 
@@ -6,10 +5,18 @@ import subjects from './data/subjects.js';
 import departs from './data/departs.js';
 import users from './data/users.js';
 import students from './data/students.js';
+import { year, semesters } from './data/years.js';
+
 import Subject from './models/subjectModel.js';
 import Department from './models/departmentModel.js';
 import User from './models/userModel.js';
 import Student from './models/studentModel.js';
+import AcadYear from './models/acadYearModel.js';
+import Semester from './models/semesterModel.js';
+import Course from './models/courseModel.js';
+import Grade from './models/gradeModel.js';
+import Enrolment from './models/enrolModel.js';
+
 import connectDB from './config/db.js';
 
 dotenv.config();
@@ -21,6 +28,8 @@ const importData = async () => {
     await Department.deleteMany();
     await User.deleteMany();
     await Student.deleteMany();
+    await AcadYear.deleteMany();
+    await Semester.deleteMany();
 
     // Insert subjects
     const subjects1 = subjects.filter((s) => s.prerequisite === null);
@@ -55,6 +64,13 @@ const importData = async () => {
     });
     await Student.insertMany(sampleStudents);
 
+    // Insert years and semesters
+    const insertedSems = await Semester.insertMany(semesters);
+    const insertedSemsIds = insertedSems.map((s) => s._id);
+    year.semesters = insertedSemsIds;
+    const insertedYear = new AcadYear(year);
+    await insertedYear.save();
+
     console.log('Data Imported!'.green.inverse);
     process.exit();
   } catch (error) {
@@ -66,8 +82,14 @@ const importData = async () => {
 const destroytData = async () => {
   try {
     await Subject.deleteMany();
+    await Department.deleteMany();
     await User.deleteMany();
     await Student.deleteMany();
+    await AcadYear.deleteMany();
+    await Semester.deleteMany();
+    await Course.deleteMany();
+    await Grade.deleteMany();
+    await Enrolment.deleteMany();
 
     console.log('Data Destroyed!'.red.inverse);
     process.exit();
