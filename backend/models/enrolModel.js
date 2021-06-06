@@ -14,13 +14,14 @@ const enrolSchema = mongoose.Schema(
         unique: true
       }
     ],
+    semester: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Semester',
+      required: true
+    },
     isApproved: {
       type: Boolean,
       default: false
-    },
-    isActive: {
-      type: Boolean,
-      default: true
     }
   },
   { timestamps: true }

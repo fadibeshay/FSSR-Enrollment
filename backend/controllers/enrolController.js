@@ -13,38 +13,7 @@ const enrolValidations = [
   })
 ];
 
-// @desc   Create an enrolment
-// @route  POST /api/enrolments
-// @access  Private
-const createEnrol = asyncHandler(async (req, res) => {
-  if (req.user.role !== 'student') {
-    res.status(403);
-    throw new Error('Enrollments are only allowed for students.');
-  }
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400);
-    throw new Error(
-      errors
-        .array()
-        .map((err) => err.msg)
-        .join(' ')
-    );
-  }
-
-  const { courses } = req.body;
-
-  const userId = req.user._id;
-  const student = await Student.findOne({ user: userId });
-
-  const enrol = new Enrolment({ student: student._id, courses });
-  const createdEnrol = await enrol.save();
-
-  res.json(createdEnrol);
-});
-
-// @desc   Get logged in student active enrolment
+// @desc   Get logged in student active enrolment, or create one if not found
 // @route  GET /api/enrolments/my
 // @access  Private
 const getMyEnrol = asyncHandler(async (req, res) => {
@@ -77,7 +46,6 @@ const getMyEnrol = asyncHandler(async (req, res) => {
       (s) => stdPassedSubs.indexOf(s.subject.toString()) < 0
     );
   }
-
   const stdNewSubsIds = stdNewSubs.map((s) => s.subject);
 
   // Get current semester's courses
@@ -112,7 +80,7 @@ const getMyEnrol = asyncHandler(async (req, res) => {
   // Get the student enrolment
   const enrol = await Enrolment.findOne({
     student: student._id,
-    isActive: true
+    semester: currentSem._id
   }).populate('courses', 'subject');
 
   if (enrol) {
@@ -123,6 +91,13 @@ const getMyEnrol = asyncHandler(async (req, res) => {
         selected: selectedCourses.indexOf(c._id) >= 0
       };
     });
+  } else {
+    const enrol = new Enrolment({
+      student: student._id,
+      courses: [],
+      semester: currentSem._id
+    });
+    await enrol.save();
   }
 
   res.json(suitableCourses);
@@ -150,12 +125,18 @@ const updateMyEnrol = asyncHandler(async (req, res) => {
 
   const { courses } = req.body;
 
+  const currentSem = await Semester.findOne({ isEnrollAvail: true });
+  if (!currentSem) {
+    res.status(403);
+    throw new Error('Enrollment is not available.');
+  }
+
   const userId = req.user._id;
   const student = await Student.findOne({ user: userId });
 
   const enrol = await Enrolment.findOne({
     student: student._id,
-    isActive: true,
+    semester: currentSem._id,
     isApproved: false
   });
 
@@ -168,6 +149,48 @@ const updateMyEnrol = asyncHandler(async (req, res) => {
     res.status(403);
     throw new Error('Enrollment modification is not allowed.');
   }
+});
+
+// @desc   Get current semester enrolments
+// @route  GET /api/enrolments/
+// @access  Private/Admin
+const getEnrols = asyncHandler(async (req, res) => {
+  const keyword = req.query.nid
+    ? {
+        nid: {
+          $regex: req.query.nid
+        }
+      }
+    : req.query.name
+    ? {
+        fullNameEn: {
+          $regex: req.query.name,
+          $options: 'i'
+        }
+      }
+    : {};
+
+  console.log(keyword);
+
+  const currentSem = await Semester.findOne({ isEnrollAvail: true });
+  if (!currentSem) {
+    res.status(403);
+    throw new Error('Enrollment is not available.');
+  }
+
+  let enrols = await Enrolment.find({
+    semester: currentSem._id
+  }).populate({
+    path: 'student',
+    select: 'fullNameEn fullNameAr nid',
+    match: {
+      ...keyword
+    }
+  });
+
+  enrols = enrols.filter((enrol) => enrol.student !== null);
+
+  res.json(enrols);
 });
 
 // @desc   Get an enrolment by id
@@ -205,12 +228,17 @@ const updateEnrol = asyncHandler(async (req, res) => {
     );
   }
 
-  const { courses } = req.body;
+  const { courses, isApproved } = req.body;
 
   const enrol = await Enrolment.findById(req.params.id);
 
   if (enrol) {
-    enrol.courses = courses;
+    if (courses && courses.length > 0) enrol.courses = courses;
+    if (isApproved) {
+      isApproved === true
+        ? (enrol.isApproved = true)
+        : (enrol.isApproved = false);
+    }
     const updatedEnrol = await enrol.save();
 
     res.json(updatedEnrol);
@@ -238,9 +266,9 @@ const deleteEnrol = asyncHandler(async (req, res) => {
 
 export {
   enrolValidations,
-  createEnrol,
   getMyEnrol,
   updateMyEnrol,
+  getEnrols,
   getEnrol,
   updateEnrol,
   deleteEnrol
