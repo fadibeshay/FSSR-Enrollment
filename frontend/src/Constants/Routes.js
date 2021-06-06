@@ -8,4 +8,7 @@ export const ROUTE = {
   DEPARTMENTS: "/departments",
   DEPARTMENTS_ADD: "/departments/add/:id?",
   // SUBJECT
+  SUBJECTS: "/subjects",
+  SUBJECT_BY_ID: "/subject/:id",
+  SUBJECTS_ADD: "/subjects/add/:id?",
 };

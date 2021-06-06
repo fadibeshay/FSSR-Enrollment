@@ -5,6 +5,8 @@ import {
   AddStudents,
   Departments,
   AddDepartments,
+  Subjects,
+  AddSubjects,
 } from "../views";
 
 const routes = [
@@ -39,6 +41,20 @@ const routes = [
     path: ROUTE.DEPARTMENTS_ADD,
     exact: true,
     component: AddDepartments,
+    isAdmin: true,
+  },
+
+  // Subjects
+  {
+    path: ROUTE.SUBJECTS,
+    exact: true,
+    component: Subjects,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.SUBJECTS_ADD,
+    exact: true,
+    component: AddSubjects,
     isAdmin: true,
   },
 ];

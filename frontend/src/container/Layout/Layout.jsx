@@ -26,7 +26,7 @@ import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import { Avatar } from "@material-ui/core";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 const drawerWidth = 240;
 
@@ -82,24 +82,27 @@ function Layout({ window, children, user }) {
   let sideBarLinks = [
     {
       text: "Home",
-      role: "admin",
       route: "/",
       isAdmin: false,
       icon: <HomeIcon />,
     },
     {
       text: "Students",
-      role: "admin",
       route: "/students",
       isAdmin: true,
       icon: <PeopleIcon />,
     },
     {
       text: "Departments",
-      role: "admin",
       route: "/departments",
       isAdmin: true,
       icon: <AccountBalanceIcon />,
+    },
+    {
+      text: "Subjects",
+      route: "/subjects",
+      isAdmin: true,
+      icon: <MenuBookIcon />,
     },
   ];
 

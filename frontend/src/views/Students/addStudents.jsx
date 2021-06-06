@@ -1,22 +1,18 @@
-import React, { useRef, useEffect } from "react";
-
-import Alert from "@material-ui/lab/Alert";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import { Layout } from "../../container";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { connect } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { useHistory } from "react-router";
-import style from "./Students.module.css";
-import placeholderUser from "../../assets/placeholder.png";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
-
-import { CreateStudent } from "../../redux/actions/studentAction";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { connect } from "react-redux";
+import { useHistory } from "react-router";
+import * as yup from "yup";
+import { Layout } from "../../container";
 import { LoadDepartments } from "../../redux/actions/departmentAction";
+import { CreateStudent } from "../../redux/actions/studentAction";
 
 // Validation
 const studentSchema = yup.object().shape({

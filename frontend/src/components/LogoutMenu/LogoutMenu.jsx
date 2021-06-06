@@ -1,11 +1,10 @@
-import React from "react";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import style from "./LogoutMenu.module.css";
+import React from "react";
 import { connect } from "react-redux";
 import { LogoutUser } from "../../redux/actions/userAction";
-import { Redirect } from "react-router";
+import style from "./LogoutMenu.module.css";
 
 function LogoutMenu({ user, LogoutUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);

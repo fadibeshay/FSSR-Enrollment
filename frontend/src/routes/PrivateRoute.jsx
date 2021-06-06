@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Redirect, Route, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
+import { Redirect, Route, useHistory } from "react-router-dom";
 import { LoadUser } from "../redux/actions/userAction";
 function PrivateRoute({
   component: Component,

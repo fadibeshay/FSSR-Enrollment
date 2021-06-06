@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   SUBJECT_LOADING,
   SUBJECTS_LOADED,
@@ -6,30 +6,30 @@ import {
   SUBJECT_CREATED,
   SUBJECT_UPDATED,
   SUBJECT_DELETED,
-  SUBJECT_FAIL
-} from './actionTypes';
-import { getErrors, clearErrors } from './errorsAction';
-import { headerConfig } from './userAction';
+  SUBJECT_FAIL,
+} from "./actionTypes";
+import { getErrors, clearErrors } from "./errorsAction";
+import { headerConfig } from "./userAction";
 
 // Load subjects
 export const LoadSubjects =
-  (code = '', title = '') =>
+  (code = "", title = "") =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: SUBJECT_LOADING
+        type: SUBJECT_LOADING,
       });
 
       const config = headerConfig(getState);
 
       const { data } = await axios.get(
-        `/api/subjects?name=${code}&nid=${title}`,
+        `/api/subjects?code=${code}&title=${title}`,
         config
       );
 
       dispatch({
         type: SUBJECTS_LOADED,
-        payload: data
+        payload: data,
       });
 
       dispatch(clearErrors());
@@ -43,7 +43,7 @@ export const LoadSubjects =
 export const LoadSubject = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING
+      type: SUBJECT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -52,7 +52,7 @@ export const LoadSubject = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_LOADED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -66,16 +66,16 @@ export const LoadSubject = (_id) => async (dispatch, getState) => {
 export const CreateSubject = (subject) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING
+      type: SUBJECT_LOADING,
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post('/api/subjects', subject, config);
+    const { data } = await axios.post("/api/subjects", subject, config);
 
     dispatch({
       type: SUBJECT_CREATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -89,7 +89,7 @@ export const CreateSubject = (subject) => async (dispatch, getState) => {
 export const UpdateSubject = (subject) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING
+      type: SUBJECT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -102,7 +102,7 @@ export const UpdateSubject = (subject) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_UPDATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -116,7 +116,7 @@ export const UpdateSubject = (subject) => async (dispatch, getState) => {
 export const DeleteSubject = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING
+      type: SUBJECT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -125,7 +125,7 @@ export const DeleteSubject = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_DELETED,
-      payload: _id
+      payload: _id,
     });
 
     dispatch(clearErrors());
