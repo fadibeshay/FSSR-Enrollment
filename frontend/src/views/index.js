@@ -2,4 +2,8 @@ export { default as Home } from "./Home";
 export { default as Login } from "./Login";
 // Student
 export { default as Students } from "./Students/Students";
-export { default as addStudents } from "./Students/addStudents";
+export { default as AddStudents } from "./Students/AddStudents";
+
+// Departments
+export { default as Departments } from "./Departments/Departments";
+export { default as AddDepartments } from "./Departments/AddDepartments";

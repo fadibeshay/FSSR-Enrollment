@@ -52,6 +52,7 @@ function AddStudents({
   CreateStudent,
   LoadDepartments,
   isLoading,
+  student,
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -72,16 +73,18 @@ function AddStudents({
 
   const onSubmitForm = async (data) => {
     // console.log("data :>> ", data);
+
     await CreateStudent(data);
 
-    if (!errorMessage) {
-      // history.push("/students");
-      // reset(data);
-      console.log(`errorMessage if`, errorMessage);
-    } else {
-      window.scrollTo(0, 0);
-      console.log(`errorMessage else `, errorMessage);
-    }
+    history.push("/");
+
+    // if (!student) {
+    //   console.log("Not :>> ");
+    //   history.push("/");
+    // } else {
+    //   console.log("Done :>> ");
+    //   window.scrollTo(0, 0);
+    // }
   };
 
   return (
@@ -94,7 +97,11 @@ function AddStudents({
         onSubmit={handleSubmit(onSubmitForm)}
         noValidate
       >
-        {errorMessage && <Alert severity="error">{errorMessage} </Alert>}
+        {errorMessage && (
+          <Alert severity="error" className="errorPlace">
+            {errorMessage}{" "}
+          </Alert>
+        )}
 
         {/* <div className={style.photoContainer}>
           <img src={placeholderUser} />
@@ -384,6 +391,7 @@ const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   departments: state.department.departments,
   isLoading: state.student.isLoading,
+  student: state.student.student,
 });
 
 export default connect(mapStateToProps, { CreateStudent, LoadDepartments })(

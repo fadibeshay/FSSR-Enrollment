@@ -86,31 +86,32 @@ export const CreateDepartment = (department) => async (dispatch, getState) => {
 };
 
 // Update Department
-export const UpdateDepartment = (department) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: DEPARTMENT_LOADING,
-    });
+export const UpdateDepartment =
+  (department, id) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: DEPARTMENT_LOADING,
+      });
 
-    const config = headerConfig(getState);
+      const config = headerConfig(getState);
 
-    const { data } = await axios.put(
-      `/api/departments/${department._id}`,
-      department,
-      config
-    );
+      const { data } = await axios.put(
+        `/api/departments/${id}`,
+        department,
+        config
+      );
 
-    dispatch({
-      type: DEPARTMENT_UPDATED,
-      payload: data,
-    });
+      dispatch({
+        type: DEPARTMENT_UPDATED,
+        payload: data,
+      });
 
-    dispatch(clearErrors());
-  } catch (err) {
-    dispatch(getErrors(err));
-    dispatch({ type: DEPARTMENT_FAIL });
-  }
-};
+      dispatch(clearErrors());
+    } catch (err) {
+      dispatch(getErrors(err));
+      dispatch({ type: DEPARTMENT_FAIL });
+    }
+  };
 
 // Delete Department
 export const DeleteDepartment = (_id) => async (dispatch, getState) => {

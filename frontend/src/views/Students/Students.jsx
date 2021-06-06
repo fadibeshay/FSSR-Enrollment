@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../../container";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -16,14 +16,36 @@ import { LoadStudents, DeleteStudent } from "../../redux/actions/studentAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-const useStyles = makeStyles({
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-});
+  inputContainer: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 300,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+}));
 
 function Students({ students, DeleteStudent, LoadStudents, isLoading }) {
   const classes = useStyles();
+  const [search, setSearch] = useState("");
 
   const confirmDeleteStudent = (id) => {
     window.confirm("Are You Sure?") && DeleteStudent(id);
@@ -33,17 +55,46 @@ function Students({ students, DeleteStudent, LoadStudents, isLoading }) {
     LoadStudents();
   }, []);
 
+  const onStudentsSearch = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+
+    LoadStudents(search);
+  };
+
   return (
     <Layout>
-      <Button
-        style={{ marginBottom: "10px" }}
-        variant="contained"
-        color="primary"
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px",
+        }}
       >
-        <Link type="link" className={style.addBtn} to={"/students/add"}>
-          Add Student
-        </Link>
-      </Button>
+        <Button variant="contained" color="primary">
+          <Link type="link" className={style.addBtn} to={"/students/add"}>
+            Add Student
+          </Link>
+        </Button>
+
+        <Paper component="form" className={classes.inputContainer}>
+          <InputBase
+            className={classes.input}
+            placeholder="Search Students"
+            inputProps={{ "aria-label": "Search Students" }}
+            onChange={onStudentsSearch}
+          />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={onStudentsSearch}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+      </div>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -69,7 +120,14 @@ function Students({ students, DeleteStudent, LoadStudents, isLoading }) {
                   <TableCell align="left">{student.phoneNumber}</TableCell>
                   <TableCell align="left">
                     <Button>
-                      <EditIcon />
+                      <Link
+                        to={`/students/add/${student._id}`}
+                        style={{
+                          color: "rgba(0, 0, 0, 0.87)",
+                        }}
+                      >
+                        <EditIcon />
+                      </Link>
                     </Button>
                   </TableCell>
                   <TableCell align="left">

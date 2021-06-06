@@ -1,5 +1,11 @@
 import { ROUTE } from "../constants/Routes";
-import { Home, Students, addStudents } from "../views";
+import {
+  Home,
+  Students,
+  AddStudents,
+  Departments,
+  AddDepartments,
+} from "../views";
 
 const routes = [
   {
@@ -18,7 +24,21 @@ const routes = [
   {
     path: ROUTE.STUDENTS_ADD,
     exact: true,
-    component: addStudents,
+    component: AddStudents,
+    isAdmin: true,
+  },
+
+  // DEPARTMENT
+  {
+    path: ROUTE.DEPARTMENTS,
+    exact: true,
+    component: Departments,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.DEPARTMENTS_ADD,
+    exact: true,
+    component: AddDepartments,
     isAdmin: true,
   },
 ];
