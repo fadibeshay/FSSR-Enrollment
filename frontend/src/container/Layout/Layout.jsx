@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
+import { Alert } from "@material-ui/lab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import List from "@material-ui/core/List";
@@ -20,6 +21,7 @@ import { LogoutMenu } from "../../components";
 import { NavLink } from "react-router-dom";
 import style from "./Layout.module.css";
 import logo from "../../assets/logo.jpeg";
+import Snackbar from "@material-ui/core/Snackbar";
 
 // Icons
 import IconButton from "@material-ui/core/IconButton";
@@ -68,14 +70,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout({ window, children, user }) {
+function Layout({ window, children, user, errors }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleClick = (newState) => () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (errors) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [errors]);
 
   const drawer = (
     <div>
@@ -175,6 +193,28 @@ function Layout({ window, children, user }) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {children}
+
+        {/* <Snackbar
+          anchorOrigin={("top", "center")}
+          open={open}
+          onClose={handleClose}
+          message="I love snacks"
+          autoHideDuration={6000}
+          // key={vertical + horizontal}
+        /> */}
+
+        {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            {errors}
+          </Alert>
+        </Snackbar> */}
+        {errors && (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error">
+              {errors}
+            </Alert>
+          </Snackbar>
+        )}
       </main>
     </div>
   );
@@ -184,6 +224,7 @@ Layout.propTypes = {
 };
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  errors: state.errors.message,
 });
 
 export default connect(mapStateToProps, {})(Layout);
