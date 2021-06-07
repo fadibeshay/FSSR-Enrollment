@@ -22,7 +22,7 @@ function Profile({ user, isLoading, LoadUser }) {
   }, []);
   return (
     <Layout>
-      {user.nid && (
+      {user.nid ? (
         <div className={style.profileContainer}>
           <Avatar src={user.photo} className={style.profileAvatar}></Avatar>
           <div className={style.profileMain}>
@@ -74,9 +74,7 @@ function Profile({ user, isLoading, LoadUser }) {
             </Grid>
           </Grid>
         </div>
-      )}
-
-      {isLoading && (
+      ) : (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
         </div>
