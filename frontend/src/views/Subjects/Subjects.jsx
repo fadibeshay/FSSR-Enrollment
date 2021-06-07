@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 300,
+    width: 250,
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -101,7 +101,7 @@ function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
           subjects.map((subject) => (
-            <Grid item xs={4} key={subject._id}>
+            <Grid item md={4} key={subject._id}>
               <Card className={classes.root}>
                 <CardContent>
                   <Typography variant="h5" component="p" color="textSecondary">

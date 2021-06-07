@@ -23,11 +23,9 @@ import logo from "../../assets/logo.jpeg";
 
 // Icons
 import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/Home";
-import PeopleIcon from "@material-ui/icons/People";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
 
+//sideBarLinks
+import { sideBarLinks } from "../../constants/SideBar";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -79,33 +77,6 @@ function Layout({ window, children, user }) {
     setMobileOpen(!mobileOpen);
   };
 
-  let sideBarLinks = [
-    {
-      text: "Home",
-      route: "/",
-      isAdmin: false,
-      icon: <HomeIcon />,
-    },
-    {
-      text: "Students",
-      route: "/students",
-      isAdmin: true,
-      icon: <PeopleIcon />,
-    },
-    {
-      text: "Departments",
-      route: "/departments",
-      isAdmin: true,
-      icon: <AccountBalanceIcon />,
-    },
-    {
-      text: "Subjects",
-      route: "/subjects",
-      isAdmin: true,
-      icon: <MenuBookIcon />,
-    },
-  ];
-
   const drawer = (
     <div>
       <div className={`${classes.toolbar} ${style.logoContainer}`}>
@@ -123,7 +94,7 @@ function Layout({ window, children, user }) {
                 activeClassName={style.active}
                 exact
                 style={
-                  user.role == "student" && sideLink.isAdmin
+                  user.role === "student" && sideLink.isAdmin
                     ? { display: "none" }
                     : null
                 }
