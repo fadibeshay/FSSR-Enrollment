@@ -71,6 +71,7 @@ export const LogoutUser = () => (dispatch) => {
   dispatch({
     type: LOGOUT_SUCCESS,
   });
+  dispatch(clearErrors());
 };
 
 // Send With Token

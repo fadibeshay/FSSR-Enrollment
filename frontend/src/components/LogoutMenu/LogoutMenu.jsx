@@ -3,6 +3,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { LogoutUser } from "../../redux/actions/userAction";
 import style from "./LogoutMenu.module.css";
 
@@ -24,24 +25,38 @@ function LogoutMenu({ user, LogoutUser }) {
 
   return (
     <div>
-      <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        className={style.logoutBtn}
-      >
-        {user && <span>{user.name}</span>}
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>My Profile</MenuItem>
-        <MenuItem onClick={logout}>Logout</MenuItem>
-      </Menu>
+      {user && (
+        <>
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            className={style.logoutBtn}
+          >
+            <span>{user.name}</span>
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <Link
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+                to={`/profile`}
+              >
+                My Profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </Menu>
+        </>
+      )}
     </div>
   );
 }
