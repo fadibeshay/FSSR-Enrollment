@@ -171,7 +171,16 @@ const removeSubFromDepart = asyncHandler(async (req, res) => {
 // @route  GET /api/departments
 // @access  Private/Admin
 const getDeparts = asyncHandler(async (req, res) => {
-  const departs = await Department.find({}).select('name');
+  const keyword = req.query.name
+    ? {
+        name: {
+          $regex: req.query.name,
+          $options: 'i'
+        }
+      }
+    : {};
+
+  const departs = await Department.find({ ...keyword }).select('name');
 
   res.json(departs);
 });
