@@ -42,17 +42,20 @@ function LogoutMenu({ user, LogoutUser }) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>
-              <Link
-                style={{
-                  color: "inherit",
-                  textDecoration: "none",
-                }}
-                to={`/profile`}
-              >
-                My Profile
-              </Link>
-            </MenuItem>
+            {user.role !== "admin" && (
+              <MenuItem onClick={handleClose}>
+                <Link
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                  to={`/profile`}
+                >
+                  My Profile
+                </Link>
+              </MenuItem>
+            )}
+
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </>
