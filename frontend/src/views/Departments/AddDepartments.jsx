@@ -37,6 +37,7 @@ function AddDepartments({
   LoadDepartment,
   UpdateDepartment,
   department,
+  success
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -53,19 +54,27 @@ function AddDepartments({
   });
 
   useEffect(() => {
-    if (id) {
-      LoadDepartment(id);
+    if (success) {
+      history.push("/departments");
     }
-  }, []);
 
-  const onSubmitForm = async (data) => {
     if (id) {
-      await UpdateDepartment(data, id);
-      setValue("name", data);
-    } else {
-      await CreateDepartment(data);
+      if (!department._id || department._id !== id) {
+        LoadDepartment(id);
+      } else {
+        // Load the form state here
+      }
     }
-    history.push("/departments");
+    
+  }, [id, success]);
+
+  const onSubmitForm = (data) => {
+    if (id) {
+      UpdateDepartment(data, id);
+      // setValue("name", data);
+    } else {
+      CreateDepartment(data);
+    }
   };
 
   return (
@@ -113,6 +122,7 @@ function AddDepartments({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   department: state.department.department,
+  success: state.department.success
 });
 
 export default connect(mapStateToProps, {

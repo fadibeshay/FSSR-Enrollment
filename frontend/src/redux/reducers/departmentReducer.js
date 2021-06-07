@@ -6,14 +6,15 @@ import {
   DEPARTMENT_UPDATED,
   DEPARTMENT_DELETED,
   DEPARTMENT_FAIL,
-  LOGOUT_SUCCESS,
-} from "../actions/actionTypes";
+  LOGOUT_SUCCESS
+} from '../actions/actionTypes';
 
 const initialState = {
   departments: [],
   department: {},
-  message: "",
+  message: '',
   isLoading: false,
+  success: false
 };
 
 const departmentReducer = (state = initialState, action) => {
@@ -22,29 +23,33 @@ const departmentReducer = (state = initialState, action) => {
       return {
         ...state,
         department: {},
-        message: "",
+        message: '',
         isLoading: true,
+        success: false
       };
     case DEPARTMENTS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         departments: action.payload,
+        success: false
       };
     case DEPARTMENT_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         department: action.payload,
+        success: false
       };
     case DEPARTMENT_CREATED:
       return {
         ...state,
         isLoading: false,
         department: action.payload,
-        message: "Department created successfully",
+        message: 'Department created successfully',
+        success: true
       };
     case DEPARTMENT_UPDATED:
       return {
@@ -54,7 +59,8 @@ const departmentReducer = (state = initialState, action) => {
           department._id === action.payload._id ? action.payload : department
         ),
         department: action.payload,
-        message: "Department updated successfully",
+        message: 'Department updated successfully',
+        success: true
       };
     case DEPARTMENT_DELETED:
       return {
@@ -62,13 +68,15 @@ const departmentReducer = (state = initialState, action) => {
         isLoading: false,
         departments: state.departments.filter((s) => s._id !== action.payload),
         department: {},
-        message: "Department deleted successfully",
+        message: 'Department deleted successfully',
+        success: false
       };
     case DEPARTMENT_FAIL:
       return {
         ...state,
-        message: "",
+        message: '',
         isLoading: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;
