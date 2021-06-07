@@ -60,7 +60,7 @@ const createStudent = asyncHandler(async (req, res) => {
   const studentExists = await Student.findOne({ nid });
   if (studentExists) {
     res.status(400);
-    throw new Error('Student already exists.');
+    throw new Error('A student with this national id already exists..');
   }
 
   const emailExists = await User.findOne({ email });
@@ -203,6 +203,21 @@ const updateStudent = asyncHandler(async (req, res) => {
     level,
     password
   } = req.body;
+
+  const studentExists = await Student.findOne({ nid });
+  if (
+    studentExists &&
+    studentExists._id.toString() !== student._id.toString()
+  ) {
+    res.status(400);
+    throw new Error('A student with this national id already exists.');
+  }
+
+  const emailExists = await User.findOne({ email });
+  if (emailExists && emailExists._id.toString() !== student.user.toString()) {
+    res.status(400);
+    throw new Error('Email already exists.');
+  }
 
   const majorDepart = await Department.findOne({ name: department });
   if (!majorDepart) {

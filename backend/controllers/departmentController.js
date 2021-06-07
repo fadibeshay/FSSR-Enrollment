@@ -85,9 +85,15 @@ const updateDepart = asyncHandler(async (req, res) => {
 
   const { name } = req.body;
 
-  depart.name = name;
+  const departExists = await Department.findOne({ name });
+  if (departExists && departExists._id.toString() !== depart._id.toString()) {
+    res.status(400);
+    throw new Error('Department already exists.');
+  }
 
+  depart.name = name;
   const updatedDepart = await depart.save();
+
   res.json(updatedDepart);
 });
 
