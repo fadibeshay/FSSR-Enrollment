@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
 import {
   CreateYear,
-  UpdateYear,
   LoadYear,
+  UpdateYear,
 } from "../../redux/actions/yearAction";
 
 // Validation
 const yearSchema = yup.object().shape({
-  name: yup.string().required(),
+  year: yup.string().required(),
 });
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -31,35 +30,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddYears({ errorMessage, CreateYear, LoadYear, UpdateYear, year }) {
+function AddYears({
+  errorMessage,
+  CreateYear,
+  LoadYear,
+  UpdateYear,
+  year,
+  success,
+}) {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
-  const [name, setName] = useState(null);
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
     reset,
+    control,
   } = useForm({
     resolver: yupResolver(yearSchema),
   });
 
   useEffect(() => {
-    if (id) {
-      LoadYear(id);
+    if (success) {
+      history.push("/years");
     }
-  }, []);
 
-  const onSubmitForm = async (data) => {
     if (id) {
-      await UpdateYear(data, id);
-      setValue("name", data);
-    } else {
-      await CreateYear(data);
+      if (!year._id || year._id !== id) {
+        LoadYear(id);
+      } else if (year._id) {
+        reset({
+          year: year.year,
+        });
+      }
     }
-    history.push("/years");
+  }, [id, success, year._id, reset]);
+
+  const onSubmitForm = (data) => {
+    if (id) {
+      UpdateYear(data, id);
+    } else {
+      CreateYear(data);
+    }
   };
 
   return (
@@ -78,16 +92,26 @@ function AddYears({ errorMessage, CreateYear, LoadYear, UpdateYear, year }) {
           </Alert>
         )}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="year"
-          label="Year Format 0000-0000"
+        <Controller
           name="year"
-          {...register("year")}
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="year"
+              label="Department year"
+              name="year"
+              {...register("year")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
         />
+
         {errors.year && <Alert severity="error">{errors.year?.message} </Alert>}
 
         <Button
@@ -97,7 +121,7 @@ function AddYears({ errorMessage, CreateYear, LoadYear, UpdateYear, year }) {
           color="primary"
           className={classes.submit}
         >
-          Add New
+          {id ? "Edit " : "Add New"}
         </Button>
       </form>
     </Layout>
@@ -107,6 +131,7 @@ function AddYears({ errorMessage, CreateYear, LoadYear, UpdateYear, year }) {
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   year: state.year.year,
+  success: state.year.success,
 });
 
 export default connect(mapStateToProps, {

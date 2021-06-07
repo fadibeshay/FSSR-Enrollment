@@ -23,7 +23,7 @@ export const LoadYears =
       const config = headerConfig(getState);
 
       const { data } = await axios.get(
-        `/api/years?name=${name}&nid=${nid}`,
+        `/api/acadyears?name=${name}&nid=${nid}`,
         config
       );
 
@@ -48,7 +48,7 @@ export const LoadYear = (_id) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.get(`/api/years/${_id}`, config);
+    const { data } = await axios.get(`/api/acadyears/${_id}`, config);
 
     dispatch({
       type: YEAR_LOADED,
@@ -71,7 +71,7 @@ export const CreateYear = (year) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post("/api/years", year, config);
+    const { data } = await axios.post("/api/acadyears", year, config);
 
     dispatch({
       type: YEAR_CREATED,
@@ -94,7 +94,7 @@ export const UpdateYear = (year, id) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.put(`/api/years/${id}`, year, config);
+    const { data } = await axios.put(`/api/acadyears/${id}`, year, config);
 
     dispatch({
       type: YEAR_UPDATED,
@@ -117,7 +117,7 @@ export const DeleteYear = (_id) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    await axios.delete(`/api/years/${_id}`, config);
+    await axios.delete(`/api/acadyears/${_id}`, config);
 
     dispatch({
       type: YEAR_DELETED,

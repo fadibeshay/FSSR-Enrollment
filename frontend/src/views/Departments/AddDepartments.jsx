@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
 import {
   CreateDepartment,
-  UpdateDepartment,
   LoadDepartment,
+  UpdateDepartment,
 } from "../../redux/actions/departmentAction";
 
 // Validation
@@ -37,18 +36,18 @@ function AddDepartments({
   LoadDepartment,
   UpdateDepartment,
   department,
-  success
+  success,
 }) {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
-  const [name, setName] = useState(null);
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
     reset,
+    control,
   } = useForm({
     resolver: yupResolver(departmentSchema),
   });
@@ -61,17 +60,17 @@ function AddDepartments({
     if (id) {
       if (!department._id || department._id !== id) {
         LoadDepartment(id);
-      } else {
-        // Load the form state here
+      } else if (department._id) {
+        reset({
+          name: department.name,
+        });
       }
     }
-    
-  }, [id, success]);
+  }, [id, success, department._id, reset]);
 
   const onSubmitForm = (data) => {
     if (id) {
       UpdateDepartment(data, id);
-      // setValue("name", data);
     } else {
       CreateDepartment(data);
     }
@@ -82,6 +81,7 @@ function AddDepartments({
       <Typography component="h1" variant="h5">
         {id ? "Edit Department" : "Create New Department"}
       </Typography>
+
       <form
         className={classes.form}
         onSubmit={handleSubmit(onSubmitForm)}
@@ -93,16 +93,26 @@ function AddDepartments({
           </Alert>
         )}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="name"
-          label="Department name"
+        <Controller
           name="name"
-          {...register("name")}
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Department name"
+              name="name"
+              {...register("name")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
         />
+
         {errors.name && <Alert severity="error">{errors.name?.message} </Alert>}
 
         <Button
@@ -112,7 +122,7 @@ function AddDepartments({
           color="primary"
           className={classes.submit}
         >
-          Add New
+          {id ? "Edit " : "Add New"}
         </Button>
       </form>
     </Layout>
@@ -122,7 +132,7 @@ function AddDepartments({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   department: state.department.department,
-  success: state.department.success
+  success: state.department.success,
 });
 
 export default connect(mapStateToProps, {

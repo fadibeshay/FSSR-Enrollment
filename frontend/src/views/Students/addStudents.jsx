@@ -8,7 +8,7 @@ import Alert from "@material-ui/lab/Alert";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
 import { LoadDepartments } from "../../redux/actions/departmentAction";
@@ -52,6 +52,7 @@ function AddStudents({
 }) {
   const classes = useStyles();
   const history = useHistory();
+  const { id } = useParams();
   // const fileInput = useRef(null);
   const {
     register,
@@ -73,20 +74,12 @@ function AddStudents({
     await CreateStudent(data);
 
     history.push("/");
-
-    // if (!student) {
-    //   console.log("Not :>> ");
-    //   history.push("/");
-    // } else {
-    //   console.log("Done :>> ");
-    //   window.scrollTo(0, 0);
-    // }
   };
 
   return (
     <Layout>
       <Typography component="h1" variant="h5">
-        Create New User
+        {id ? "Edit User" : "Create New User"}
       </Typography>
       <form
         className={classes.form}
@@ -98,10 +91,6 @@ function AddStudents({
             {errorMessage}{" "}
           </Alert>
         )}
-
-        {/* <div className={style.photoContainer}>
-          <img src={placeholderUser} />
-        </div> */}
 
         <TextField
           variant="outlined"
@@ -376,7 +365,7 @@ function AddStudents({
           color="primary"
           className={classes.submit}
         >
-          Add New
+          {id ? "Edit " : "Add New"}
         </Button>
       </form>
     </Layout>

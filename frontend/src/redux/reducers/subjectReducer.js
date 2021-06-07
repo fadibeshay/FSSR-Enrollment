@@ -6,14 +6,15 @@ import {
   SUBJECT_CREATED,
   SUBJECT_UPDATED,
   SUBJECT_DELETED,
-  LOGOUT_SUCCESS
-} from '../actions/actionTypes';
+  LOGOUT_SUCCESS,
+} from "../actions/actionTypes";
 
 const initialState = {
   subjects: [],
   subject: {},
-  message: '',
-  isLoading: false
+  message: "",
+  isLoading: false,
+  success: false,
 };
 
 const subjectReducer = (state = initialState, action) => {
@@ -21,29 +22,33 @@ const subjectReducer = (state = initialState, action) => {
     case SUBJECT_LOADING:
       return {
         ...state,
-        message: '',
-        isLoading: true
+        message: "",
+        isLoading: true,
+        success: false,
       };
     case SUBJECTS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
-        subjects: action.payload
+        message: "",
+        subjects: action.payload,
+        success: false,
       };
     case SUBJECT_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
-        subject: action.payload
+        message: "",
+        subject: action.payload,
+        success: false,
       };
     case SUBJECT_CREATED:
       return {
         ...state,
         isLoading: false,
         subject: action.payload,
-        message: 'Subject created successfully'
+        message: "Subject created successfully",
+        success: true,
       };
     case SUBJECT_UPDATED:
       return {
@@ -53,7 +58,8 @@ const subjectReducer = (state = initialState, action) => {
           subject._id === action.payload._id ? action.payload : subject
         ),
         subject: action.payload,
-        message: 'Subject updated successfully'
+        message: "Subject updated successfully",
+        success: true,
       };
     case SUBJECT_DELETED:
       return {
@@ -61,13 +67,15 @@ const subjectReducer = (state = initialState, action) => {
         isLoading: false,
         subjects: state.subjects.filter((s) => s._id !== action.payload),
         subject: {},
-        message: 'Subject deleted successfully'
+        message: "Subject deleted successfully",
+        success: true,
       };
     case SUBJECT_FAIL:
       return {
         ...state,
-        message: '',
-        isLoading: false
+        message: "",
+        isLoading: false,
+        success: false,
       };
     case LOGOUT_SUCCESS:
       return initialState;

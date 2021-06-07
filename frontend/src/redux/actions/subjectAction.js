@@ -86,7 +86,7 @@ export const CreateSubject = (subject) => async (dispatch, getState) => {
 };
 
 // Update subject
-export const UpdateSubject = (subject) => async (dispatch, getState) => {
+export const UpdateSubject = (subject, id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: SUBJECT_LOADING,
@@ -94,11 +94,7 @@ export const UpdateSubject = (subject) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.put(
-      `/api/subjects/${subject._id}`,
-      subject,
-      config
-    );
+    const { data } = await axios.put(`/api/subjects/${id}`, subject, config);
 
     dispatch({
       type: SUBJECT_UPDATED,

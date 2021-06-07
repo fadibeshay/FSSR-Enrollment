@@ -14,6 +14,7 @@ const initialState = {
   year: {},
   message: "",
   isLoading: false,
+  success: false,
 };
 
 const yearReducer = (state = initialState, action) => {
@@ -24,6 +25,7 @@ const yearReducer = (state = initialState, action) => {
         year: {},
         message: "",
         isLoading: true,
+        success: false,
       };
     case YEARS_LOADED:
       return {
@@ -31,6 +33,7 @@ const yearReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         years: action.payload,
+        success: false,
       };
     case YEAR_LOADED:
       return {
@@ -38,6 +41,7 @@ const yearReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         year: action.payload,
+        success: false,
       };
     case YEAR_CREATED:
       return {
@@ -45,6 +49,7 @@ const yearReducer = (state = initialState, action) => {
         isLoading: false,
         year: action.payload,
         message: "Year created successfully",
+        success: true,
       };
     case YEAR_UPDATED:
       return {
@@ -55,6 +60,7 @@ const yearReducer = (state = initialState, action) => {
         ),
         year: action.payload,
         message: "Year updated successfully",
+        success: true,
       };
     case YEAR_DELETED:
       return {
@@ -63,12 +69,14 @@ const yearReducer = (state = initialState, action) => {
         years: state.years.filter((s) => s._id !== action.payload),
         year: {},
         message: "Year deleted successfully",
+        success: true,
       };
     case YEAR_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
+        success: false,
       };
     case LOGOUT_SUCCESS:
       return initialState;

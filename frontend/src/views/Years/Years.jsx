@@ -105,7 +105,7 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
               <Card className={classes.root}>
                 <CardContent>
                   <Typography variant="h6" component="p" color="textSecondary">
-                    {year.name}
+                    {year.year}
                   </Typography>
                 </CardContent>
                 <CardActions>

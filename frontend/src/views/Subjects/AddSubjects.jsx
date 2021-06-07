@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
@@ -23,7 +23,7 @@ const subjectSchema = yup.object().shape({
   title: yup.string().required(),
   code: yup.string().required(),
   credit: yup.string().required(),
-  prerequisite: yup.string(),
+  // prerequisite: yup.string(),
 });
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -41,6 +41,7 @@ function AddSubjects({
   LoadSubject,
   UpdateSubject,
   subject,
+  success,
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -51,24 +52,34 @@ function AddSubjects({
     setValue,
     formState: { errors },
     reset,
+    control,
   } = useForm({
     resolver: yupResolver(subjectSchema),
   });
 
   useEffect(() => {
-    if (id) {
-      LoadSubject(id);
+    if (success) {
+      history.push("/subjects");
     }
-  }, []);
 
-  const onSubmitForm = async (data) => {
     if (id) {
-      await UpdateSubject(data, id);
-      setValue("name", data);
-    } else {
-      await CreateSubject(data);
+      if (!subject._id || subject._id !== id) {
+        LoadSubject(id);
+      } else if (subject._id) {
+        setValue("title", subject.title);
+        setValue("code", subject.code);
+        setValue("prerequisite", subject.prerequisite);
+        setValue("credit", subject.credit);
+      }
     }
-    history.push("/subjects");
+  }, [id, success, subject._id, reset]);
+
+  const onSubmitForm = (data) => {
+    if (id) {
+      UpdateSubject(data, id);
+    } else {
+      CreateSubject(data);
+    }
   };
 
   return (
@@ -87,65 +98,102 @@ function AddSubjects({
           </Alert>
         )}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="title"
-          label="subject title"
+        <Controller
           name="title"
-          {...register("title")}
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="title"
+              label="title"
+              // {...register("title")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
         />
+
         {errors.title && (
           <Alert severity="error">{errors.title?.message} </Alert>
         )}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="code"
-          label="subject code"
+        <Controller
           name="code"
-          {...register("code")}
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="code"
+              label="code"
+              // {...register("code")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
         />
+
         {errors.code && <Alert severity="error">{errors.code?.message} </Alert>}
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="prerequisite"
-          label="subject prerequisite"
+        <Controller
           name="prerequisite"
-          {...register("prerequisite")}
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="prerequisite"
+              label="subject prerequisite"
+              name="prerequisite"
+              // {...register("prerequisite")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
         />
+
         {errors.prerequisite && (
           <Alert severity="error">{errors.prerequisite?.message} </Alert>
         )}
 
         <FormControl fullWidth style={{ marginBottom: "1rem" }}>
           <InputLabel id="demo-controlled-open-select-label">credit</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            id="credit"
-            label="credit"
-            required
-            fullWidth
+
+          <Controller
             name="credit"
-            variant="outlined"
-            // onChange={handleSelectChange}
-            {...register("credit")}
-          >
-            <MenuItem value={"1"}>1</MenuItem>
-            <MenuItem value={"2"}>2</MenuItem>
-            <MenuItem value={"3"}>3</MenuItem>
-            <MenuItem value={"4"}>4</MenuItem>
-          </Select>
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                id="credit"
+                label="credit"
+                required
+                fullWidth
+                name="credit"
+                variant="outlined"
+                // {...register("credit")}
+                value={value}
+                onChange={onChange}
+              >
+                <MenuItem value={"1"}>1</MenuItem>
+                <MenuItem value={"2"}>2</MenuItem>
+                <MenuItem value={"3"}>3</MenuItem>
+                <MenuItem value={"4"}>4</MenuItem>
+              </Select>
+            )}
+          />
 
           {errors.credit && (
             <Alert severity="error">{errors.credit?.message} </Alert>
@@ -159,7 +207,7 @@ function AddSubjects({
           color="primary"
           className={classes.submit}
         >
-          Add New
+          {id ? "Edit " : "Add New"}
         </Button>
       </form>
     </Layout>
@@ -169,6 +217,7 @@ function AddSubjects({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   subject: state.subject.subject,
+  success: state.subject.success,
 });
 
 export default connect(mapStateToProps, {
