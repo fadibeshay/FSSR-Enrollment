@@ -12,25 +12,12 @@ function PrivateRoute({
   const history = useHistory();
 
   useEffect(() => {
-    getAndRedirectUser();
-  }, []);
-
-  const getAndRedirectUser = async () => {
-    if (Object.keys(userState).length == "") {
-      await LoadUser();
-      await ifUserAdmin();
-    }
-  };
-
-  const ifUserAdmin = () => {
-    if (
-      isAdmin &&
-      Object.keys(userState).length !== "" &&
-      userState.role !== "admin"
-    ) {
+    if (!userState || Object.keys(userState).length == "") {
+      LoadUser();
+    } else if (isAdmin && userState.role !== "admin") {
       history.push("/");
     }
-  };
+  }, [userState, isAdmin]);
 
   return (
     <Route

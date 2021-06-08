@@ -86,7 +86,7 @@ export const CreateStudent = (student) => async (dispatch, getState) => {
 };
 
 // Update student
-export const UpdateStudent = (student) => async (dispatch, getState) => {
+export const UpdateStudent = (student, id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: STUDENT_LOADING,
@@ -94,11 +94,7 @@ export const UpdateStudent = (student) => async (dispatch, getState) => {
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.put(
-      `/api/students/${student._id}`,
-      student,
-      config
-    );
+    const { data } = await axios.put(`/api/students/${id}`, student, config);
 
     dispatch({
       type: STUDENT_UPDATED,

@@ -49,7 +49,6 @@ function AddSubjects({
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
     reset,
     control,
@@ -66,13 +65,15 @@ function AddSubjects({
       if (!subject._id || subject._id !== id) {
         LoadSubject(id);
       } else {
-        setValue("title", subject.title);
-        setValue("code", subject.code);
-        setValue("prerequisite", subject.prerequisite && subject.prerequisite.code);
-        setValue("credit", subject.credit);
+        reset({
+          title: subject.title,
+          code: subject.code,
+          prerequisite: subject.prerequisite && subject.prerequisite.code,
+          credit: subject.credit,
+        });
       }
     }
-  }, [id, success, subject, history, LoadSubject, setValue]);
+  }, [id, success, subject, history, LoadSubject, reset]);
 
   const onSubmitForm = (data) => {
     if (id) {
@@ -183,7 +184,7 @@ function AddSubjects({
                 fullWidth
                 name="credit"
                 variant="outlined"
-                // {...register("credit")}
+                {...register("credit")}
                 value={value}
                 onChange={onChange}
               >
