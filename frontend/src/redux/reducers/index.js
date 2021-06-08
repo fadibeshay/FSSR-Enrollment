@@ -5,6 +5,7 @@ import subjectReducer from "./subjectReducer";
 import departmentReducer from "./departmentReducer";
 import yearReducer from "./yearReducer";
 import errorsReducer from "./errorsReducer";
+import messageReducer from "./messageReducer";
 
 export default combineReducers({
   user: userReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   subject: subjectReducer,
   department: departmentReducer,
   year: yearReducer,
+  message: messageReducer,
   errors: errorsReducer,
 });

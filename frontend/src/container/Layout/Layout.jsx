@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Layout({ window, children, user, errors }) {
+function Layout({ window, children, user, errors, message }) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -88,12 +88,12 @@ function Layout({ window, children, user, errors }) {
   };
 
   useEffect(() => {
-    if (errors) {
+    if (errors || message) {
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [errors]);
+  }, [errors, message]);
 
   const drawer = (
     <div>
@@ -194,20 +194,13 @@ function Layout({ window, children, user, errors }) {
         <div className={classes.toolbar} />
         {children}
 
-        {/* <Snackbar
-          anchorOrigin={("top", "center")}
-          open={open}
-          onClose={handleClose}
-          message="I love snacks"
-          autoHideDuration={6000}
-          // key={vertical + horizontal}
-        /> */}
-
-        {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            {errors}
-          </Alert>
-        </Snackbar> */}
+        {message && (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">
+              {message}
+            </Alert>
+          </Snackbar>
+        )}
         {errors && (
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">
@@ -225,6 +218,7 @@ Layout.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.user,
   errors: state.errors.message,
+  message: state.message.message,
 });
 
 export default connect(mapStateToProps, {})(Layout);

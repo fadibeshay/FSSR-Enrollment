@@ -10,6 +10,10 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 
+// Message
+export const GET_MESSAGE = "GET_MESSAGE";
+export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+
 // Student
 export const STUDENT_LOADING = "STUDENT_LOADING";
 export const STUDENTS_LOADED = "STUDENTS_LOADED";

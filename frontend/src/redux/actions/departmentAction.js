@@ -9,6 +9,7 @@ import {
   DEPARTMENT_FAIL,
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
+import { getMessage, clearMessage } from "./messageAction";
 import { headerConfig } from "./userAction";
 
 // Load DEPARTMENTs
@@ -79,7 +80,9 @@ export const CreateDepartment = (department) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Department created successfully"));
   } catch (err) {
+    dispatch(clearMessage());
     dispatch(getErrors(err));
     dispatch({ type: DEPARTMENT_FAIL });
   }
@@ -107,7 +110,10 @@ export const UpdateDepartment =
       });
 
       dispatch(clearErrors());
+      dispatch(getMessage("Department updated successfully"));
     } catch (err) {
+      dispatch(clearMessage());
+
       dispatch(getErrors(err));
       dispatch({ type: DEPARTMENT_FAIL });
     }
@@ -130,8 +136,11 @@ export const DeleteDepartment = (_id) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Department deleted successfully"));
   } catch (err) {
+    dispatch(clearMessage());
     dispatch(getErrors(err));
+
     dispatch({ type: DEPARTMENT_FAIL });
   }
 };
