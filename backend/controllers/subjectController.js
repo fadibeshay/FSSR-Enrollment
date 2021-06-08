@@ -72,6 +72,15 @@ const updateSubject = asyncHandler(async (req, res) => {
 
   const { code, title, credit, prerequisite } = req.body;
 
+  const subjectExists = await Subject.findOne({ code });
+  if (
+    subjectExists &&
+    subjectExists._id.toString() !== subject._id.toString()
+  ) {
+    res.status(400);
+    throw new Error('Subject already exists.');
+  }
+
   let preSubId = null;
   if (prerequisite) {
     const preSub = await Subject.findOne({ code: prerequisite });
@@ -112,7 +121,9 @@ const deleteSubject = asyncHandler(async (req, res) => {
 // @route  GET /api/subjects/:id
 // @access  Private/Admin
 const getSubjectById = asyncHandler(async (req, res) => {
-  const subject = await Subject.findById(req.params.id);
+  const subject = await Subject.findById(req.params.id).populate(
+    'prerequisite'
+  );
 
   if (subject) {
     res.json(subject);

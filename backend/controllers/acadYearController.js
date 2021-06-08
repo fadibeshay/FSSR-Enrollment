@@ -73,6 +73,12 @@ const updateAcadYear = asyncHandler(async (req, res) => {
 
   const { year } = req.body;
 
+  const yearExists = await AcadYear.findOne({ year });
+  if (yearExists && yearExists._id.toString() !== acadYear._id.toString()) {
+    res.status(400);
+    throw new Error('Academic year already exists.');
+  }
+
   acadYear.year = year;
 
   const updatedAcadYear = await acadYear.save();

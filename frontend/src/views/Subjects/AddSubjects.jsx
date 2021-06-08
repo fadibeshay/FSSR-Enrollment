@@ -65,14 +65,14 @@ function AddSubjects({
     if (id) {
       if (!subject._id || subject._id !== id) {
         LoadSubject(id);
-      } else if (subject._id) {
+      } else {
         setValue("title", subject.title);
         setValue("code", subject.code);
-        setValue("prerequisite", subject.prerequisite);
+        setValue("prerequisite", subject.prerequisite && subject.prerequisite.code);
         setValue("credit", subject.credit);
       }
     }
-  }, [id, success, subject._id, reset]);
+  }, [id, success, subject, history, LoadSubject, setValue]);
 
   const onSubmitForm = (data) => {
     if (id) {

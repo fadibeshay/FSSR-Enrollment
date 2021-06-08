@@ -22,7 +22,6 @@ const departmentReducer = (state = initialState, action) => {
     case DEPARTMENT_LOADING:
       return {
         ...state,
-        department: {},
         message: '',
         isLoading: true,
         success: false

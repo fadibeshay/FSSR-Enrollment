@@ -6,14 +6,15 @@ import {
   STUDENT_CREATED,
   STUDENT_UPDATED,
   STUDENT_DELETED,
-  LOGOUT_SUCCESS,
-} from "../actions/actionTypes";
+  LOGOUT_SUCCESS
+} from '../actions/actionTypes';
 
 const initialState = {
   students: [],
   student: {},
-  message: "",
+  message: '',
   isLoading: false,
+  success: false
 };
 
 const studentReducer = (state = initialState, action) => {
@@ -21,30 +22,33 @@ const studentReducer = (state = initialState, action) => {
     case STUDENT_LOADING:
       return {
         ...state,
-        message: "",
+        message: '',
         isLoading: true,
-        student: {},
+        success: false
       };
     case STUDENTS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         students: action.payload,
+        success: false
       };
     case STUDENT_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         student: action.payload,
+        success: false
       };
     case STUDENT_CREATED:
       return {
         ...state,
         isLoading: false,
         student: action.payload,
-        message: "Student created successfully",
+        message: 'Student created successfully',
+        success: true
       };
     case STUDENT_UPDATED:
       return {
@@ -54,7 +58,8 @@ const studentReducer = (state = initialState, action) => {
           student._id === action.payload._id ? action.payload : student
         ),
         student: action.payload,
-        message: "Student updated successfully",
+        message: 'Student updated successfully',
+        success: true
       };
     case STUDENT_DELETED:
       return {
@@ -62,13 +67,15 @@ const studentReducer = (state = initialState, action) => {
         isLoading: false,
         students: state.students.filter((s) => s._id !== action.payload),
         student: {},
-        message: "Student deleted successfully",
+        message: 'Student deleted successfully',
+        success: false
       };
     case STUDENT_FAIL:
       return {
         ...state,
-        message: "",
+        message: '',
         isLoading: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;

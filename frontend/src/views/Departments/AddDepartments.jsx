@@ -60,13 +60,11 @@ function AddDepartments({
     if (id) {
       if (!department._id || department._id !== id) {
         LoadDepartment(id);
-      } else if (department._id) {
-        reset({
-          name: department.name,
-        });
+      } else {
+        setValue("name", department.name);
       }
     }
-  }, [id, success, department._id, reset]);
+  }, [id, success, department, history, LoadDepartment, setValue]);
 
   const onSubmitForm = (data) => {
     if (id) {

@@ -60,13 +60,11 @@ function AddYears({
     if (id) {
       if (!year._id || year._id !== id) {
         LoadYear(id);
-      } else if (year._id) {
-        reset({
-          year: year.year,
-        });
+      } else {
+        setValue('year', year.year);
       }
     }
-  }, [id, success, year._id, reset]);
+  }, [id, success, year, history, LoadYear, setValue]);
 
   const onSubmitForm = (data) => {
     if (id) {
