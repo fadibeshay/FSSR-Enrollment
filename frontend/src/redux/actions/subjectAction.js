@@ -10,6 +10,7 @@ import {
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { headerConfig } from "./userAction";
+import { getMessage, clearMessage } from "./messageAction";
 
 // Load subjects
 export const LoadSubjects =
@@ -79,7 +80,10 @@ export const CreateSubject = (subject) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Subject Created successfully"));
   } catch (err) {
+    dispatch(clearMessage());
+
     dispatch(getErrors(err));
     dispatch({ type: SUBJECT_FAIL });
   }
@@ -102,7 +106,10 @@ export const UpdateSubject = (subject, id) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Subject updated successfully"));
   } catch (err) {
+    dispatch(clearMessage());
+
     dispatch(getErrors(err));
     dispatch({ type: SUBJECT_FAIL });
   }
@@ -125,7 +132,10 @@ export const DeleteSubject = (_id) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Subject Deleted successfully"));
   } catch (err) {
+    dispatch(clearMessage());
+
     dispatch(getErrors(err));
     dispatch({ type: SUBJECT_FAIL });
   }

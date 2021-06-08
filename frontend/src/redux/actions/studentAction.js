@@ -10,6 +10,7 @@ import {
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { headerConfig } from "./userAction";
+import { getMessage, clearMessage } from "./messageAction";
 
 // Load students
 export const LoadStudents =
@@ -79,7 +80,10 @@ export const CreateStudent = (student) => async (dispatch, getState) => {
     });
 
     dispatch(clearErrors());
+    dispatch(getMessage("Student Created successfully"));
   } catch (err) {
+    dispatch(clearMessage());
+
     dispatch(getErrors(err));
     dispatch({ type: STUDENT_FAIL });
   }
@@ -100,9 +104,10 @@ export const UpdateStudent = (student, id) => async (dispatch, getState) => {
       type: STUDENT_UPDATED,
       payload: data,
     });
-
+    dispatch(getMessage("Student Updated successfully"));
     dispatch(clearErrors());
   } catch (err) {
+    dispatch(clearMessage());
     dispatch(getErrors(err));
     dispatch({ type: STUDENT_FAIL });
   }
@@ -123,9 +128,12 @@ export const DeleteStudent = (_id) => async (dispatch, getState) => {
       type: STUDENT_DELETED,
       payload: _id,
     });
+    dispatch(getMessage("Student Deleted successfully"));
 
     dispatch(clearErrors());
   } catch (err) {
+    dispatch(clearMessage());
+
     dispatch(getErrors(err));
     dispatch({ type: STUDENT_FAIL });
   }

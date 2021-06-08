@@ -384,6 +384,9 @@ function AddStudents({
               {...register("birthday")}
               onChange={onChange}
               value={value}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           )}
         />
