@@ -16,3 +16,11 @@ export { default as AddSubjects } from "./Subjects/AddSubjects";
 // Years
 export { default as Years } from "./Years/Years";
 export { default as AddYears } from "./Years/AddYears";
+
+// Departments
+export { default as Semesters } from "./Semesters/Semesters";
+export { default as AddSemesters } from "./Semesters/AddSemesters";
+
+// Departments
+export { default as Courses } from "./Courses/Courses";
+export { default as AddCourses } from "./Courses/AddCourses";

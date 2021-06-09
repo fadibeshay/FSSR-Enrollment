@@ -10,6 +10,10 @@ import {
   Profile,
   Years,
   AddYears,
+  Semesters,
+  AddSemesters,
+  Courses,
+  AddCourses,
 } from "../views";
 
 const routes = [
@@ -78,6 +82,34 @@ const routes = [
     path: ROUTE.YEARS_ADD,
     exact: true,
     component: AddYears,
+    isAdmin: true,
+  },
+
+  // SEMESTERS
+  {
+    path: ROUTE.SEMESTERS,
+    exact: true,
+    component: Semesters,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.SEMESTERS_ADD,
+    exact: true,
+    component: AddSemesters,
+    isAdmin: true,
+  },
+
+  // courses
+  {
+    path: ROUTE.COURSES,
+    exact: true,
+    component: Courses,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.COURSES_ADD,
+    exact: true,
+    component: AddCourses,
     isAdmin: true,
   },
 ];
