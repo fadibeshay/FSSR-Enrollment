@@ -32,6 +32,26 @@ const getSemById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc   Get Current semester
+// @route  GET /api/semesters/current
+// @access  Private/Admin
+const getCurSem = asyncHandler(async (req, res) => {
+  const semester = await Semester.findOne()
+    .sort({ createdAt: -1 })
+    .limit(1)
+    .populate({
+      path: 'courses',
+      select: 'subject instructor',
+      populate: {
+        path: 'subject',
+        select: 'code title'
+      }
+    })
+    .populate('acadYear', 'year');
+
+  res.json(semester);
+});
+
 // @desc   Update a semester
 // @route  PUT /api/semesters/:id
 // @access  Private/Admin
@@ -118,4 +138,4 @@ const addCourseToSem = asyncHandler(async (req, res) => {
   res.json(createdCourse);
 });
 
-export { courseValidations, getSemById, updateSem, addCourseToSem };
+export { courseValidations, getSemById, getCurSem, updateSem, addCourseToSem };

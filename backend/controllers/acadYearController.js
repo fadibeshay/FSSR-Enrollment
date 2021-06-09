@@ -35,6 +35,12 @@ const createAcadYear = asyncHandler(async (req, res) => {
 
   const { year } = req.body;
 
+  const years = year.split('-');
+  if (Number(years[1]) !== Number(years[0]) + 1) {
+    res.status(400);
+    throw new Error('Year format is not correct.');
+  }
+
   const yearExists = await AcadYear.findOne({ year });
   if (yearExists) {
     res.status(400);
@@ -73,6 +79,12 @@ const updateAcadYear = asyncHandler(async (req, res) => {
 
   const { year } = req.body;
 
+  const years = year.split('-');
+  if (Number(years[1]) !== Number(years[0]) + 1) {
+    res.status(400);
+    throw new Error('Year format is not correct.');
+  }
+
   const yearExists = await AcadYear.findOne({ year });
   if (yearExists && yearExists._id.toString() !== acadYear._id.toString()) {
     res.status(400);
@@ -100,6 +112,18 @@ const getAcadYearById = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Academic year not found.');
   }
+});
+
+// @desc   Get current year
+// @route  GET /api/acadYears/current
+// @access  Private/Admin
+const getCurAcadYear = asyncHandler(async (req, res) => {
+  const acadYear = await AcadYear.findOne()
+    .sort({ createdAt: -1 })
+    .limit(1)
+    .populate('semesters', 'name startDate endDate');
+
+  res.json(acadYear);
 });
 
 // @desc    Get all academic years
@@ -168,6 +192,7 @@ export {
   createAcadYear,
   updateAcadYear,
   getAcadYearById,
+  getCurAcadYear,
   getAcadYears,
   addSemToYear,
   semesterValidations

@@ -4,6 +4,7 @@ import {
   createAcadYear,
   updateAcadYear,
   getAcadYearById,
+  getCurAcadYear,
   getAcadYears,
   semesterValidations,
   addSemToYear
@@ -16,6 +17,8 @@ router
   .route('/')
   .get(protect, admin, getAcadYears)
   .post(protect, admin, yearValidations, createAcadYear);
+
+router.route('/current').get(protect, admin, getCurAcadYear);
 
 router
   .route('/:id')
