@@ -56,6 +56,7 @@ function AddStudents({
   student,
   UpdateStudent,
   LoadDepartments,
+  success,
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -68,18 +69,17 @@ function AddStudents({
     formState: { errors },
     reset,
     control,
-    success,
   } = useForm({
     resolver: yupResolver(studentSchema),
   });
 
   useEffect(() => {
-    LoadDepartments();
     if (success) {
-      history.push("/years");
+      history.push("/students");
     } else {
       window.scrollTo(0, 0);
     }
+    LoadDepartments();
 
     if (id) {
       if (!student._id || student._id !== id) {
@@ -218,12 +218,13 @@ function AddStudents({
               margin="normal"
               required
               fullWidth
+              type="number"
               id="nid"
-              label="National ID Number"
+              label="National ID"
               name="nid"
               {...register("nid")}
-              value={value}
               onChange={onChange}
+              value={value}
             />
           )}
         />
@@ -280,6 +281,7 @@ function AddStudents({
 
         <FormControl fullWidth style={{ marginBottom: "1rem" }}>
           <InputLabel id="demo-controlled-open-select-label">gender</InputLabel>
+
           <Controller
             name="gender"
             control={control}
@@ -294,9 +296,9 @@ function AddStudents({
                 fullWidth
                 name="gender"
                 variant="outlined"
-                value={value}
-                onChange={onChange}
                 {...register("gender")}
+                onChange={onChange}
+                value={value}
               >
                 <MenuItem value={"male"}>male</MenuItem>
                 <MenuItem value={"female"}>female</MenuItem>
