@@ -6,11 +6,13 @@ import {
   SEMESTER_DELETED,
   SEMESTER_FAIL,
   LOGOUT_SUCCESS,
+  CURRENT_SEMESTER_LOADED,
 } from "../actions/actionTypes";
 
 const initialState = {
   semesters: [],
   semester: {},
+  currentSemester: {},
   message: "",
   isLoading: false,
   success: false,
@@ -39,6 +41,14 @@ const semesterReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         semester: action.payload,
+        success: false,
+      };
+    case CURRENT_SEMESTER_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        message: "",
+        currentSemester: action.payload,
         success: false,
       };
     case SEMESTER_CREATED:

@@ -6,6 +6,7 @@ import {
   SEMESTER_UPDATED,
   SEMESTER_DELETED,
   SEMESTER_FAIL,
+  CURRENT_SEMESTER_LOADED,
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { getMessage, clearMessage } from "./messageAction";
@@ -135,6 +136,29 @@ export const DeleteSemester = (_id) => async (dispatch, getState) => {
     dispatch(clearMessage());
     dispatch(getErrors(err));
 
+    dispatch({ type: SEMESTER_FAIL });
+  }
+};
+
+// /api/semesters/current// Load SEMESTERs
+export const LoadCurrentSemester = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: SEMESTER_LOADING,
+    });
+
+    const config = headerConfig(getState);
+
+    const { data } = await axios.get(`/api/semesters/current`, config);
+
+    dispatch({
+      type: CURRENT_SEMESTER_LOADED,
+      payload: data,
+    });
+
+    dispatch(clearErrors());
+  } catch (err) {
+    dispatch(getErrors(err));
     dispatch({ type: SEMESTER_FAIL });
   }
 };
