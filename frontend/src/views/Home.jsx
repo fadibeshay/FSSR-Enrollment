@@ -36,7 +36,7 @@ function Home({
   return (
     <Layout>
       <Typography variant="h2" component="h2" color="textPrimary">
-        Welcome in FSSR Enrollment System
+        Welcome To FSSR Enrollment System
       </Typography>
       <Typography
         variant="h5"
