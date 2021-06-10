@@ -3,7 +3,7 @@ import {
   USER_LOADED,
   USER_FAIL,
   LOGIN_SUCCESS,
-  LOGIN_FALL,
+  LOGIN_FAIL,
   LOGOUT_SUCCESS
 } from '../actions/actionTypes';
 
@@ -39,7 +39,7 @@ const userReducer = (state = initialState, action) => {
         isLoading: false
       };
 
-    case LOGIN_FALL:
+    case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
     case USER_FAIL:
       return {
