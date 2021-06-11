@@ -8,7 +8,7 @@ import Grade from '../models/gradeModel.js';
 
 const enrolValidations = [
   check('courses', 'You can submit up to 5 courses only.').isArray({
-    min: 1,
+    min: 0,
     max: 5
   })
 ];

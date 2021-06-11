@@ -19,19 +19,23 @@ const getStats = asyncHandler(async (req, res) => {
   const curSem = await Semester.findOne()
     .sort({ createdAt: -1 })
     .limit(1)
-    .select('-createdAt -updatedAt')
+    .select('name startDate endDate')
     .populate('acadYear', 'year');
 
-  const courseCount = await Course.countDocuments({ semester: curSem._id });
+  const courseCount = await Course.countDocuments({
+    semester: curSem._id.toString()
+  });
 
-  const enroledstdCount = await Enrol.countDocuments({ semester: curSem._id });
+  const enroledStdCount = await Enrol.countDocuments({
+    semester: curSem._id.toString()
+  });
 
   const stats = {
     departCount,
     subjectCount,
     courseCount,
     studentCount,
-    enroledstdCount,
+    enroledStdCount,
     currentSemester: curSem
   };
 

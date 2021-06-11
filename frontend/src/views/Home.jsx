@@ -4,98 +4,84 @@ import { Layout } from "../container";
 import "../App.css";
 import PeopleIcon from "@material-ui/icons/People";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import ScheduleIcon from "@material-ui/icons/Schedule";
+import Moment from "react-moment";
 
 import { connect } from "react-redux";
-import { LoadStudents } from "../redux/actions/studentAction";
-import { LoadSubjects } from "../redux/actions/subjectAction";
-import { LoadDepartments } from "../redux/actions/departmentAction";
-import { LoadCurrentSemester } from "../redux/actions/semesterAction";
-import Moment from "react-moment";
+import { LoadStats } from "../redux/actions/statsAction";
+
 function Home({
-  LoadStudents,
-  LoadDepartments,
-  LoadSubjects,
-  LoadCurrentSemester,
-  students,
-  departments,
-  subjects,
-  currentSemester,
+  LoadStats,
+  statsState
 }) {
   useEffect(() => {
-    LoadStudents();
-    LoadDepartments();
-    LoadSubjects();
-    LoadCurrentSemester();
-  }, []);
+    LoadStats();
+  }, [LoadStats]);
 
-  function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-  }
+
   return (
     <Layout>
-      <Typography variant="h2" component="h2" color="textPrimary">
-        Welcome To FSSR Enrollment System
+      <Typography variant="h2" component="h2" color="textPrimary" style={{
+          marginBottom: "3rem",
+      }}>
+        Welcome to FSSR Enrollment System
       </Typography>
-      <Typography
+      {/* <Typography
         variant="h5"
         component="h5"
         color="textSecondary"
-        style={{
-          marginBottom: "1rem",
-        }}
+        
       >
-        Some Facts about our college
-      </Typography>
-      {!isEmpty(students) &&
-        !isEmpty(subjects) &&
-        !isEmpty(departments) &&
-        !isEmpty(currentSemester) && (
+        Some Numbers about the Current Semester
+      </Typography> */}
+      { !statsState.isLoading && (
           <Grid container spacing={2}>
             <Grid item xs={6} className="numberContainer">
-              <PeopleIcon />
-              <h4>{students.length}</h4>
+              <ScheduleIcon />
+              <h5>
+                Number : {statsState.stats.currentSemester.name}
+                <br />
+                Start Date{" "}
+                <Moment format="YYYY/MM/DD">{statsState.stats.currentSemester.startDate}</Moment>
+                <br />
+                End Date :{" "}
+                <Moment format="YYYY/MM/DD">{statsState.stats.currentSemester.endDate}</Moment>
+              </h5>
               <Typography variant="h6" component="h5" color="textSecondary">
-                Number Of Students
+                Current Semester
               </Typography>
             </Grid>
+
             <Grid item xs={6} className="numberContainer">
               <AccountBalanceIcon />
-              <h4>{departments.length}</h4>
+              <h4>{statsState.stats.departCount}</h4>
               <Typography variant="h6" component="h5" color="textSecondary">
                 Number Of Departments
               </Typography>
             </Grid>
 
             <Grid item xs={6} className="numberContainer">
-              <MenuBookIcon />
-              <h4>{subjects.length}</h4>
+              <LibraryBooksIcon />
+              <h4>{statsState.stats.courseCount}</h4>
 
               <Typography variant="h6" component="h5" color="textSecondary">
-                Number Of Subjects
+                Number Of Courses
               </Typography>
             </Grid>
 
             <Grid item xs={6} className="numberContainer">
-              <ScheduleIcon />
-              <h5>
-                Name : {currentSemester.name}
-                <br />
-                Start Date{" "}
-                <Moment format="YYYY/MM/DD">{currentSemester.startDate}</Moment>
-                <br />
-                End Date :{" "}
-                <Moment format="YYYY/MM/DD">{currentSemester.endDate}</Moment>
-              </h5>
+              <PeopleIcon />
+              <h4>{statsState.stats.enroledStdCount}</h4>
               <Typography variant="h6" component="h5" color="textSecondary">
-                Current Semester
+                Number Of Students
               </Typography>
             </Grid>
+            
           </Grid>
         )}
 
-      {isEmpty(students) && isEmpty(subjects) && isEmpty(departments) && (
+      {statsState.isLoading && (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
         </div>
@@ -105,15 +91,9 @@ function Home({
 }
 
 const mapStateToProps = (state) => ({
-  students: state.student.students,
-  subjects: state.subject.subjects,
-  departments: state.department.departments,
-  currentSemester: state.semester.currentSemester,
+  statsState: state.stats
 });
 
 export default connect(mapStateToProps, {
-  LoadStudents,
-  LoadDepartments,
-  LoadSubjects,
-  LoadCurrentSemester,
+  LoadStats
 })(Home);
