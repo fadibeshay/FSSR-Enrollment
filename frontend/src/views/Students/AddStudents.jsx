@@ -85,26 +85,23 @@ function AddStudents({
       if (!student._id || student._id !== id) {
         LoadStudent(id);
       } else {
-        const dateFormat = new Date(student.birthday).toLocaleDateString(
-          "en-US"
-        );
-        reset({
-          email: student.email,
-          fullNameEn: student.fullNameEn,
-          fullNameAr: student.fullNameAr,
-          nid: student.nid,
-          birthday: dateFormat,
-          gender: student.gender,
-          militaryStatus: student.militaryStatus,
-          // photo: student.photo,
-          degree: student.degree,
-          gradYear: student.gradYear,
-          address: student.address,
-          phoneNumber: student.phoneNumber,
-          department: student.major.name,
-          level: student.level,
-          password: student.password,
-        });
+        const dateFormat = new Date(student.birthday).toISOString().split('T')[0];
+
+        setValue('email', student.email);
+        setValue('fullNameEn', student.fullNameEn);
+        setValue('fullNameAr', student.fullNameAr);
+        setValue('nid', student.nid);
+        setValue('birthday', dateFormat);
+        setValue('gender', student.gender);
+        setValue('militaryStatus', student.militaryStatus);
+        // setValue('photo', student.photo);
+        setValue('degree', student.degree);
+        setValue('gradYear', student.gradYear);
+        setValue('address', student.address);
+        setValue('phoneNumber', student.phoneNumber);
+        setValue('department', student.major.name);
+        setValue('level', student.level);
+        setValue('password', '');
       }
     }
   }, [id, student, reset, success]);

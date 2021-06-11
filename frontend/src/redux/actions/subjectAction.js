@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   SUBJECT_LOADING,
   SUBJECTS_LOADED,
@@ -6,31 +6,31 @@ import {
   SUBJECT_CREATED,
   SUBJECT_UPDATED,
   SUBJECT_DELETED,
-  SUBJECT_FAIL,
-} from "./actionTypes";
-import { getErrors, clearErrors } from "./errorsAction";
-import { headerConfig } from "./userAction";
-import { getMessage, clearMessage } from "./messageAction";
+  SUBJECT_FAIL
+} from './actionTypes';
+import { getErrors, clearErrors } from './errorsAction';
+import { headerConfig } from './userAction';
+import { getMessage, clearMessage } from './messageAction';
 
 // Load subjects
 export const LoadSubjects =
-  (code = "", title = "") =>
+  (keyword = '') =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: SUBJECT_LOADING,
+        type: SUBJECT_LOADING
       });
 
       const config = headerConfig(getState);
 
       const { data } = await axios.get(
-        `/api/subjects?code=${code}&title=${title}`,
+        `/api/subjects?keyword=${keyword}`,
         config
       );
 
       dispatch({
         type: SUBJECTS_LOADED,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -44,7 +44,7 @@ export const LoadSubjects =
 export const LoadSubject = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING,
+      type: SUBJECT_LOADING
     });
 
     const config = headerConfig(getState);
@@ -53,7 +53,7 @@ export const LoadSubject = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_LOADED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -67,20 +67,20 @@ export const LoadSubject = (_id) => async (dispatch, getState) => {
 export const CreateSubject = (subject) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING,
+      type: SUBJECT_LOADING
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post("/api/subjects", subject, config);
+    const { data } = await axios.post('/api/subjects', subject, config);
 
     dispatch({
       type: SUBJECT_CREATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Subject Created successfully"));
+    dispatch(getMessage('Subject Created successfully'));
   } catch (err) {
     dispatch(clearMessage());
 
@@ -93,7 +93,7 @@ export const CreateSubject = (subject) => async (dispatch, getState) => {
 export const UpdateSubject = (subject, id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING,
+      type: SUBJECT_LOADING
     });
 
     const config = headerConfig(getState);
@@ -102,11 +102,11 @@ export const UpdateSubject = (subject, id) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_UPDATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Subject updated successfully"));
+    dispatch(getMessage('Subject updated successfully'));
   } catch (err) {
     dispatch(clearMessage());
 
@@ -119,7 +119,7 @@ export const UpdateSubject = (subject, id) => async (dispatch, getState) => {
 export const DeleteSubject = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SUBJECT_LOADING,
+      type: SUBJECT_LOADING
     });
 
     const config = headerConfig(getState);
@@ -128,11 +128,11 @@ export const DeleteSubject = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SUBJECT_DELETED,
-      payload: _id,
+      payload: _id
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Subject Deleted successfully"));
+    dispatch(getMessage('Subject Deleted successfully'));
   } catch (err) {
     dispatch(clearMessage());
 

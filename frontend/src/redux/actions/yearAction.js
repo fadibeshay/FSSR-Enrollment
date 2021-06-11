@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   YEAR_LOADING,
   YEARS_LOADED,
@@ -6,30 +6,27 @@ import {
   YEAR_CREATED,
   YEAR_UPDATED,
   YEAR_DELETED,
-  YEAR_FAIL,
-} from "./actionTypes";
-import { getErrors, clearErrors } from "./errorsAction";
-import { headerConfig } from "./userAction";
+  YEAR_FAIL
+} from './actionTypes';
+import { getErrors, clearErrors } from './errorsAction';
+import { headerConfig } from './userAction';
 
 // Load YEARs
 export const LoadYears =
-  (name = "", nid = "") =>
+  (year = '') =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: YEAR_LOADING,
+        type: YEAR_LOADING
       });
 
       const config = headerConfig(getState);
 
-      const { data } = await axios.get(
-        `/api/acadyears?name=${name}&nid=${nid}`,
-        config
-      );
+      const { data } = await axios.get(`/api/acadyears?year=${year}`, config);
 
       dispatch({
         type: YEARS_LOADED,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -43,7 +40,7 @@ export const LoadYears =
 export const LoadYear = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: YEAR_LOADING,
+      type: YEAR_LOADING
     });
 
     const config = headerConfig(getState);
@@ -52,7 +49,7 @@ export const LoadYear = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: YEAR_LOADED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -66,16 +63,16 @@ export const LoadYear = (_id) => async (dispatch, getState) => {
 export const CreateYear = (year) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: YEAR_LOADING,
+      type: YEAR_LOADING
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post("/api/acadyears", year, config);
+    const { data } = await axios.post('/api/acadyears', year, config);
 
     dispatch({
       type: YEAR_CREATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -89,7 +86,7 @@ export const CreateYear = (year) => async (dispatch, getState) => {
 export const UpdateYear = (year, id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: YEAR_LOADING,
+      type: YEAR_LOADING
     });
 
     const config = headerConfig(getState);
@@ -98,7 +95,7 @@ export const UpdateYear = (year, id) => async (dispatch, getState) => {
 
     dispatch({
       type: YEAR_UPDATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -112,7 +109,7 @@ export const UpdateYear = (year, id) => async (dispatch, getState) => {
 export const DeleteYear = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: YEAR_LOADING,
+      type: YEAR_LOADING
     });
 
     const config = headerConfig(getState);
@@ -121,7 +118,7 @@ export const DeleteYear = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: YEAR_DELETED,
-      payload: _id,
+      payload: _id
     });
 
     dispatch(clearErrors());
