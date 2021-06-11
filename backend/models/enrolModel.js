@@ -10,8 +10,7 @@ const enrolSchema = mongoose.Schema(
     courses: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'Course',
-        unique: true
+        ref: 'Course'
       }
     ],
     semester: {

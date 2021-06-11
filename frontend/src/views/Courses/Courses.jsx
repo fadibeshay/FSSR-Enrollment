@@ -76,7 +76,7 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
       >
         <Button variant="contained" color="primary">
           <Link type="link" className={style.addBtn} to={"/courses/add"}>
-            Add Courses
+            Add Course
           </Link>
         </Button>
 
@@ -101,18 +101,18 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
           courses &&
-          courses.map((courses) => (
-            <Grid item md={4} key={courses._id}>
+          courses.map((course) => (
+            <Grid item md={4} key={course._id}>
               <Card className={classes.root}>
                 <CardContent>
                   <Typography variant="h6" component="p" color="textSecondary">
-                    {courses.name}
+                    {course.name}
                   </Typography>
                 </CardContent>
                 <CardActions>
                   <Button>
                     <Link
-                      to={`/courses/add/${courses._id}`}
+                      to={`/courses/add/${course._id}`}
                       style={{
                         color: "rgba(0, 0, 0, 0.87)",
                       }}
@@ -121,7 +121,7 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
                     </Link>
                   </Button>
 
-                  <Button onClick={() => confirmDeleteCourses(courses._id)}>
+                  <Button onClick={() => confirmDeleteCourses(course._id)}>
                     <DeleteIcon />
                   </Button>
                 </CardActions>
@@ -140,7 +140,7 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
 }
 
 const mapStateToProps = (state) => ({
-  courses: state.courses.course,
+  courses: state.courses.courses,
   isLoading: state.courses.isLoading,
 });
 

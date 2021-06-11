@@ -137,19 +137,22 @@ const getSubjectById = asyncHandler(async (req, res) => {
 // @route  GET /api/subjects
 // @access  Private/Admin
 const getSubjects = asyncHandler(async (req, res) => {
-  const keyword = req.query.code
+  const keyword = req.query.keyword
     ? {
-        code: {
-          $regex: req.query.code,
-          $options: 'i'
-        }
-      }
-    : req.query.title
-    ? {
-        title: {
-          $regex: req.query.title,
-          $options: 'i'
-        }
+        $or: [
+          {
+            code: {
+              $regex: req.query.keyword,
+              $options: 'i'
+            }
+          },
+          {
+            title: {
+              $regex: req.query.keyword,
+              $options: 'i'
+            }
+          }
+        ]
       }
     : {};
 

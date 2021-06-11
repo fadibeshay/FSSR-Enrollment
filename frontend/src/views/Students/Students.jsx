@@ -94,15 +94,16 @@ function Students({ students, DeleteStudent, LoadStudents, isLoading }) {
             <SearchIcon />
           </IconButton>
         </Paper>
+        
       </div>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">fullNameEn</TableCell>
+              <TableCell align="left">Name</TableCell>
               <TableCell align="left">National ID</TableCell>
-              <TableCell align="left">department</TableCell>
-              <TableCell align="left">graduation Year</TableCell>
+              <TableCell align="left">Department</TableCell>
+              <TableCell align="left">Level</TableCell>
               <TableCell align="left">Phone Number</TableCell>
               <TableCell align="center" colSpan={2}>
                 Actions
@@ -116,7 +117,7 @@ function Students({ students, DeleteStudent, LoadStudents, isLoading }) {
                   <TableCell align="left">{student.fullNameEn}</TableCell>
                   <TableCell align="left">{student.nid}</TableCell>
                   <TableCell align="left">{student.major.name}</TableCell>
-                  <TableCell align="left">{student.gradYear}</TableCell>
+                  <TableCell align="left">{student.level}</TableCell>
                   <TableCell align="left">{student.phoneNumber}</TableCell>
                   <TableCell align="left">
                     <Button>

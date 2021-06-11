@@ -14,6 +14,7 @@ import courseRoutes from './routes/courseRoutes.js';
 import gradeRoutes from './routes/gradeRoutes.js';
 import enrolRoutes from './routes/enrolRoutes.js';
 import uploadRoutes from './routes/uploadRoute.js';
+import statsRoutes from './routes/statsRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -35,6 +36,7 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/enrols', enrolRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/stats', statsRoutes);
 
 const __dirname = path.resolve();
 

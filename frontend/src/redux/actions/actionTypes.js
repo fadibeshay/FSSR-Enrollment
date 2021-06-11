@@ -14,6 +14,11 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_MESSAGE = 'GET_MESSAGE';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 
+// Stats
+export const STATS_LOADING = 'STATS_LOADING';
+export const STATS_LOADED = 'STATS_LOADED';
+export const STATS_FAIL = 'STATS_FAIL';
+
 // Student
 export const STUDENT_LOADING = 'STUDENT_LOADING';
 export const STUDENTS_LOADED = 'STUDENTS_LOADED';

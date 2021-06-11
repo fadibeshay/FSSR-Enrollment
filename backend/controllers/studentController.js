@@ -4,7 +4,7 @@ import User from '../models/userModel.js';
 import Student from '../models/studentModel.js';
 import Department from '../models/departmentModel.js';
 
-export const studentValidations = [
+export const updateStdValidations = [
   check('fullNameEn', 'English name is required.').notEmpty(),
   check('fullNameAr', 'Arabic name is required.').notEmpty(),
   check('nid', 'National id is required.').notEmpty(),
@@ -18,11 +18,14 @@ export const studentValidations = [
   check('phoneNumber', 'Phone number is required.').notEmpty(),
   check('department', 'Department is required.').notEmpty(),
   check('level', 'Level should be between 1 and 4.').isInt({ min: 1, max: 4 }),
-  check('email', 'Email address is not valid.').isEmail(),
+  check('email', 'Email address is not valid.').isEmail()
+];
+
+export const createStdValidations = updateStdValidations.concat([
   check('password', 'Password should be 6 or more characters.').isLength({
     min: 6
   })
-];
+]);
 
 // @desc   Create student
 // @route  POST /api/students
@@ -122,18 +125,21 @@ const createStudent = asyncHandler(async (req, res) => {
 // @route  GET /api/students
 // @access  Private/Admin
 const getStudents = asyncHandler(async (req, res) => {
-  const keyword = req.query.nid
+  const keyword = req.query.keyword
     ? {
-        nid: {
-          $regex: req.query.nid
-        }
-      }
-    : req.query.name
-    ? {
-        fullNameEn: {
-          $regex: req.query.name,
-          $options: 'i'
-        }
+        $or: [
+          {
+            nid: {
+              $regex: req.query.keyword
+            }
+          },
+          {
+            fullNameEn: {
+              $regex: req.query.keyword,
+              $options: 'i'
+            }
+          }
+        ]
       }
     : {};
 
@@ -236,7 +242,7 @@ const updateStudent = asyncHandler(async (req, res) => {
 
   const user = await User.findById(student.user);
   user.email = email;
-  user.password = password;
+  if (password) user.password = password;
   await user.save();
 
   student.fullNameEn = fullNameEn;
