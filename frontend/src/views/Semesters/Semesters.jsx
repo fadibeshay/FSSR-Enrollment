@@ -10,16 +10,15 @@ import { Button, Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import style from "./Semesters.module.css";
 import { connect } from "react-redux";
-import {
-  LoadSemesters,
-  DeleteSemester,
-} from "../../redux/actions/semesterAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+
+import { DeleteSemester } from "../../redux/actions/semesterAction";
+import { LoadYear } from "../../redux/actions/yearAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Semesters({ semesters, DeleteSemester, LoadSemesters, isLoading }) {
+function Semesters({ year, isLoading, LoadYear, DeleteSemester }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
 
@@ -57,14 +56,14 @@ function Semesters({ semesters, DeleteSemester, LoadSemesters, isLoading }) {
   };
 
   useEffect(() => {
-    LoadSemesters();
-  }, []);
+    LoadYear('current');
+  }, [LoadYear]);
 
   const onSemestersSearch = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
 
-    LoadSemesters(search);
+    // LoadSemesters(search);
   };
 
   return (
@@ -103,7 +102,7 @@ function Semesters({ semesters, DeleteSemester, LoadSemesters, isLoading }) {
 
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
-          semesters.map((semester) => (
+          year.semesters.map((semester) => (
             <Grid item md={4} key={semester._id}>
               <Card className={classes.root}>
                 <CardContent>
@@ -142,10 +141,10 @@ function Semesters({ semesters, DeleteSemester, LoadSemesters, isLoading }) {
 }
 
 const mapStateToProps = (state) => ({
-  semesters: state.semester.semesters,
-  isLoading: state.semester.isLoading,
+  year: state.year.year,
+  isLoading: state.year.isLoading
 });
 
-export default connect(mapStateToProps, { LoadSemesters, DeleteSemester })(
+export default connect(mapStateToProps, { LoadYear, DeleteSemester })(
   Semesters
 );

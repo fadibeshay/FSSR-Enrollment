@@ -10,13 +10,15 @@ import { Button, Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import style from "./Courses.module.css";
 import { connect } from "react-redux";
-import { LoadCourses, DeleteCourses } from "../../redux/actions/coursesAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+
+import { LoadSemester } from "../../redux/actions/semesterAction";
+import { DeleteCourses } from "../../redux/actions/coursesAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
+function Courses({ semester, isLoading, LoadSemester, DeleteCourses }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
 
@@ -54,14 +56,14 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
   };
 
   useEffect(() => {
-    LoadCourses();
-  }, []);
+    LoadSemester('current');
+  }, [LoadSemester]);
 
   const onCoursesSearch = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
 
-    LoadCourses(search);
+    // LoadCourses(search);
   };
 
   return (
@@ -100,13 +102,13 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
 
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
-          courses &&
-          courses.map((course) => (
+          semester.courses &&
+          semester.courses.map((course) => (
             <Grid item md={4} key={course._id}>
               <Card className={classes.root}>
                 <CardContent>
                   <Typography variant="h6" component="p" color="textSecondary">
-                    {course.name}
+                    {course.subject.code}
                   </Typography>
                 </CardContent>
                 <CardActions>
@@ -140,10 +142,10 @@ function Courses({ courses, DeleteCourses, LoadCourses, isLoading }) {
 }
 
 const mapStateToProps = (state) => ({
-  courses: state.courses.courses,
-  isLoading: state.courses.isLoading,
+  semester: state.semester.semester,
+  isLoading: state.semester.isLoading,
 });
 
-export default connect(mapStateToProps, { LoadCourses, DeleteCourses })(
+export default connect(mapStateToProps, { LoadSemester, DeleteCourses })(
   Courses
 );

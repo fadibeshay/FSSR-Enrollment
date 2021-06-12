@@ -1,21 +1,21 @@
 import {
   SEMESTER_LOADING,
+  SEMESTERS_LOADED,
   SEMESTER_LOADED,
   SEMESTER_CREATED,
   SEMESTER_UPDATED,
   SEMESTER_DELETED,
   SEMESTER_FAIL,
-  LOGOUT_SUCCESS,
-  CURRENT_SEMESTER_LOADED,
-} from "../actions/actionTypes";
+  LOGOUT_SUCCESS
+} from '../actions/actionTypes';
 
 const initialState = {
   semesters: [],
-  semester: {},
+  semester: { courses: [] },
   currentSemester: {},
-  message: "",
+  message: '',
   isLoading: false,
-  success: false,
+  success: false
 };
 
 const semesterReducer = (state = initialState, action) => {
@@ -23,40 +23,32 @@ const semesterReducer = (state = initialState, action) => {
     case SEMESTER_LOADING:
       return {
         ...state,
-        message: "",
+        message: '',
         isLoading: true,
-        success: false,
+        success: false
       };
-    case SEMESTER_LOADED:
+    case SEMESTERS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         semesters: action.payload,
-        success: false,
+        success: false
       };
     case SEMESTER_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: "",
+        message: '',
         semester: action.payload,
-        success: false,
-      };
-    case CURRENT_SEMESTER_LOADED:
-      return {
-        ...state,
-        isLoading: false,
-        message: "",
-        currentSemester: action.payload,
-        success: false,
+        success: false
       };
     case SEMESTER_CREATED:
       return {
         ...state,
         isLoading: false,
         semester: action.payload,
-        success: true,
+        success: true
       };
     case SEMESTER_UPDATED:
       return {
@@ -66,7 +58,7 @@ const semesterReducer = (state = initialState, action) => {
           semester._id === action.payload._id ? action.payload : semester
         ),
         semester: action.payload,
-        success: true,
+        success: true
       };
     case SEMESTER_DELETED:
       return {
@@ -74,14 +66,14 @@ const semesterReducer = (state = initialState, action) => {
         isLoading: false,
         semesters: state.semesters.filter((s) => s._id !== action.payload),
         semester: {},
-        success: false,
+        success: false
       };
     case SEMESTER_FAIL:
       return {
         ...state,
-        message: "",
+        message: '',
         isLoading: false,
-        success: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;

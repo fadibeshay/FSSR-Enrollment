@@ -1,24 +1,24 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   SEMESTER_LOADING,
+  SEMESTERS_LOADED,
   SEMESTER_LOADED,
   SEMESTER_CREATED,
   SEMESTER_UPDATED,
   SEMESTER_DELETED,
-  SEMESTER_FAIL,
-  CURRENT_SEMESTER_LOADED,
-} from "./actionTypes";
-import { getErrors, clearErrors } from "./errorsAction";
-import { getMessage, clearMessage } from "./messageAction";
-import { headerConfig } from "./userAction";
+  SEMESTER_FAIL
+} from './actionTypes';
+import { getErrors, clearErrors } from './errorsAction';
+import { getMessage, clearMessage } from './messageAction';
+import { headerConfig } from './userAction';
 
 // Load SEMESTERs
 export const LoadSemesters =
-  (name = "", nid = "") =>
+  (name = '', nid = '') =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: SEMESTER_LOADING,
+        type: SEMESTER_LOADING
       });
 
       const config = headerConfig(getState);
@@ -29,8 +29,8 @@ export const LoadSemesters =
       );
 
       dispatch({
-        type: SEMESTER_LOADED,
-        payload: data,
+        type: SEMESTERS_LOADED,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -44,7 +44,7 @@ export const LoadSemesters =
 export const LoadSemester = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SEMESTER_LOADING,
+      type: SEMESTER_LOADING
     });
 
     const config = headerConfig(getState);
@@ -53,7 +53,7 @@ export const LoadSemester = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SEMESTER_LOADED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -67,20 +67,20 @@ export const LoadSemester = (_id) => async (dispatch, getState) => {
 export const CreateSemester = (semester) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SEMESTER_LOADING,
+      type: SEMESTER_LOADING
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post("/api/semesters", semester, config);
+    const { data } = await axios.post('/api/semesters', semester, config);
 
     dispatch({
       type: SEMESTER_CREATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Semester created successfully"));
+    dispatch(getMessage('Semester created successfully'));
   } catch (err) {
     dispatch(clearMessage());
     dispatch(getErrors(err));
@@ -92,7 +92,7 @@ export const CreateSemester = (semester) => async (dispatch, getState) => {
 export const UpdateSemester = (semester, id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SEMESTER_LOADING,
+      type: SEMESTER_LOADING
     });
 
     const config = headerConfig(getState);
@@ -101,11 +101,11 @@ export const UpdateSemester = (semester, id) => async (dispatch, getState) => {
 
     dispatch({
       type: SEMESTER_UPDATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Semester updated successfully"));
+    dispatch(getMessage('Semester updated successfully'));
   } catch (err) {
     dispatch(clearMessage());
 
@@ -118,7 +118,7 @@ export const UpdateSemester = (semester, id) => async (dispatch, getState) => {
 export const DeleteSemester = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: SEMESTER_LOADING,
+      type: SEMESTER_LOADING
     });
 
     const config = headerConfig(getState);
@@ -127,38 +127,15 @@ export const DeleteSemester = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: SEMESTER_DELETED,
-      payload: _id,
+      payload: _id
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage("Semester deleted successfully"));
+    dispatch(getMessage('Semester deleted successfully'));
   } catch (err) {
     dispatch(clearMessage());
     dispatch(getErrors(err));
 
-    dispatch({ type: SEMESTER_FAIL });
-  }
-};
-
-// /api/semesters/current// Load SEMESTERs
-export const LoadCurrentSemester = () => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: SEMESTER_LOADING,
-    });
-
-    const config = headerConfig(getState);
-
-    const { data } = await axios.get(`/api/semesters/current`, config);
-
-    dispatch({
-      type: CURRENT_SEMESTER_LOADED,
-      payload: data,
-    });
-
-    dispatch(clearErrors());
-  } catch (err) {
-    dispatch(getErrors(err));
     dispatch({ type: SEMESTER_FAIL });
   }
 };

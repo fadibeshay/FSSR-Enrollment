@@ -11,7 +11,7 @@ import {
 
 const initialState = {
   years: [],
-  year: {},
+  year: { semesters: [] },
   message: '',
   isLoading: false,
   success: false
