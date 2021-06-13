@@ -6,15 +6,18 @@ import {
   YEAR_UPDATED,
   YEAR_DELETED,
   YEAR_FAIL,
-  LOGOUT_SUCCESS
-} from '../actions/actionTypes';
+  YEAR_SEMESTERS_LOADING,
+  YEAR_SEMESTERS_LOADED,
+  LOGOUT_SUCCESS,
+} from "../actions/actionTypes";
 
 const initialState = {
   years: [],
   year: { semesters: [] },
-  message: '',
+  message: "",
   isLoading: false,
-  success: false
+  success: false,
+  yearsSemesters: [],
 };
 
 const yearReducer = (state = initialState, action) => {
@@ -22,33 +25,34 @@ const yearReducer = (state = initialState, action) => {
     case YEAR_LOADING:
       return {
         ...state,
-        message: '',
+        message: "",
         isLoading: true,
-        success: false
+        success: false,
       };
     case YEARS_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
+        message: "",
         years: action.payload,
-        success: false
+        success: false,
       };
     case YEAR_LOADED:
       return {
         ...state,
         isLoading: false,
-        message: '',
+        message: "",
         year: action.payload,
-        success: false
+        success: false,
       };
+
     case YEAR_CREATED:
       return {
         ...state,
         isLoading: false,
         year: action.payload,
-        message: 'Year created successfully',
-        success: true
+        message: "Year created successfully",
+        success: true,
       };
     case YEAR_UPDATED:
       return {
@@ -58,8 +62,8 @@ const yearReducer = (state = initialState, action) => {
           year._id === action.payload._id ? action.payload : year
         ),
         year: action.payload,
-        message: 'Year updated successfully',
-        success: true
+        message: "Year updated successfully",
+        success: true,
       };
     case YEAR_DELETED:
       return {
@@ -67,18 +71,33 @@ const yearReducer = (state = initialState, action) => {
         isLoading: false,
         years: state.years.filter((s) => s._id !== action.payload),
         year: {},
-        message: 'Year deleted successfully',
-        success: true
+        message: "Year deleted successfully",
+        success: true,
       };
     case YEAR_FAIL:
       return {
         ...state,
-        message: '',
+        message: "",
         isLoading: false,
-        success: false
+        success: false,
       };
     case LOGOUT_SUCCESS:
       return initialState;
+
+    case YEAR_SEMESTERS_LOADING:
+      return {
+        ...state,
+        isLoading: false,
+        success: false,
+      };
+    case YEAR_SEMESTERS_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        yearsSemesters: action.payload,
+        success: false,
+      };
+
     default:
       return state;
   }

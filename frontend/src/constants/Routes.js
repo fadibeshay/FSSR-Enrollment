@@ -17,10 +17,12 @@ export const ROUTE = {
   // YEAR
   YEARS: "/years",
   YEARS_ADD: "/years/add/:id?",
+  YEARS_SEMESTERS: "/years/:id?/semesters",
 
   // semesters
   SEMESTERS: "/semesters",
   SEMESTERS_ADD: "/semesters/add/:id?",
+  SEMESTERS_COURSES: "/semesters/:id?/courses",
 
   // Courses
   COURSES: "/courses",

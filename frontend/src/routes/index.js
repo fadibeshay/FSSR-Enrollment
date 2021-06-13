@@ -14,6 +14,8 @@ import {
   AddSemesters,
   Courses,
   AddCourses,
+  SemestersCourses,
+  YearsSemester,
 } from "../views";
 
 const routes = [
@@ -84,6 +86,12 @@ const routes = [
     component: AddYears,
     isAdmin: true,
   },
+  {
+    path: ROUTE.YEARS_SEMESTERS,
+    exact: true,
+    component: YearsSemester,
+    isAdmin: true,
+  },
 
   // SEMESTERS
   {
@@ -96,6 +104,12 @@ const routes = [
     path: ROUTE.SEMESTERS_ADD,
     exact: true,
     component: AddSemesters,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.SEMESTERS_COURSES,
+    exact: true,
+    component: SemestersCourses,
     isAdmin: true,
   },
 

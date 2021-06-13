@@ -7,16 +7,18 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { Button, Grid } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import style from "./Years.module.css";
 import { connect } from "react-redux";
-import { LoadYears, DeleteYear } from "../../redux/actions/yearAction";
+import { YearsSemesters, DeleteYear } from "../../redux/actions/yearAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+import { Breadcrumbs } from "@material-ui/core";
+import { isEmpty } from "../../helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,64 +47,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Years({ years, DeleteYear, LoadYears, isLoading }) {
+function YearSemesters({
+  yearSemesters,
+  DeleteYear,
+  YearsSemesters,
+  isLoading,
+}) {
   const classes = useStyles();
-  const [search, setSearch] = useState("");
+  const { id } = useParams();
 
-  const confirmDeleteYear = (id) => {
+  const confirmDeleteSemesters = (id) => {
     window.confirm("Are You Sure?") && DeleteYear(id);
   };
 
   useEffect(() => {
-    LoadYears();
-  }, [LoadYears]);
-
-  const onYearsSearch = (e) => {
-    e.preventDefault();
-    setSearch(e.target.value);
-
-    LoadYears(search);
-  };
+    YearsSemesters(id);
+  }, [YearsSemesters, id]);
 
   return (
     <Layout>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10px",
-        }}
-      >
-        <Button variant="contained" color="primary">
-          <Link type="link" className={style.addBtn} to={"/years/add"}>
-            Add Year
-          </Link>
-        </Button>
+      <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "10px" }}>
+        <Link color="inherit" to="/years">
+          {!isLoading && yearSemesters.year}
+        </Link>
 
-        <Paper component="form" className={classes.inputContainer}>
-          <InputBase
-            className={classes.input}
-            placeholder="Search Years"
-            inputProps={{ "aria-label": "Search Years" }}
-            onChange={onYearsSearch}
-          />
-          <IconButton
-            type="submit"
-            className={classes.iconButton}
-            aria-label="search"
-            onClick={onYearsSearch}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-      </div>
+        <Typography color="textPrimary">Semesters</Typography>
+      </Breadcrumbs>
 
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
-          years.map((year) => (
-            <Grid item md={4} key={year._id}>
-              <Link to={`/years/${year._id}/semesters`}>
+          !isEmpty(yearSemesters) &&
+          yearSemesters.semesters.map((semester) => (
+            <Grid item md={4} key={semester._id}>
+              <Link to={`/semesters/${semester._id}/courses`}>
                 <Card className={classes.root}>
                   <CardContent>
                     <Typography
@@ -110,13 +87,13 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
                       component="p"
                       color="textSecondary"
                     >
-                      {year.year}
+                      {semester.name}
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Button>
                       <Link
-                        to={`/years/add/${year._id}`}
+                        to={`/semesters/add/${semester._id}`}
                         style={{
                           color: "rgba(0, 0, 0, 0.87)",
                         }}
@@ -125,7 +102,9 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
                       </Link>
                     </Button>
 
-                    <Button onClick={() => confirmDeleteYear(year._id)}>
+                    <Button
+                      onClick={() => confirmDeleteSemesters(semester._id)}
+                    >
                       <DeleteIcon />
                     </Button>
                   </CardActions>
@@ -135,7 +114,7 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
           ))}
       </Grid>
 
-      {isLoading && (
+      {isLoading && isEmpty(yearSemesters) && (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
         </div>
@@ -145,8 +124,10 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
 }
 
 const mapStateToProps = (state) => ({
-  years: state.year.years,
+  yearSemesters: state.year.yearsSemesters,
   isLoading: state.year.isLoading,
 });
 
-export default connect(mapStateToProps, { LoadYears, DeleteYear })(Years);
+export default connect(mapStateToProps, { YearsSemesters, DeleteYear })(
+  YearSemesters
+);
