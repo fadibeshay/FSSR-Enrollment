@@ -19,134 +19,134 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    minWidth: 275,
-  },
-  inputContainer: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-    width: 250,
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+	root: {
+		minWidth: 275
+	},
+	inputContainer: {
+		padding: "2px 4px",
+		display: "flex",
+		alignItems: "center",
+		width: 250
+	},
+	input: {
+		marginLeft: theme.spacing(1),
+		flex: 1
+	},
+	bullet: {
+		display: "inline-block",
+		margin: "0 2px",
+		transform: "scale(0.8)"
+	},
+	title: {
+		fontSize: 14
+	},
+	pos: {
+		marginBottom: 12
+	}
 }));
 
 function Years({ years, DeleteYear, LoadYears, isLoading }) {
-  const classes = useStyles();
-  const [search, setSearch] = useState("");
+	const classes = useStyles();
+	const [search, setSearch] = useState("");
 
-  const confirmDeleteYear = (id) => {
-    window.confirm("Are You Sure?") && DeleteYear(id);
-  };
+	// const confirmDeleteYear = (id) => {
+	//   window.confirm("Are You Sure?") && DeleteYear(id);
+	// };
 
-  useEffect(() => {
-    LoadYears();
-  }, [LoadYears]);
+	useEffect(() => {
+		LoadYears();
+	}, [LoadYears]);
 
-  const onYearsSearch = (e) => {
-    e.preventDefault();
-    setSearch(e.target.value);
+	const onYearsSearch = (e) => {
+		e.preventDefault();
+		setSearch(e.target.value);
 
-    LoadYears(search);
-  };
+		LoadYears(search);
+	};
 
-  return (
-    <Layout>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10px",
-        }}
-      >
-        <Button variant="contained" color="primary">
-          <Link type="link" className={style.addBtn} to={"/years/add"}>
-            Add Year
-          </Link>
-        </Button>
+	return (
+		<Layout>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginBottom: "10px"
+				}}
+			>
+				<Button variant="contained" color="primary">
+					<Link type="link" className={style.addBtn} to={"/years/add"}>
+						Add Year
+					</Link>
+				</Button>
 
-        <Paper component="form" className={classes.inputContainer}>
-          <InputBase
-            className={classes.input}
-            placeholder="Search Years"
-            inputProps={{ "aria-label": "Search Years" }}
-            onChange={onYearsSearch}
-          />
-          <IconButton
-            type="submit"
-            className={classes.iconButton}
-            aria-label="search"
-            onClick={onYearsSearch}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-      </div>
+				<Paper component="form" className={classes.inputContainer}>
+					<InputBase
+						className={classes.input}
+						placeholder="Search Years"
+						inputProps={{ "aria-label": "Search Years" }}
+						onChange={onYearsSearch}
+					/>
+					<IconButton
+						type="submit"
+						className={classes.iconButton}
+						aria-label="search"
+						onClick={onYearsSearch}
+					>
+						<SearchIcon />
+					</IconButton>
+				</Paper>
+			</div>
 
-      <Grid container className={classes.root} spacing={2}>
-        {!isLoading &&
-          years.map((year) => (
-            <Grid item md={4} key={year._id}>
-              <Link to={`/years/${year._id}/semesters`}>
-                <Card className={classes.root}>
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      component="p"
-                      color="textSecondary"
-                    >
-                      {year.year}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button>
-                      <Link
-                        to={`/years/add/${year._id}`}
-                        style={{
-                          color: "rgba(0, 0, 0, 0.87)",
-                        }}
-                      >
-                        <EditIcon />
-                      </Link>
-                    </Button>
+			<Grid container className={classes.root} spacing={2}>
+				{!isLoading &&
+					years.map((year) => (
+						<Grid item md={4} key={year._id}>
+							<Card className={classes.root}>
+								<Link to={`/years/${year._id}/semesters`}>
+									<CardContent>
+										<Typography
+											variant="h6"
+											component="p"
+											color="textSecondary"
+										>
+											{year.year}
+										</Typography>
+									</CardContent>
+								</Link>
+								<CardActions>
+									<Button>
+										<Link
+											to={`/years/add/${year._id}`}
+											style={{
+												color: "rgba(0, 0, 0, 0.87)"
+											}}
+										>
+											<EditIcon />
+										</Link>
+									</Button>
 
-                    <Button onClick={() => confirmDeleteYear(year._id)}>
+									{/* <Button onClick={() => confirmDeleteYear(year._id)}>
                       <DeleteIcon />
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Link>
-            </Grid>
-          ))}
-      </Grid>
+                    </Button> */}
+								</CardActions>
+							</Card>
+						</Grid>
+					))}
+			</Grid>
 
-      {isLoading && (
-        <div style={{ textAlign: "center" }}>
-          <CircularProgress disableShrink />
-        </div>
-      )}
-    </Layout>
-  );
+			{isLoading && (
+				<div style={{ textAlign: "center" }}>
+					<CircularProgress disableShrink />
+				</div>
+			)}
+		</Layout>
+	);
 }
 
 const mapStateToProps = (state) => ({
-  years: state.year.years,
-  isLoading: state.year.isLoading,
+	years: state.year.years,
+	isLoading: state.year.isLoading
 });
 
 export default connect(mapStateToProps, { LoadYears, DeleteYear })(Years);

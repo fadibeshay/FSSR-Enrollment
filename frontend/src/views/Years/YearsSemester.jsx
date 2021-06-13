@@ -10,7 +10,6 @@ import { Button, Grid } from "@material-ui/core";
 import { Link, useParams } from "react-router-dom";
 import style from "./Years.module.css";
 import { connect } from "react-redux";
-import { YearsSemesters, DeleteYear } from "../../redux/actions/yearAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -18,79 +17,84 @@ import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import { Breadcrumbs } from "@material-ui/core";
-import { isEmpty } from "../../helper";
+import Moment from "react-moment";
+
+import { LoadYear, DeleteYear } from "../../redux/actions/yearAction";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    minWidth: 275,
-  },
-  inputContainer: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-    width: 250,
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+	root: {
+		minWidth: 275
+	},
+	inputContainer: {
+		padding: "2px 4px",
+		display: "flex",
+		alignItems: "center",
+		width: 250
+	},
+	input: {
+		marginLeft: theme.spacing(1),
+		flex: 1
+	},
+	bullet: {
+		display: "inline-block",
+		margin: "0 2px",
+		transform: "scale(0.8)"
+	},
+	title: {
+		fontSize: 14
+	},
+	pos: {
+		marginBottom: 12
+	}
 }));
 
-function YearSemesters({
-  yearSemesters,
-  DeleteYear,
-  YearsSemesters,
-  isLoading,
-}) {
-  const classes = useStyles();
-  const { id } = useParams();
+function YearSemesters({ LoadYear, DeleteYear, year, isLoading }) {
+	const classes = useStyles();
+	const { id } = useParams();
 
-  const confirmDeleteSemesters = (id) => {
-    window.confirm("Are You Sure?") && DeleteYear(id);
-  };
+	// const confirmDeleteSemesters = (id) => {
+	// 	window.confirm("Are You Sure?") && DeleteYear(id);
+	// };
 
-  useEffect(() => {
-    YearsSemesters(id);
-  }, [YearsSemesters, id]);
+	useEffect(() => {
+		LoadYear(id);
+	}, [LoadYear, id]);
 
-  return (
-    <Layout>
-      <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "10px" }}>
-        <Link color="inherit" to="/years">
-          {!isLoading && yearSemesters.year}
-        </Link>
+	return (
+		<Layout>
+			{!isLoading && (
+				<Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "10px" }}>
+					<Link color="inherit" to="/years">
+						{year.year}
+					</Link>
 
-        <Typography color="textPrimary">Semesters</Typography>
-      </Breadcrumbs>
+					<Typography color="textPrimary">Semesters</Typography>
+				</Breadcrumbs>
+			)}
 
-      <Grid container className={classes.root} spacing={2}>
-        {!isLoading &&
-          !isEmpty(yearSemesters) &&
-          yearSemesters.semesters.map((semester) => (
-            <Grid item md={4} key={semester._id}>
-              <Link to={`/semesters/${semester._id}/courses`}>
-                <Card className={classes.root}>
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      component="p"
-                      color="textSecondary"
-                    >
-                      {semester.name}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
+			<Grid container className={classes.root} spacing={2}>
+				{!isLoading &&
+					year.semesters.map((semester) => (
+						<Grid item md={4} key={semester._id}>
+							<Link to={`/semesters/${semester._id}/courses`}>
+								<Card className={classes.root}>
+									<CardContent>
+										<Typography
+											variant="h6"
+											component="p"
+											color="textSecondary"
+										>
+											{semester.name.toUpperCase()}
+										</Typography>
+										<Typography component="p" color="textSecondary">
+											Start Date{" "}
+											<Moment format="YYYY/MM/DD">{semester.startDate}</Moment>
+											<br />
+											End Date :{" "}
+											<Moment format="YYYY/MM/DD">{semester.endDate}</Moment>
+										</Typography>
+									</CardContent>
+									{/* <CardActions>
                     <Button>
                       <Link
                         to={`/semesters/add/${semester._id}`}
@@ -107,27 +111,27 @@ function YearSemesters({
                     >
                       <DeleteIcon />
                     </Button>
-                  </CardActions>
-                </Card>
-              </Link>
-            </Grid>
-          ))}
-      </Grid>
+                  </CardActions> */}
+								</Card>
+							</Link>
+						</Grid>
+					))}
+			</Grid>
 
-      {isLoading && isEmpty(yearSemesters) && (
-        <div style={{ textAlign: "center" }}>
-          <CircularProgress disableShrink />
-        </div>
-      )}
-    </Layout>
-  );
+			{isLoading && (
+				<div style={{ textAlign: "center" }}>
+					<CircularProgress disableShrink />
+				</div>
+			)}
+		</Layout>
+	);
 }
 
 const mapStateToProps = (state) => ({
-  yearSemesters: state.year.yearsSemesters,
-  isLoading: state.year.isLoading,
+	year: state.year.year,
+	isLoading: state.year.isLoading
 });
 
-export default connect(mapStateToProps, { YearsSemesters, DeleteYear })(
-  YearSemesters
+export default connect(mapStateToProps, { LoadYear, DeleteYear })(
+	YearSemesters
 );

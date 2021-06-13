@@ -10,10 +10,6 @@ import { Button, Grid } from "@material-ui/core";
 import { Link, useParams } from "react-router-dom";
 import style from "./Semesters.module.css";
 import { connect } from "react-redux";
-import {
-  SemestersCourses,
-  DeleteSemester,
-} from "../../redux/actions/semesterAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -22,124 +18,109 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import { Breadcrumbs } from "@material-ui/core";
 import { isEmpty } from "../../helper";
+import {
+	LoadSemester,
+	DeleteSemester
+} from "../../redux/actions/semesterAction";
+
 const useStyles = makeStyles((theme) => ({
-  root: {
-    minWidth: 275,
-  },
-  inputContainer: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-    width: 250,
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
+	root: {
+		minWidth: 275
+	},
+	inputContainer: {
+		padding: "2px 4px",
+		display: "flex",
+		alignItems: "center",
+		width: 250
+	},
+	input: {
+		marginLeft: theme.spacing(1),
+		flex: 1
+	},
+	bullet: {
+		display: "inline-block",
+		margin: "0 2px",
+		transform: "scale(0.8)"
+	},
+	title: {
+		fontSize: 14
+	},
+	pos: {
+		marginBottom: 12
+	}
 }));
 
 function SemesterCourses({
-  semesterCourses,
-  DeleteSemester,
-  SemestersCourses,
-  isLoading,
-  currentYear,
+	semester,
+	isLoading,
+	LoadSemester,
+	DeleteSemester
 }) {
-  const classes = useStyles();
-  const { id } = useParams();
+	const classes = useStyles();
+	const { id } = useParams();
 
-  const confirmDeleteSemesters = (id) => {
-    window.confirm("Are You Sure?") && DeleteSemester(id);
-  };
+	const confirmDeleteSemester = (id) => {
+		window.confirm("Are You Sure?") && DeleteSemester(id);
+	};
 
-  useEffect(() => {
-    SemestersCourses(id);
-  }, [SemestersCourses, id]);
+	useEffect(() => {
+		LoadSemester(id);
+	}, [LoadSemester, id]);
 
-  return (
-    <Layout>
-      <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "10px" }}>
-        <Link color="inherit" to={`/years/`}>
-          {/*  */}
-          {!isLoading && currentYear.year}
-        </Link>
+	return (
+		<Layout>
+			{!isLoading && (
+				<Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: "10px" }}>
+					<Link color="inherit" to={`/years`}>
+						{semester.acadYear.year}
+					</Link>
 
-        <Link
-          color="inherit"
-          to={`/years/${!isLoading && semesterCourses._id}/semesters`}
-        >
-          {!isLoading && semesterCourses.name}
-        </Link>
+					<Link
+						color="inherit"
+						to={`/years/${semester.acadYear._id}/semesters`}
+					>
+						{semester.name}
+					</Link>
 
-        <Typography color="textPrimary">{!isLoading && "Courses"}</Typography>
-      </Breadcrumbs>
+					<Typography color="textPrimary">Courses</Typography>
+				</Breadcrumbs>
+			)}
 
-      <Grid container className={classes.root} spacing={2}>
-        {!isLoading &&
-          !isEmpty(semesterCourses) &&
-          semesterCourses.courses.map((semester) => (
-            <Grid item md={4} key={semester._id}>
-              <Card className={classes.root}>
-                <CardContent>
-                  <Typography variant="h4" component="p" color="textSecondary">
-                    {semester.subject.code}
-                  </Typography>
-                  <Typography variant="h5" component="p" color="textSecondary">
-                    {semester.subject.title}
-                  </Typography>
-                  <Typography variant="h6" component="p">
-                    {semester.instructor}
-                  </Typography>
-                </CardContent>
-                {/* <CardActions>
-                  <Button>
-                    <Link
-                      to={`/semesters/add/${semester._id}`}
-                      style={{
-                        color: "rgba(0, 0, 0, 0.87)",
-                      }}
-                    >
-                      <EditIcon />
-                    </Link>
-                  </Button>
+			<Grid container className={classes.root} spacing={2}>
+				{!isLoading &&
+					semester.courses.map((course) => (
+						<Grid item md={4} key={course._id}>
+							<Card className={classes.root}>
+								<CardContent>
+									<Typography variant="h4" component="p" color="textSecondary">
+										{course.subject.code}
+									</Typography>
+									<Typography variant="h5" component="p" color="textSecondary">
+										{course.subject.title}
+									</Typography>
+									<Typography variant="h6" component="p">
+										{course.instructor}
+									</Typography>
+								</CardContent>
+							</Card>
+						</Grid>
+					))}
+			</Grid>
 
-                  <Button onClick={() => confirmDeleteSemesters(semester._id)}>
-                    <DeleteIcon />
-                  </Button>
-                </CardActions>
-             */}
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
-
-      {isLoading &&
-        isEmpty(semesterCourses)(
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress disableShrink />
-          </div>
-        )}
-    </Layout>
-  );
+			{isLoading && (
+				<div style={{ textAlign: "center" }}>
+					<CircularProgress disableShrink />
+				</div>
+			)}
+		</Layout>
+	);
 }
 
 const mapStateToProps = (state) => ({
-  semesterCourses: state.semester.semesterCourses,
-  currentYear: state.year.yearsSemesters,
-  isLoading: state.year.isLoading,
+	semester: state.semester.semester,
+	isLoading: state.semester.isLoading
 });
 
-export default connect(mapStateToProps, { SemestersCourses, DeleteSemester })(
-  SemesterCourses
+export default connect(mapStateToProps, { LoadSemester, DeleteSemester })(
+	SemesterCourses
 );

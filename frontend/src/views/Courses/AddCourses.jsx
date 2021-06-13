@@ -11,130 +11,157 @@ import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
 import {
-  CreateCourses,
-  LoadCourses,
-  UpdateCourses,
+	CreateCourse,
+	LoadCourse,
+	UpdateCourse
 } from "../../redux/actions/coursesAction";
 
 // Validation
 const coursesSchema = yup.object().shape({
-  name: yup.string().required(),
+	subjectCode: yup.string().required("Subject Code is required"),
+	instructor: yup.string().required("Instructor Name is required")
 });
 const useStyles = makeStyles((theme) => ({
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+	form: {
+		width: "100%",
+		marginTop: theme.spacing(1)
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2)
+	}
 }));
 
 function AddCourses({
-  errorMessage,
-  CreateCourses,
-  LoadCourses,
-  UpdateCourses,
-  courses,
-  success,
+	errorMessage,
+	CreateCourse,
+	LoadCourse,
+	UpdateCourse,
+	course,
+	success
 }) {
-  const classes = useStyles();
-  const history = useHistory();
-  const { id } = useParams();
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    reset,
-    control,
-  } = useForm({
-    resolver: yupResolver(coursesSchema),
-  });
+	const classes = useStyles();
+	const history = useHistory();
+	const { id } = useParams();
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors },
+		control
+	} = useForm({
+		resolver: yupResolver(coursesSchema)
+	});
 
-  useEffect(() => {
-    if (success) {
-      history.push("/courses");
-    }
+	useEffect(() => {
+		if (success) {
+			history.push("/courses");
+		}
 
-    if (id) {
-      if (!courses._id || courses._id !== id) {
-        LoadCourses(id);
-      } else {
-        setValue("name", courses.name);
-      }
-    }
-  }, [id, success, courses, history, LoadCourses, setValue]);
+		if (id) {
+			if (!course._id || course._id !== id) {
+				LoadCourse(id);
+			} else {
+				setValue("subjectCode", course.subject.code);
+				setValue("instructor", course.instructor);
+			}
+		}
+	}, [id, success, course, history, LoadCourse, setValue]);
 
-  const onSubmitForm = (data) => {
-    if (id) {
-      UpdateCourses(data, id);
-    } else {
-      CreateCourses(data);
-    }
-  };
+	const onSubmitForm = (data) => {
+		if (id) {
+			UpdateCourse(data, id);
+		} else {
+			CreateCourse(data);
+		}
+	};
 
-  return (
-    <Layout>
-      <Typography component="h1" variant="h5">
-        {id ? "Edit Courses" : "Create New Courses"}
-      </Typography>
+	return (
+		<Layout>
+			<Typography component="h1" variant="h5">
+				{id ? "Edit Course" : "Create New Course"}
+			</Typography>
 
-      <form
-        className={classes.form}
-        onSubmit={handleSubmit(onSubmitForm)}
-        noValidate
-      >
-        {errorMessage && (
-          <Alert severity="error" className="errorPlace">
-            {errorMessage}{" "}
-          </Alert>
-        )}
+			<form
+				className={classes.form}
+				onSubmit={handleSubmit(onSubmitForm)}
+				noValidate
+			>
+				{errorMessage && (
+					<Alert severity="error" className="errorPlace">
+						{errorMessage}{" "}
+					</Alert>
+				)}
 
-        <Controller
-          name="name"
-          control={control}
-          defaultValue=""
-          render={({ field: { onChange, value } }) => (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Courses name"
-              name="name"
-              {...register("name")}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
+				<Controller
+					name="subjectCode"
+					control={control}
+					defaultValue=""
+					render={({ field: { onChange, value } }) => (
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="subjectCode"
+							label="Subject Code"
+							name="subjectCode"
+							{...register("subjectCode")}
+							value={value}
+							onChange={onChange}
+						/>
+					)}
+				/>
 
-        {errors.name && <Alert severity="error">{errors.name?.message} </Alert>}
+				{errors.subjectCode && (
+					<Alert severity="error">{errors.subjectCode.message} </Alert>
+				)}
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          {id ? "Edit " : "Add New"}
-        </Button>
-      </form>
-    </Layout>
-  );
+				<Controller
+					name="instructor"
+					control={control}
+					defaultValue=""
+					render={({ field: { onChange, value } }) => (
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="instructor"
+							label="Instructor"
+							name="instructor"
+							{...register("instructor")}
+							value={value}
+							onChange={onChange}
+						/>
+					)}
+				/>
+
+				{errors.instructor && (
+					<Alert severity="error">{errors.instructor.message} </Alert>
+				)}
+
+				<Button
+					type="submit"
+					fullWidth
+					variant="contained"
+					color="primary"
+					className={classes.submit}
+				>
+					{id ? "Edit " : "Add New"}
+				</Button>
+			</form>
+		</Layout>
+	);
 }
 
 const mapStateToProps = (state) => ({
-  errorMessage: state.errors.message,
-  courses: state.courses.courses,
-  success: state.courses.success,
+	errorMessage: state.errors.message,
+	course: state.course.course,
+	success: state.course.success
 });
 
 export default connect(mapStateToProps, {
-  CreateCourses,
-  LoadCourses,
-  UpdateCourses,
+	CreateCourse,
+	LoadCourse,
+	UpdateCourse
 })(AddCourses);
