@@ -26,3 +26,6 @@ export { default as SemestersCourses } from "./Semesters/SemestersCourses";
 // Departments
 export { default as Courses } from "./Courses/Courses";
 export { default as AddCourses } from "./Courses/AddCourses";
+
+// Enrollemts
+export { default as Enrollments } from "./Enrolments/Enrollments";

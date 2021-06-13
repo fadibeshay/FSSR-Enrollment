@@ -9,16 +9,18 @@ import coursesReducer from "./coursesReducer";
 import errorsReducer from "./errorsReducer";
 import messageReducer from "./messageReducer";
 import statsReducer from "./statsReducer";
+import enrollmentsReducer from "./enrollmentsReducer";
 
 export default combineReducers({
-	user: userReducer,
-	student: studentReducer,
-	subject: subjectReducer,
-	department: departmentReducer,
-	year: yearReducer,
-	semester: semesterReducer,
-	course: coursesReducer,
-	message: messageReducer,
-	errors: errorsReducer,
-	stats: statsReducer
+  user: userReducer,
+  student: studentReducer,
+  subject: subjectReducer,
+  department: departmentReducer,
+  year: yearReducer,
+  semester: semesterReducer,
+  course: coursesReducer,
+  message: messageReducer,
+  errors: errorsReducer,
+  stats: statsReducer,
+  enrollment: enrollmentsReducer,
 });
