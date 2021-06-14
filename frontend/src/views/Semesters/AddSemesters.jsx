@@ -1,11 +1,18 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Checkbox,
+  FormControlLabel,
+} from "@material-ui/core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
@@ -22,6 +29,7 @@ const semesterSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   startDate: yup.string().required("Start date is required"),
   endDate: yup.string().required("End date is required"),
+  isEnrollAvail: yup.boolean(),
 });
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -45,15 +53,15 @@ function AddSemesters({
   const history = useHistory();
   const { id } = useParams();
   const {
-    register,
     handleSubmit,
     setValue,
     formState: { errors },
-    reset,
     control,
   } = useForm({
     resolver: yupResolver(semesterSchema),
   });
+
+  const [enrollChecked, setChecked] = useState(false);
 
   useEffect(() => {
     if (success) {
@@ -75,9 +83,17 @@ function AddSemesters({
         setValue("name", semester.name);
         setValue("startDate", startdateFormated);
         setValue("endDate", enddateFormated);
+        setValue("isEnrollAvail", semester.isEnrollAvail);
+        setChecked(semester.isEnrollAvail);
       }
     }
-  }, [id, success, semester, history, LoadSemester, setValue]);
+  }, [id, success, semester, history, LoadSemester, setValue, setChecked]);
+
+  const handleCheckChange = (e) => {
+    const newValue = !enrollChecked;
+    setChecked(newValue);
+    setValue("isEnrollAvail", newValue);
+  };
 
   const onSubmitForm = (data) => {
     if (id) {
@@ -192,6 +208,22 @@ function AddSemesters({
         {errors.endDate && (
           <Alert severity="error">{errors.endDate?.message} </Alert>
         )}
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={enrollChecked}
+              onChange={handleCheckChange}
+              name="isEnrollAvail"
+              color="primary"
+              id="isEnrollAvail"
+              name="isEnrollAvail"
+            />
+          }
+          name="isEnrollAvail"
+          id="isEnrollAvail"
+          label="Enrollment Available?"
+        />
 
         <Button
           type="submit"
