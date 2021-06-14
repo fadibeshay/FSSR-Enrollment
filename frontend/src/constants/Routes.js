@@ -30,4 +30,6 @@ export const ROUTE = {
 
   // Enrollments
   ENROLLMENTS: "/enrollments",
+  // Admin Enrollments
+  ENROLLMENTS_DETAILS: "/enrollments/show/:id",
 };

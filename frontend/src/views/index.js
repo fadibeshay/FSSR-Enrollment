@@ -29,3 +29,4 @@ export { default as AddCourses } from "./Courses/AddCourses";
 
 // Enrollemts
 export { default as Enrollments } from "./Enrolments/Enrollments";
+export { default as EnrollmentsDetails } from "./Enrolments/EnrollmentsDetails";

@@ -5,14 +5,14 @@ import {
   ENROLLMENTS_UPDATED,
   ENROLLMENTS_CREATED,
   ENROLLMENTS_APPROVED,
-  ENROLLMENTS_STUDENT_CREATED,
   ENROLLMENTS_FAIL,
   LOGOUT_SUCCESS,
+  ENROLLMENT_COURSE_DELETED,
 } from "../actions/actionTypes";
 
 const initialState = {
-  userEnrollments: [],
   enrollments: [],
+  enrollment: [],
   message: "",
   isLoading: false,
   success: false,
@@ -27,6 +27,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         isLoading: true,
         success: false,
       };
+
     case ENROLLMENTS_LOADED:
       return {
         ...state,
@@ -40,7 +41,10 @@ const enrollmentsReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        enrollments: action.payload,
+        enrollments: state.enrollments.map((enrollment) =>
+          enrollment._id === action.payload._id ? action.payload : enrollment
+        ),
+        enrollment: action.payload,
         success: true,
       };
 
@@ -49,16 +53,24 @@ const enrollmentsReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        userEnrollments: action.payload,
+        enrollment: action.payload,
         success: false,
       };
 
-    case ENROLLMENTS_STUDENT_CREATED:
+    // case COURSE_SELECTED:
+    //   return {
+    //     ...state,
+    //     isLoading: false,
+    //     enrollment: action.payload,
+    //     success: true,
+    //   };
+
+    case ENROLLMENT_COURSE_DELETED:
       return {
         ...state,
         isLoading: false,
-        userEnrollments: action.payload,
-        success: true,
+        enrollment: action.payload,
+        success: false,
       };
 
     // case DEPARTMENT_UPDATED:

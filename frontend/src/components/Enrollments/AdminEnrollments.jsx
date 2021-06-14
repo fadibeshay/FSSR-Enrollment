@@ -1,26 +1,26 @@
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
+  Checkbox,
   Grid,
   IconButton,
   Typography,
-  Checkbox,
 } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
-import { LoadAdminEnrollments } from "../../redux/actions/enrollmentsActions";
+import {
+  LoadAdminEnrollments,
+  ApproveEnrollment,
+} from "../../redux/actions/enrollmentsActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,9 +61,9 @@ function AdminEnrollments() {
   const enrollments = useSelector((state) => state.enrollment.enrollments);
   const isLoading = useSelector((state) => state.enrollment.isLoading);
   const [search, setSearch] = useState("");
-  const [checkedState, setCheckedState] = useState(
-    new Array(enrollments.length).fill(false)
-  );
+  // const [checkedState, setCheckedState] = useState(
+  //   new Array(enrollments.length).fill(false)
+  // );
 
   const onEnrollmentsSearch = (e) => {
     e.preventDefault();
@@ -71,13 +71,8 @@ function AdminEnrollments() {
     dispatch(LoadAdminEnrollments(search));
   };
 
-  const getEnrollmentIds = (ids, idx) => {
-    console.log("id :>> ", ids);
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === idx ? !item : item
-    );
-
-    setCheckedState(updatedCheckedState);
+  const getEnrollmentId = (id, data) => {
+    dispatch(ApproveEnrollment(id, { isApproved: data }));
   };
 
   useEffect(() => {
@@ -143,22 +138,23 @@ function AdminEnrollments() {
                   </CardContent>
                 </Link>
 
-                {!enrollment.isApproved && (
-                  <CardActions>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={checkedState[idx]}
-                          // onChange={handleCheckedChange}
-                          onClick={() => getEnrollmentIds(enrollment._id, idx)}
-                          name="checkedB"
-                          color="primary"
-                        />
-                      }
-                      label="Approved"
-                    />
-                  </CardActions>
-                )}
+                <CardActions>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={enrollment.isApproved}
+                        onClick={() =>
+                          getEnrollmentId(
+                            enrollment._id,
+                            !enrollment.isApproved
+                          )
+                        }
+                        color="primary"
+                      />
+                    }
+                    label="Approved"
+                  />
+                </CardActions>
               </Card>
             </Grid>
           ))}

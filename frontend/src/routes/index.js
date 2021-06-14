@@ -17,6 +17,7 @@ import {
   SemestersCourses,
   YearsSemester,
   Enrollments,
+  EnrollmentsDetails,
 } from "../views";
 
 const routes = [
@@ -133,6 +134,12 @@ const routes = [
     path: ROUTE.ENROLLMENTS,
     exact: true,
     component: Enrollments,
+  },
+  {
+    path: ROUTE.ENROLLMENTS_DETAILS,
+    exact: true,
+    component: EnrollmentsDetails,
+    isAdmin: true,
   },
 ];
 export default routes;

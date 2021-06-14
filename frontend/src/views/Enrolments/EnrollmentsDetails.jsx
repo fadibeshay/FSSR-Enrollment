@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Layout } from "../../container";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  LoadStudentEnrollments,
-  SelectedCourse,
+  LoadEnrollmentById,
+  DeleteDepartment,
+  ApproveEnrollment,
 } from "../../redux/actions/enrollmentsActions";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -34,45 +36,66 @@ const useStyles = makeStyles((theme) => ({
   },
   studentContainer: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "10px",
-  },
-  spaceMargin: {
-    marginBottom: "10px",
+    paddingBottom: "10px",
   },
 }));
 
-function StudentEnrollments() {
+function EnrollmentsDetails() {
   const classes = useStyles();
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const { courses, student, isApproved, _id } = useSelector(
+    (state) => state.enrollment.enrollment
+  );
   const isLoading = useSelector((state) => state.enrollment.isLoading);
   const dispatch = useDispatch();
-  const enrollment = useSelector((state) => state.enrollment.enrollment);
+  const { id } = useParams();
 
   useEffect(() => {
-    dispatch(LoadStudentEnrollments());
-  }, []);
+    dispatch(LoadEnrollmentById(id));
+  }, [id, LoadEnrollmentById]);
 
-  const selectCourse = (id) => {
-    setSelectedCourses((prev) => [...prev, id]);
+  const approveEnrollment = (id, data) => {
+    dispatch(ApproveEnrollment(id, { isApproved: data }));
   };
-
-  const sendIds = (ids) => {
-    dispatch(SelectedCourse({ courses: ids }));
-    setSelectedCourses([]);
+  const confirmDeleteCourse = (id, courseId) => {
+    window.confirm("Are You Sure?") && dispatch(DeleteDepartment(id, courseId));
   };
 
   return (
-    <div>
-      <Typography
-        variant="h6"
-        component="p"
-        color="textSecondary"
-        className={classes.spaceMargin}
-      >
-        Select Your Courses
-      </Typography>
+    <Layout>
+      {!isLoading && student && (
+        <div className={classes.studentContainer}>
+          <div>
+            <Typography variant="h6" component="p">
+              Student Name: {student.fullNameEn}
+            </Typography>
+            <Typography variant="h6" component="p">
+              Student National ID: {student.nid}
+            </Typography>
+          </div>
+
+          <div>
+            {isApproved ? (
+              <Chip label="Approved" color="primary" />
+            ) : (
+              <Chip label="Not Approved" color="secondary" />
+            )}
+
+            <FormControlLabel
+              style={{ marginLeft: "10px" }}
+              control={
+                <Checkbox
+                  checked={isApproved}
+                  onClick={() => approveEnrollment(_id, !isApproved)}
+                  color="primary"
+                />
+              }
+              label="Approved"
+            />
+          </div>
+        </div>
+      )}
 
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
@@ -80,9 +103,7 @@ function StudentEnrollments() {
             <TableRow>
               <TableCell align="left">Code</TableCell>
               <TableCell align="left">title</TableCell>
-              <TableCell align="left">credit</TableCell>
               <TableCell align="left">instructor</TableCell>
-              <TableCell align="left">status</TableCell>
               <TableCell align="center" colSpan={2}>
                 Actions
               </TableCell>
@@ -90,56 +111,31 @@ function StudentEnrollments() {
           </TableHead>
           <TableBody>
             {!isLoading &&
-              enrollment &&
-              enrollment.map((enroll) => (
+              courses &&
+              courses.map((enroll) => (
                 <TableRow key={enroll._id}>
-                  <TableCell align="left">{enroll.code}</TableCell>
-                  <TableCell align="left">{enroll.title}</TableCell>
-                  <TableCell align="left">{enroll.credit}</TableCell>
+                  <TableCell align="left">{enroll.subject.code}</TableCell>
+                  <TableCell align="left">{enroll.subject.title}</TableCell>
                   <TableCell align="left">{enroll.instructor}</TableCell>
-                  <TableCell align="left">
-                    {enroll.selected ? (
-                      <Chip label="Selected" color="primary" />
-                    ) : (
-                      <Chip label="Not Selected" color="secondary" />
-                    )}
-                  </TableCell>
 
                   <TableCell align="left">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onClick={() => selectCourse(enroll._id)}
-                          color="primary"
-                        />
-                      }
-                      label="Selected"
-                    />
+                    <Button onClick={() => confirmDeleteCourse(id, enroll._id)}>
+                      <DeleteIcon />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {selectedCourses.length > 0 && (
-        <div className={classes.studentContainer}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => sendIds(selectedCourses)}
-          >
-            Send
-          </Button>
-        </div>
-      )}
 
       {isLoading && (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
         </div>
       )}
-    </div>
+    </Layout>
   );
 }
 
-export default StudentEnrollments;
+export default EnrollmentsDetails;
