@@ -64,7 +64,7 @@ function Courses({ semester, isLoading, success, LoadSemester, DeleteCourse }) {
 		e.preventDefault();
 		setSearch(e.target.value);
 
-		// LoadCourses(search);
+		LoadSemester("current", search);
 	};
 
 	return (
