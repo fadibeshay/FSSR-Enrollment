@@ -6,10 +6,11 @@
 
 .profileMain {
   text-align: center;
+  margin-bottom: 3rem;
 }
 .profileAvatar {
-  width: 100px !important;
-  height: 100px !important;
+  width: 150px !important;
+  height: 150px !important;
   margin: 0 auto;
 }
 

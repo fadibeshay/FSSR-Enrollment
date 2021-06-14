@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -5,561 +7,614 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
-import React, { useEffect } from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { useForm, Controller } from "react-hook-form";
 import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
-import Moment from "react-moment";
 import {
-	CreateStudent,
-	UpdateStudent,
-	LoadStudent
+  CreateStudent,
+  UpdateStudent,
+  LoadStudent,
 } from "../../redux/actions/studentAction";
 
 import { LoadDepartments } from "../../redux/actions/departmentAction";
-// Validation
-const studentSchema = yup.object().shape({
-	email: yup.string().email().required(),
-	fullNameEn: yup.string().required("English Full Name Is Required"),
-	fullNameAr: yup.string().required("Arabic Full Name Is Required"),
-	nid: yup.number().required("National ID Is Required"),
-	birthday: yup.string().required(),
-	gender: yup.string().required(),
-	militaryStatus: yup.string().required(),
-	photo: yup.string().required(),
-	degree: yup.string().required(),
-	gradYear: yup.number().required(),
-	address: yup.string().required(),
-	phoneNumber: yup.string().required(),
-	department: yup.string().required(),
-	level: yup.string().required(),
-	password: yup.string().min(6).required()
-});
+
 const useStyles = makeStyles((theme) => ({
-	form: {
-		width: "100%",
-		marginTop: theme.spacing(1)
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2)
-	}
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 function AddStudents({
-	errorMessage,
-	departments,
-	CreateStudent,
-	LoadStudent,
-	isLoading,
-	student,
-	UpdateStudent,
-	LoadDepartments,
-	success
+  errorMessage,
+  departments,
+  CreateStudent,
+  LoadStudent,
+  isLoading,
+  student,
+  UpdateStudent,
+  LoadDepartments,
+  success,
 }) {
-	const classes = useStyles();
-	const history = useHistory();
-	const { id } = useParams();
+  const classes = useStyles();
+  const history = useHistory();
+  const { id } = useParams();
+  const [uploading, setUploading] = useState(false);
 
-	const {
-		register,
-		handleSubmit,
-		setValue,
-		formState: { errors },
-		reset,
-		control
-	} = useForm({
-		resolver: yupResolver(studentSchema)
-	});
+  // Validation
+  const studentSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    fullNameEn: yup.string().required("English Full Name Is Required"),
+    fullNameAr: yup.string().required("Arabic Full Name Is Required"),
+    nid: yup
+      .number()
+      .typeError("National ID should be a valid number")
+      .required("National ID Is Required"),
+    birthday: yup.string().required(),
+    gender: yup.string().required(),
+    militaryStatus: yup.string().required(),
+    photo: yup.string().required(),
+    degree: yup.string().required(),
+    gradYear: yup
+      .number()
+      .typeError("Graduation year should be a valid year")
+      .required(),
+    address: yup.string().required(),
+    phoneNumber: yup.string().required(),
+    department: yup.string().required(),
+    level: yup.string().required(),
+    password: !id && yup.string().min(6).required(),
+  });
 
-	useEffect(() => {
-		if (success) {
-			history.push("/students");
-		} else {
-			window.scrollTo(0, 0);
-		}
-		LoadDepartments();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+    control,
+  } = useForm({
+    resolver: yupResolver(studentSchema),
+  });
 
-		if (id) {
-			if (!student._id || student._id !== id) {
-				LoadStudent(id);
-			} else {
-				const dateFormat = new Date(student.birthday)
-					.toISOString()
-					.split("T")[0];
+  useEffect(() => {
+    if (success) {
+      history.push("/students");
+    } else {
+      window.scrollTo(0, 0);
+    }
+    LoadDepartments();
 
-				setValue("email", student.email);
-				setValue("fullNameEn", student.fullNameEn);
-				setValue("fullNameAr", student.fullNameAr);
-				setValue("nid", student.nid);
-				setValue("birthday", dateFormat);
-				setValue("gender", student.gender);
-				setValue("militaryStatus", student.militaryStatus);
-				// setValue('photo', student.photo);
-				setValue("degree", student.degree);
-				setValue("gradYear", student.gradYear);
-				setValue("address", student.address);
-				setValue("phoneNumber", student.phoneNumber);
-				setValue("department", student.major.name);
-				setValue("level", student.level);
-				setValue("password", "");
-			}
-		}
-	}, [id, student, reset, success, setValue]);
+    if (id) {
+      if (!student._id || student._id !== id) {
+        LoadStudent(id);
+      } else {
+        const dateFormat = new Date(student.birthday)
+          .toISOString()
+          .split("T")[0];
 
-	const onSubmitForm = (data) => {
-		if (id) {
-			UpdateStudent(data, id);
-		} else {
-			CreateStudent(data);
-		}
-	};
+        setValue("email", student.email);
+        setValue("fullNameEn", student.fullNameEn);
+        setValue("fullNameAr", student.fullNameAr);
+        setValue("nid", student.nid);
+        setValue("birthday", dateFormat);
+        setValue("gender", student.gender);
+        setValue("militaryStatus", student.militaryStatus);
+        setValue("photo", student.photo);
+        setValue("degree", student.degree);
+        setValue("gradYear", student.gradYear);
+        setValue("address", student.address);
+        setValue("phoneNumber", student.phoneNumber);
+        setValue("department", student.major.name);
+        setValue("level", student.level);
+      }
+    }
+  }, [id, student, success, setValue]);
 
-	return (
-		<Layout>
-			<Typography component="h1" variant="h5">
-				{id ? "Edit User" : "Create New User"}
-			</Typography>
-			<form
-				className={classes.form}
-				onSubmit={handleSubmit(onSubmitForm)}
-				noValidate
-			>
-				{errorMessage && (
-					<Alert severity="error" className="errorPlace">
-						{errorMessage}{" "}
-					</Alert>
-				)}
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "mulipart/form-data",
+        },
+      };
 
-				<Controller
-					name="photo"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							type="file"
-							name="photo"
-							id="photo"
-							{...register("photo")}
-							value={value}
-							onChange={onChange}
-							InputLabelProps={{
-								shrink: true
-							}}
-						/>
-					)}
-				/>
+      const { data } = await axios.post("/api/upload", formData, config);
+      setValue("photo", data);
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
 
-				{errors.photo && (
-					<Alert severity="error">{errors.photo?.message} </Alert>
-				)}
+  const onSubmitForm = (data) => {
+    if (id) {
+      UpdateStudent(data, id);
+    } else {
+      CreateStudent(data);
+    }
+  };
 
-				<Controller
-					name="fullNameAr"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="fullNameAr"
-							label="Full Name In Arabic"
-							name="fullNameAr"
-							{...register("fullNameAr")}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+  return (
+    <Layout>
+      <Typography component="h1" variant="h5">
+        {id ? "Edit User" : "Create New User"}
+      </Typography>
+      <form
+        className={classes.form}
+        onSubmit={handleSubmit(onSubmitForm)}
+        noValidate
+      >
+        {errorMessage && (
+          <Alert severity="error" className="errorPlace">
+            {errorMessage}{" "}
+          </Alert>
+        )}
 
-				{errors.fullNameAr && (
-					<Alert severity="error">{errors.fullNameAr?.message} </Alert>
-				)}
+        <Controller
+          name="photo"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              margin="normal"
+              fullWidth
+              type="text"
+              disabled
+              name="photo"
+              id="photo"
+              //   {...register("photo")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
 
-				<Controller
-					name="fullNameEn"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="fullNameEn"
-							label="Full Name In English"
-							name="fullNameEn"
-							{...register("fullNameEn")}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+        {uploading ? (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        ) : (
+          <Controller
+            name="photoFile"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                type="file"
+                name="photoFile"
+                id="photoFile"
+                // {...register("photoFile")}
+                value={value}
+                onChange={uploadFileHandler}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            )}
+          />
+        )}
 
-				{errors.fullNameEn && (
-					<Alert severity="error">{errors.fullNameEn?.message} </Alert>
-				)}
+        {errors.photo && (
+          <Alert severity="error">{errors.photo?.message} </Alert>
+        )}
 
-				<Controller
-					name="nid"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							type="number"
-							id="nid"
-							label="National ID"
-							name="nid"
-							{...register("nid")}
-							onChange={onChange}
-							value={value}
-						/>
-					)}
-				/>
+        <Controller
+          name="fullNameAr"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="fullNameAr"
+              label="Full Name In Arabic"
+              name="fullNameAr"
+              //   {...register("fullNameAr")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
 
-				{errors.nid && <Alert severity="error">{errors.nid?.message} </Alert>}
+        {errors.fullNameAr && (
+          <Alert severity="error">{errors.fullNameAr?.message} </Alert>
+        )}
 
-				<Controller
-					name="militaryStatus"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="militaryStatus"
-							label="military Status"
-							name="militaryStatus"
-							{...register("militaryStatus")}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+        <Controller
+          name="fullNameEn"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="fullNameEn"
+              label="Full Name In English"
+              name="fullNameEn"
+              //   {...register("fullNameEn")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
 
-				{errors.militaryStatus && (
-					<Alert severity="error">{errors.militaryStatus?.message} </Alert>
-				)}
+        {errors.fullNameEn && (
+          <Alert severity="error">{errors.fullNameEn?.message} </Alert>
+        )}
 
-				<Controller
-					name="address"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="address"
-							label="address"
-							name="address"
-							{...register("address")}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+        <Controller
+          name="nid"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              type="number"
+              id="nid"
+              label="National ID"
+              name="nid"
+              //   {...register("nid")}
+              onChange={onChange}
+              value={value}
+            />
+          )}
+        />
 
-				{errors.address && (
-					<Alert severity="error">{errors.address?.message} </Alert>
-				)}
+        {errors.nid && <Alert severity="error">{errors.nid?.message} </Alert>}
 
-				<FormControl fullWidth style={{ marginBottom: "1rem" }}>
-					<InputLabel id="demo-controlled-open-select-label">gender</InputLabel>
+        <Controller
+          name="militaryStatus"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="militaryStatus"
+              label="military Status"
+              name="militaryStatus"
+              //   {...register("militaryStatus")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
 
-					<Controller
-						name="gender"
-						control={control}
-						defaultValue=""
-						render={({ field: { onChange, value } }) => (
-							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								id="gender"
-								label="gender"
-								required
-								fullWidth
-								name="gender"
-								variant="outlined"
-								{...register("gender")}
-								onChange={onChange}
-								value={value}
-							>
-								<MenuItem value={"male"}>male</MenuItem>
-								<MenuItem value={"female"}>female</MenuItem>
-							</Select>
-						)}
-					/>
+        {errors.militaryStatus && (
+          <Alert severity="error">{errors.militaryStatus?.message} </Alert>
+        )}
 
-					{errors.gender && (
-						<Alert severity="error">{errors.gender?.message} </Alert>
-					)}
-				</FormControl>
+        <Controller
+          name="address"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="address"
+              label="address"
+              name="address"
+              //   {...register("address")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
 
-				<FormControl fullWidth style={{ marginBottom: "1rem" }}>
-					<InputLabel id="demo-controlled-open-select-label">level</InputLabel>
+        {errors.address && (
+          <Alert severity="error">{errors.address?.message} </Alert>
+        )}
 
-					<Controller
-						name="level"
-						control={control}
-						defaultValue=""
-						render={({ field: { onChange, value } }) => (
-							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								id="level"
-								label="level"
-								required
-								fullWidth
-								name="level"
-								variant="outlined"
-								{...register("level")}
-								onChange={onChange}
-								value={value}
-							>
-								<MenuItem value={"1"}>1</MenuItem>
-								<MenuItem value={"2"}>2</MenuItem>
-								<MenuItem value={"3"}>3</MenuItem>
-								<MenuItem value={"4"}>4</MenuItem>
-							</Select>
-						)}
-					/>
+        <FormControl fullWidth style={{ marginBottom: "1rem" }}>
+          <InputLabel id="demo-controlled-open-select-label">gender</InputLabel>
 
-					{errors.level && (
-						<Alert severity="error">{errors.level?.message} </Alert>
-					)}
-				</FormControl>
+          <Controller
+            name="gender"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                id="gender"
+                label="gender"
+                required
+                fullWidth
+                name="gender"
+                variant="outlined"
+                // {...register("gender")}
+                onChange={onChange}
+                value={value}
+              >
+                <MenuItem value={"male"}>male</MenuItem>
+                <MenuItem value={"female"}>female</MenuItem>
+              </Select>
+            )}
+          />
 
-				<Controller
-					name="phoneNumber"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="phoneNumber"
-							label="Phone Number"
-							name="phoneNumber"
-							{...register("phoneNumber")}
-							onChange={onChange}
-							value={value}
-						/>
-					)}
-				/>
+          {errors.gender && (
+            <Alert severity="error">{errors.gender?.message} </Alert>
+          )}
+        </FormControl>
 
-				{errors.phoneNumber && (
-					<Alert severity="error">{errors.phoneNumber?.message} </Alert>
-				)}
+        <FormControl fullWidth style={{ marginBottom: "1rem" }}>
+          <InputLabel id="demo-controlled-open-select-label">level</InputLabel>
 
-				<Controller
-					name="birthday"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="birthday"
-							label="birthday"
-							name="birthday"
-							type="date"
-							{...register("birthday")}
-							onChange={onChange}
-							value={value}
-							InputLabelProps={{
-								shrink: true
-							}}
-						/>
-					)}
-				/>
+          <Controller
+            name="level"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                id="level"
+                label="level"
+                required
+                fullWidth
+                name="level"
+                variant="outlined"
+                // {...register("level")}
+                onChange={onChange}
+                value={value}
+              >
+                <MenuItem value={"1"}>1</MenuItem>
+                <MenuItem value={"2"}>2</MenuItem>
+                <MenuItem value={"3"}>3</MenuItem>
+                <MenuItem value={"4"}>4</MenuItem>
+              </Select>
+            )}
+          />
 
-				{errors.birthday && (
-					<Alert severity="error">{errors.birthday?.message} </Alert>
-				)}
+          {errors.level && (
+            <Alert severity="error">{errors.level?.message} </Alert>
+          )}
+        </FormControl>
 
-				<Controller
-					name="degree"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="degree"
-							label="degree"
-							name="degree"
-							{...register("degree")}
-							onChange={onChange}
-							value={value}
-						/>
-					)}
-				/>
+        <Controller
+          name="phoneNumber"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="phoneNumber"
+              label="Phone Number"
+              name="phoneNumber"
+              //   {...register("phoneNumber")}
+              onChange={onChange}
+              value={value}
+            />
+          )}
+        />
 
-				{errors.degree && (
-					<Alert severity="error">{errors.degree?.message} </Alert>
-				)}
+        {errors.phoneNumber && (
+          <Alert severity="error">{errors.phoneNumber?.message} </Alert>
+        )}
 
-				<Controller
-					name="gradYear"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							type="number"
-							id="gradYear"
-							label="gradYear"
-							name="Graduation Year"
-							{...register("gradYear")}
-							onChange={onChange}
-							value={value}
-						/>
-					)}
-				/>
+        <Controller
+          name="birthday"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="birthday"
+              label="birthday"
+              name="birthday"
+              type="date"
+              //   {...register("birthday")}
+              onChange={onChange}
+              value={value}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          )}
+        />
 
-				{errors.gradYear && (
-					<Alert severity="error">{errors.gradYear?.message} </Alert>
-				)}
+        {errors.birthday && (
+          <Alert severity="error">{errors.birthday?.message} </Alert>
+        )}
 
-				<FormControl fullWidth>
-					<InputLabel id="demo-controlled-open-select-label">
-						Department
-					</InputLabel>
+        <Controller
+          name="degree"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="degree"
+              label="degree"
+              name="degree"
+              //   {...register("degree")}
+              onChange={onChange}
+              value={value}
+            />
+          )}
+        />
 
-					{departments && (
-						<Controller
-							name="department"
-							control={control}
-							defaultValue=""
-							render={({ field: { onChange, value } }) => (
-								<Select
-									labelId="demo-simple-select-label"
-									id="demo-simple-select"
-									id="department"
-									label="department"
-									required
-									fullWidth
-									name="department"
-									variant="outlined"
-									{...register("department")}
-									onChange={onChange}
-									value={value}
-								>
-									{departments.map((dep) => (
-										<MenuItem value={dep.name} key={dep._id}>
-											{dep.name}
-										</MenuItem>
-									))}
-								</Select>
-							)}
-						/>
-					)}
+        {errors.degree && (
+          <Alert severity="error">{errors.degree?.message} </Alert>
+        )}
 
-					{errors.department && (
-						<Alert severity="error">{errors.department?.message} </Alert>
-					)}
-				</FormControl>
+        <Controller
+          name="gradYear"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              type="number"
+              id="gradYear"
+              label="gradYear"
+              name="Graduation Year"
+              //   {...register("gradYear")}
+              onChange={onChange}
+              value={value}
+            />
+          )}
+        />
 
-				<Controller
-					name="email"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							id="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
-							{...register("email")}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+        {errors.gradYear && (
+          <Alert severity="error">{errors.gradYear?.message} </Alert>
+        )}
 
-				{errors.email && (
-					<Alert severity="error">{errors.email?.message} </Alert>
-				)}
+        <FormControl fullWidth>
+          <InputLabel id="demo-controlled-open-select-label">
+            Department
+          </InputLabel>
 
-				<Controller
-					name="password"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => (
-						<TextField
-							variant="outlined"
-							margin="normal"
-							required
-							fullWidth
-							name="password"
-							label="Password"
-							type="password"
-							id="password"
-							autoComplete="password"
-							{...register("password", { required: true })}
-							value={value}
-							onChange={onChange}
-						/>
-					)}
-				/>
+          {(departments || student.major) && (
+            <Controller
+              name="department"
+              control={control}
+              defaultValue=""
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  id="department"
+                  label="department"
+                  required
+                  fullWidth
+                  name="department"
+                  variant="outlined"
+                  //   {...register("department")}
+                  onChange={onChange}
+                  value={value}
+                >
+                  {departments.map((dep) => (
+                    <MenuItem value={dep.name} key={dep._id}>
+                      {dep.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          )}
 
-				{errors.password && (
-					<Alert severity="error">{errors.password?.message} </Alert>
-				)}
+          {errors.department && (
+            <Alert severity="error">{errors.department?.message} </Alert>
+          )}
+        </FormControl>
 
-				<Button
-					type="submit"
-					fullWidth
-					variant="contained"
-					color="primary"
-					className={classes.submit}
-				>
-					{id ? "Edit " : "Add New"}
-				</Button>
-			</form>
-		</Layout>
-	);
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              //   {...register("email")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+
+        {errors.email && (
+          <Alert severity="error">{errors.email?.message} </Alert>
+        )}
+
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required={!id}
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="password"
+              //   {...register("password", { required: true })}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+
+        {errors.password && (
+          <Alert severity="error">{errors.password?.message} </Alert>
+        )}
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+          {id ? "Edit " : "Add New"}
+        </Button>
+      </form>
+    </Layout>
+  );
 }
 
 const mapStateToProps = (state) => ({
-	errorMessage: state.errors.message,
-	departments: state.department.departments,
-	isLoading: state.student.isLoading,
-	student: state.student.student,
-	success: state.student.success
+  errorMessage: state.errors.message,
+  departments: state.department.departments,
+  isLoading: state.student.isLoading,
+  student: state.student.student,
+  success: state.student.success,
 });
 
 export default connect(mapStateToProps, {
-	CreateStudent,
-	LoadStudent,
-	UpdateStudent,
-	LoadDepartments
+  CreateStudent,
+  LoadStudent,
+  UpdateStudent,
+  LoadDepartments,
 })(AddStudents);

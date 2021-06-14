@@ -23,7 +23,6 @@ const subjectSchema = yup.object().shape({
   title: yup.string().required(),
   code: yup.string().required(),
   credit: yup.string().required(),
-  // prerequisite: yup.string(),
 });
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -49,8 +48,8 @@ function AddSubjects({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-    reset,
     control,
   } = useForm({
     resolver: yupResolver(subjectSchema),
@@ -65,15 +64,14 @@ function AddSubjects({
       if (!subject._id || subject._id !== id) {
         LoadSubject(id);
       } else {
-        reset({
-          title: subject.title,
-          code: subject.code,
-          prerequisite: subject.prerequisite && subject.prerequisite.code,
-          credit: subject.credit,
-        });
+        setValue("title", subject.title);
+        setValue("code", subject.code);
+        setValue("credit", subject.credit);
+        subject.prerequisite &&
+          setValue("prerequisite", subject.prerequisite.code);
       }
     }
-  }, [id, success, subject, history, LoadSubject, reset]);
+  }, [id, success, subject, history, LoadSubject, setValue]);
 
   const onSubmitForm = (data) => {
     if (id) {
@@ -100,6 +98,27 @@ function AddSubjects({
         )}
 
         <Controller
+          name="code"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="code"
+              label="code"
+              // {...register("code")}
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+
+        {errors.code && <Alert severity="error">{errors.code?.message} </Alert>}
+
+        <Controller
           name="title"
           control={control}
           defaultValue=""
@@ -123,27 +142,6 @@ function AddSubjects({
         )}
 
         <Controller
-          name="code"
-          control={control}
-          defaultValue=""
-          render={({ field: { onChange, value } }) => (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="code"
-              label="code"
-              // {...register("code")}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-
-        {errors.code && <Alert severity="error">{errors.code?.message} </Alert>}
-
-        <Controller
           name="prerequisite"
           control={control}
           defaultValue=""
@@ -151,7 +149,6 @@ function AddSubjects({
             <TextField
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               id="prerequisite"
               label="subject prerequisite"
@@ -184,7 +181,7 @@ function AddSubjects({
                 fullWidth
                 name="credit"
                 variant="outlined"
-                {...register("credit")}
+                // {...register("credit")}
                 value={value}
                 onChange={onChange}
               >

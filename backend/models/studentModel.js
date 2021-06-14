@@ -1,78 +1,78 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const studentSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: 'User'
+      ref: "User",
     },
     fullNameEn: {
       type: String,
-      required: true
+      required: true,
     },
     fullNameAr: {
       type: String,
-      required: true
+      required: true,
     },
     nid: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     birthday: {
       type: Date,
-      required: true
+      required: true,
     },
     gender: {
       type: String,
       required: true,
-      enum: ['male', 'female']
+      enum: ["male", "female"],
     },
     militaryStatus: {
       type: String,
-      required: true
+      required: true,
     },
     photo: {
       type: String,
-      required: true
+      required: true,
     },
     degree: {
       type: String,
-      required: true
+      required: true,
     },
     gradYear: {
-      type: String,
-      required: true
+      type: Number,
+      required: true,
     },
     phoneNumber: {
       type: String,
-      required: true
+      required: true,
     },
     address: {
       type: String,
-      required: true
+      required: true,
     },
     major: {
       type: mongoose.Types.ObjectId,
-      ref: 'Department',
-      required: true
+      ref: "Department",
+      required: true,
     },
     minor: {
       type: mongoose.Types.ObjectId,
-      ref: 'Department',
-      default: null
+      ref: "Department",
+      default: null,
     },
     level: {
       type: Number,
       required: true,
       default: 1,
-      enum: [1, 2, 3, 4]
-    }
+      enum: [1, 2, 3, 4],
+    },
   },
   { timestamps: true }
 );
 
-const Student = mongoose.model('Student', studentSchema);
+const Student = mongoose.model("Student", studentSchema);
 
 export default Student;

@@ -104,7 +104,7 @@ function AddDepartments({
               id="name"
               label="Department name"
               name="name"
-              {...register("name")}
+              // {...register("name")}
               value={value}
               onChange={onChange}
             />

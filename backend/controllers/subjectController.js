@@ -1,11 +1,11 @@
-import asyncHandler from 'express-async-handler';
-import { check, validationResult } from 'express-validator';
-import Subject from '../models/subjectModel.js';
+import asyncHandler from "express-async-handler";
+import { check, validationResult } from "express-validator";
+import Subject from "../models/subjectModel.js";
 
 const subjectValidations = [
-  check('code', 'Code is required.').notEmpty(),
-  check('title', 'Title name is required.').notEmpty(),
-  check('credit', 'Credit is required.').notEmpty()
+  check("code", "Code is required.").notEmpty(),
+  check("title", "Title name is required.").notEmpty(),
+  check("credit", "Credit is required.").notEmpty(),
 ];
 
 // @desc   Create a subject
@@ -19,7 +19,7 @@ const createSubject = asyncHandler(async (req, res) => {
       errors
         .array()
         .map((err) => err.msg)
-        .join(' ')
+        .join(" ")
     );
   }
 
@@ -28,7 +28,7 @@ const createSubject = asyncHandler(async (req, res) => {
   const subjectExists = await Subject.findOne({ code });
   if (subjectExists) {
     res.status(400);
-    throw new Error('Subject already exists.');
+    throw new Error("Subject already exists.");
   }
 
   let preSubId = null;
@@ -37,7 +37,7 @@ const createSubject = asyncHandler(async (req, res) => {
 
     if (!preSub) {
       res.status(404);
-      throw new Error('Prerequisite subjct was not found.');
+      throw new Error("Prerequisite subjct was not found.");
     }
 
     preSubId = preSub._id;
@@ -46,7 +46,11 @@ const createSubject = asyncHandler(async (req, res) => {
   const subject = new Subject({ code, title, credit, prerequisite: preSubId });
   const createdSubject = await subject.save();
 
-  res.status(201).json(createdSubject);
+  const populatedSubject = await Subject.findById(createdSubject._id).populate(
+    "prerequisite"
+  );
+
+  res.status(201).json(populatedSubject);
 });
 
 // @desc   Update a subject
@@ -56,7 +60,7 @@ const updateSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id);
   if (!subject) {
     res.status(404);
-    throw new Error('Subject not found.');
+    throw new Error("Subject not found.");
   }
 
   const errors = validationResult(req);
@@ -66,7 +70,7 @@ const updateSubject = asyncHandler(async (req, res) => {
       errors
         .array()
         .map((err) => err.msg)
-        .join(' ')
+        .join(" ")
     );
   }
 
@@ -78,7 +82,7 @@ const updateSubject = asyncHandler(async (req, res) => {
     subjectExists._id.toString() !== subject._id.toString()
   ) {
     res.status(400);
-    throw new Error('Subject already exists.');
+    throw new Error("Subject already exists.");
   }
 
   let preSubId = null;
@@ -87,7 +91,7 @@ const updateSubject = asyncHandler(async (req, res) => {
 
     if (!preSub) {
       res.status(404);
-      throw new Error('Prerequisite subjct not found.');
+      throw new Error("Prerequisite subjct not found.");
     }
 
     preSubId = preSub._id;
@@ -98,7 +102,12 @@ const updateSubject = asyncHandler(async (req, res) => {
   subject.credit = credit;
   subject.prerequisite = preSubId;
 
-  const updatedSubject = await subject.save();
+  await subject.save();
+
+  const updatedSubject = await Subject.findById(req.params.id).populate(
+    "prerequisite"
+  );
+
   res.json(updatedSubject);
 });
 
@@ -110,10 +119,10 @@ const deleteSubject = asyncHandler(async (req, res) => {
 
   if (subject) {
     await subject.remove();
-    res.json({ message: 'Subject removed.' });
+    res.json({ message: "Subject removed." });
   } else {
     res.status(404);
-    throw new Error('Subject not found.');
+    throw new Error("Subject not found.");
   }
 });
 
@@ -122,14 +131,14 @@ const deleteSubject = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getSubjectById = asyncHandler(async (req, res) => {
   const subject = await Subject.findById(req.params.id).populate(
-    'prerequisite'
+    "prerequisite"
   );
 
   if (subject) {
     res.json(subject);
   } else {
     res.status(404);
-    throw new Error('Subject not found.');
+    throw new Error("Subject not found.");
   }
 });
 
@@ -143,16 +152,16 @@ const getSubjects = asyncHandler(async (req, res) => {
           {
             code: {
               $regex: req.query.keyword,
-              $options: 'i'
-            }
+              $options: "i",
+            },
           },
           {
             title: {
               $regex: req.query.keyword,
-              $options: 'i'
-            }
-          }
-        ]
+              $options: "i",
+            },
+          },
+        ],
       }
     : {};
 
@@ -167,5 +176,5 @@ export {
   updateSubject,
   deleteSubject,
   getSubjectById,
-  getSubjects
+  getSubjects,
 };
