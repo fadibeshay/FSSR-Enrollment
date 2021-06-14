@@ -14,28 +14,28 @@ import { headerConfig } from "./userAction";
 // ? Admin Actions Enrollments
 // Load Enrollment for admin
 export const LoadAdminEnrollments =
-  (name = "") =>
-  async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: ENROLLMENTS_LOADING,
-      });
+  (keyword = "") =>
+    async (dispatch, getState) => {
+      try {
+        dispatch({
+          type: ENROLLMENTS_LOADING,
+        });
 
-      const config = headerConfig(getState);
+        const config = headerConfig(getState);
 
-      const { data } = await axios.get(`/api/enrols?name=${name}`, config);
+        const { data } = await axios.get(`/api/enrols?keyword=${keyword}`, config);
 
-      dispatch({
-        type: ENROLLMENTS_LOADED,
-        payload: data,
-      });
+        dispatch({
+          type: ENROLLMENTS_LOADED,
+          payload: data,
+        });
 
-      dispatch(clearErrors());
-    } catch (err) {
-      dispatch(getErrors(err));
-      dispatch({ type: ENROLLMENTS_FAIL });
-    }
-  };
+        dispatch(clearErrors());
+      } catch (err) {
+        dispatch(getErrors(err));
+        dispatch({ type: ENROLLMENTS_FAIL });
+      }
+    };
 // get  Enrollment by user ID
 export const LoadEnrollmentsById = (_id) => async (dispatch) => {
   try {

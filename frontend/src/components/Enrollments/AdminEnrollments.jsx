@@ -123,11 +123,12 @@ function AdminEnrollments() {
                     >
                       {enrollment.student.fullNameEn}
                     </Typography>
-                    <Typography variant="p" component="p">
-                      Number of Enrollment Courses : {enrollment.courses.length}
+                    <Typography component="p" color="textSecondary">
+                      National ID : {enrollment.student.nid}
                     </Typography>
-                    <Typography variant="p" component="p">
-                      Level : {enrollment.__v}
+
+                    <Typography component="p" color="textSecondary">
+                      Number of Courses : {enrollment.courses.length}
                     </Typography>
 
                     <div className={classes.CardBottom}>

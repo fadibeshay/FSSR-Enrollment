@@ -155,19 +155,22 @@ const updateMyEnrol = asyncHandler(async (req, res) => {
 // @route  GET /api/enrolments/
 // @access  Private/Admin
 const getEnrols = asyncHandler(async (req, res) => {
-  const keyword = req.query.nid
+  const keyword = req.query.keyword
     ? {
-        nid: {
-          $regex: req.query.nid
+      $or: [
+        {
+          nid: {
+            $regex: req.query.keyword
+          }
+        },
+        {
+          fullNameEn: {
+            $regex: req.query.keyword,
+            $options: 'i'
+          }
         }
-      }
-    : req.query.name
-    ? {
-        fullNameEn: {
-          $regex: req.query.name,
-          $options: 'i'
-        }
-      }
+      ]
+    }
     : {};
 
   console.log(keyword);
