@@ -144,7 +144,15 @@ const addCourseToSem = asyncHandler(async (req, res) => {
 	semester.courses.push(createdCourse);
 	await semester.save();
 
-	res.json(createdCourse);
+	const populatedCourse = await Course.findById(createdCourse._id)
+		.populate({ path: "subject", select: "code title" })
+		.populate({
+			path: "semester",
+			select: "name acadYear",
+			populate: { path: "acadYear", select: "year" }
+		});
+
+	res.json(populatedCourse);
 });
 
 export { courseValidations, getSemById, getCurSem, updateSem, addCourseToSem };
