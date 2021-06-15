@@ -163,11 +163,16 @@ const gradeStudents = asyncHandler(async (req, res) => {
 	(async (grades) => {
 		let grade;
 		for (const g of grades) {
-			grade = new Grade({
-				student: g.student,
-				percent: g.percent,
-				course: course._id
-			});
+			grade = await Grade.findOne({ course: course._id, student: g.student });
+			if (grade) {
+				grade.percent = g.percent;
+			} else {
+				grade = new Grade({
+					student: g.student,
+					percent: g.percent,
+					course: course._id
+				});
+			}
 			await grade.save();
 		}
 

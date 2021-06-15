@@ -79,7 +79,7 @@ const getMyEnrol = asyncHandler(async (req, res) => {
 	});
 
 	// Get the student enrolment
-	const enrol = await Enrolment.findOne({
+	let enrol = await Enrolment.findOne({
 		student: student._id,
 		semester: currentSem._id
 	}).populate("courses", "subject");
@@ -93,12 +93,12 @@ const getMyEnrol = asyncHandler(async (req, res) => {
 			};
 		});
 	} else {
-		const enrol = new Enrolment({
+		enrol = new Enrolment({
 			student: student._id,
 			courses: [],
 			semester: currentSem._id
 		});
-		await enrol.save();
+		enrol = await enrol.save();
 	}
 
 	res.json({
