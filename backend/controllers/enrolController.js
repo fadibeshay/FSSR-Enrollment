@@ -160,6 +160,9 @@ const updateMyEnrol = asyncHandler(async (req, res) => {
 // @route  GET /api/enrolments/
 // @access  Private/Admin
 const getEnrols = asyncHandler(async (req, res) => {
+	const pageSize = Number(req.query.pageSize) || 10;
+	const page = Number(req.query.page) || 1;
+
 	const keyword = req.query.keyword
 		? {
 				$or: [
@@ -195,8 +198,13 @@ const getEnrols = asyncHandler(async (req, res) => {
 	});
 
 	enrols = enrols.filter((enrol) => enrol.student !== null);
+	const totalPages = Math.ceil(enrols.length / pageSize);
 
-	res.json(enrols);
+	const start = pageSize * (page - 1);
+	const end = start + pageSize;
+	enrols = enrols.slice(start, end);
+
+	res.json({ enrols, page, totalPages });
 });
 
 // @desc   Get an enrolment by id
