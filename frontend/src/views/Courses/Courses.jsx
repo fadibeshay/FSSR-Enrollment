@@ -122,6 +122,7 @@ function Courses({
 
 			<Grid container className={classes.root} spacing={2}>
 				{!isLoading &&
+					semester.courses &&
 					semester.courses.map((course) => (
 						<Grid item md={4} key={course._id}>
 							<Card className={classes.root}>
