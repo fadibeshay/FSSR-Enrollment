@@ -16,7 +16,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import { Breadcrumbs } from "@material-ui/core";
+import Pagination from "@material-ui/lab/Pagination";
 
 import { LoadSemester } from "../../redux/actions/semesterAction";
 import { DeleteCourse } from "../../redux/actions/coursesAction";
@@ -48,9 +48,17 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function Courses({ semester, isLoading, success, LoadSemester, DeleteCourse }) {
+function Courses({
+	semesterState,
+	isLoading,
+	success,
+	LoadSemester,
+	DeleteCourse
+}) {
 	const classes = useStyles();
 	const [search, setSearch] = useState("");
+	const [counter, setCounter] = useState(null);
+	const { semester, page, totalPages } = semesterState;
 
 	const confirmDeleteCourse = (id) => {
 		window.confirm("Are You Sure?") && DeleteCourse(id);
@@ -61,10 +69,21 @@ function Courses({ semester, isLoading, success, LoadSemester, DeleteCourse }) {
 	}, [LoadSemester, success]);
 
 	const onCoursesSearch = (e) => {
-		e.preventDefault();
 		setSearch(e.target.value);
 
-		LoadSemester("current", search);
+		if (counter) {
+			clearTimeout(counter);
+		}
+		setCounter(
+			setTimeout(() => {
+				LoadSemester("current", e.target.value);
+			}, 500)
+		);
+	};
+
+	const onPageChange = (e, v) => {
+		e.preventDefault();
+		LoadSemester("current", search, v);
 	};
 
 	return (
@@ -138,6 +157,21 @@ function Courses({ semester, isLoading, success, LoadSemester, DeleteCourse }) {
 					))}
 			</Grid>
 
+			{!isLoading && semester.courses.length > 0 && (
+				<div className={style.paginate}>
+					<Pagination
+						count={totalPages}
+						page={page}
+						siblingCount={1}
+						boundaryCount={1}
+						showFirstButton={true}
+						shape="rounded"
+						color="primary"
+						onChange={onPageChange}
+					/>
+				</div>
+			)}
+
 			{isLoading && (
 				<div style={{ textAlign: "center" }}>
 					<CircularProgress disableShrink />
@@ -148,7 +182,7 @@ function Courses({ semester, isLoading, success, LoadSemester, DeleteCourse }) {
 }
 
 const mapStateToProps = (state) => ({
-	semester: state.semester.semester,
+	semesterState: state.semester.semester,
 	isLoading: state.semester.isLoading,
 	success: state.course.success
 });
