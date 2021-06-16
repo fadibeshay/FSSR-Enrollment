@@ -12,7 +12,8 @@ import style from "./Years.module.css";
 import { connect } from "react-redux";
 import { LoadYears, DeleteYear } from "../../redux/actions/yearAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import DeleteIcon from "@material-ui/icons/Delete";
+import Pagination from "@material-ui/lab/Pagination";
+// import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 function Years({ years, DeleteYear, LoadYears, isLoading }) {
 	const classes = useStyles();
 	const [search, setSearch] = useState("");
+	const [counter, setCounter] = useState(null);
 
 	// const confirmDeleteYear = (id) => {
 	//   window.confirm("Are You Sure?") && DeleteYear(id);
@@ -58,10 +60,21 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
 	}, [LoadYears]);
 
 	const onYearsSearch = (e) => {
-		e.preventDefault();
 		setSearch(e.target.value);
 
-		LoadYears(search);
+		if (counter) {
+			clearTimeout(counter);
+		}
+		setCounter(
+			setTimeout(() => {
+				LoadYears(e.target.value);
+			}, 500)
+		);
+	};
+
+	const onPageChange = (e, v) => {
+		e.preventDefault();
+		LoadYears(search, v);
 	};
 
 	return (
@@ -100,7 +113,8 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
 
 			<Grid container className={classes.root} spacing={2}>
 				{!isLoading &&
-					years.map((year) => (
+					years.acadYears &&
+					years.acadYears.map((year) => (
 						<Grid item md={4} key={year._id}>
 							<Card className={classes.root}>
 								<Link to={`/years/${year._id}/semesters`}>
@@ -134,6 +148,21 @@ function Years({ years, DeleteYear, LoadYears, isLoading }) {
 						</Grid>
 					))}
 			</Grid>
+
+			{!isLoading && years.acadYears && years.acadYears.length > 0 && (
+				<div className={style.paginate}>
+					<Pagination
+						count={years.totalPages}
+						page={years.page}
+						siblingCount={1}
+						boundaryCount={1}
+						showFirstButton={true}
+						shape="rounded"
+						color="primary"
+						onChange={onPageChange}
+					/>
+				</div>
+			)}
 
 			{isLoading && (
 				<div style={{ textAlign: "center" }}>
