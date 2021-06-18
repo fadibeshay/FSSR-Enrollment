@@ -11,7 +11,7 @@ import Alert from "@material-ui/lab/Alert";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import * as yup from "yup";
 import { LoginUser } from "../redux/actions/userAction";
 
@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ loadingLogin, LoginUser, errorMessage }) {
   const classes = useStyles();
-  const history = useHistory();
 
   // This field is required
   // invalid Email!

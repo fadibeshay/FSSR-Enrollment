@@ -42,11 +42,9 @@ function AddDepartments({
   const history = useHistory();
   const { id } = useParams();
   const {
-    register,
     handleSubmit,
     setValue,
     formState: { errors },
-    reset,
     control,
   } = useForm({
     resolver: yupResolver(departmentSchema),

@@ -49,9 +49,9 @@ function SemesterCourses({
   const classes = useStyles();
   const { id } = useParams();
 
-  const confirmDeleteSemester = (id) => {
-    window.confirm("Are You Sure?") && DeleteSemester(id);
-  };
+  // const confirmDeleteSemester = (id) => {
+  //   window.confirm("Are You Sure?") && DeleteSemester(id);
+  // };
 
   useEffect(() => {
     LoadSemester(id);
