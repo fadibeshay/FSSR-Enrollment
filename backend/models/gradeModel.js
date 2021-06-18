@@ -1,20 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const gradeSchema = mongoose.Schema(
   {
     student: {
       type: mongoose.Types.ObjectId,
-      ref: 'Student',
+      ref: "Student",
       required: true
     },
     course: {
       type: mongoose.Types.ObjectId,
-      ref: 'Course',
+      ref: "Course",
       required: true
     },
     percent: {
       type: Number,
-      required: true,
+      default: null,
       min: 0,
       max: 100
     }
@@ -22,6 +22,6 @@ const gradeSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Grade = mongoose.model('Grade', gradeSchema);
+const Grade = mongoose.model("Grade", gradeSchema);
 
 export default Grade;
