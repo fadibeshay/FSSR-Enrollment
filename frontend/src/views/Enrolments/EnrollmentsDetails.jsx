@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Layout } from "../../container";
 import { useSelector, useDispatch } from "react-redux";
 import {
   LoadEnrollmentById,
-  DeleteDepartment,
+  DeleteEnrollment,
   ApproveEnrollment,
+  AddCourseToEnrollment,
 } from "../../redux/actions/enrollmentsActions";
+import { LoadSemester } from "../../redux/actions/semesterAction";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -17,12 +19,15 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import { isEmpty } from "../../helper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Chip, Typography } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
+import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
@@ -40,13 +45,28 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     paddingBottom: "10px",
   },
+  inputContainer: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 250,
+    marginTop: "1rem",
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
 }));
 
 function EnrollmentsDetails() {
   const classes = useStyles();
+  const [search, setSearch] = useState("");
+  const [counter, setCounter] = useState(null);
+
   const { courses, student, isApproved, _id } = useSelector(
     (state) => state.enrollment.enrollment
   );
+  const semester = useSelector((state) => state.semester.semester.semester);
   const isLoading = useSelector((state) => state.enrollment.isLoading);
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -59,7 +79,27 @@ function EnrollmentsDetails() {
     dispatch(ApproveEnrollment(id, { isApproved: data }));
   };
   const confirmDeleteCourse = (id, courseId) => {
-    window.confirm("Are You Sure?") && dispatch(DeleteDepartment(id, courseId));
+    window.confirm("Are You Sure?") && dispatch(DeleteEnrollment(id, courseId));
+  };
+
+  const confirmAddCourse = (id, courseId) => {
+    window.confirm("Are You Sure?") &&
+      dispatch(AddCourseToEnrollment(id, courseId));
+  };
+
+  const onCoursesSearch = (e) => {
+    e.preventDefault();
+
+    setSearch(e.target.value);
+
+    if (counter) {
+      clearTimeout(counter);
+    }
+    setCounter(
+      setTimeout(() => {
+        dispatch(LoadSemester("current", e.target.value));
+      }, 500)
+    );
   };
 
   return (
@@ -134,6 +174,45 @@ function EnrollmentsDetails() {
           <CircularProgress disableShrink />
         </div>
       )}
+
+      <div>
+        <Paper component="form" className={classes.inputContainer}>
+          <InputBase
+            className={classes.input}
+            placeholder="Search Courses"
+            inputProps={{ "aria-label": "Search Courses" }}
+            onChange={onCoursesSearch}
+          />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={onCoursesSearch}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+
+        <Table>
+          <TableBody>
+            {!isLoading &&
+              semester.courses &&
+              semester.courses.map((enroll) => (
+                <TableRow key={enroll._id}>
+                  <TableCell align="left">{enroll.subject.code}</TableCell>
+                  <TableCell align="left">{enroll.subject.title}</TableCell>
+                  <TableCell align="left">{enroll.instructor}</TableCell>
+
+                  <TableCell align="left">
+                    <Button onClick={() => confirmAddCourse(_id, enroll._id)}>
+                      <AddIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
     </Layout>
   );
 }

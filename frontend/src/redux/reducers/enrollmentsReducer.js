@@ -8,6 +8,7 @@ import {
   ENROLLMENTS_FAIL,
   LOGOUT_SUCCESS,
   ENROLLMENT_COURSE_DELETED,
+  ENROLLMENTS_ADD_COURSE,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -34,6 +35,15 @@ const enrollmentsReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         enrollments: action.payload,
+        success: false,
+      };
+
+    case ENROLLMENTS_ADD_COURSE:
+      return {
+        ...state,
+        isLoading: false,
+        message: "",
+        enrollment: action.payload,
         success: false,
       };
 
