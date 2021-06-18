@@ -102,6 +102,7 @@ function StudentEnrollments() {
             <TableRow>
               <TableCell align="left">Code</TableCell>
               <TableCell align="left">title</TableCell>
+              <TableCell align="left">type</TableCell>
               <TableCell align="left">credit</TableCell>
               <TableCell align="left">instructor</TableCell>
               <TableCell align="left">status</TableCell>
@@ -117,6 +118,7 @@ function StudentEnrollments() {
                 <TableRow key={enroll._id}>
                   <TableCell align="left">{enroll.code}</TableCell>
                   <TableCell align="left">{enroll.title}</TableCell>
+                  <TableCell align="left">{enroll.type}</TableCell>
                   <TableCell align="left">{enroll.credit}</TableCell>
                   <TableCell align="left">{enroll.instructor}</TableCell>
                   <TableCell align="left">
