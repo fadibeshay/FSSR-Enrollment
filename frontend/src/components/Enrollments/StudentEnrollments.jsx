@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  LoadStudentEnrollments,
-  SelectedCourse,
-} from "../../redux/actions/enrollmentsActions";
+import { Chip, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
-import { isEmpty } from "../../helper";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { Chip, Typography } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  LoadStudentEnrollments,
+  SelectedCourse,
+} from "../../redux/actions/enrollmentsActions";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -62,7 +59,7 @@ function StudentEnrollments() {
 
   useEffect(() => {
     dispatch(LoadStudentEnrollments());
-  }, []);
+  }, [dispatch]);
 
   const selectCourse = (e, id) => {
     const checkedValue = e.target.checked;

@@ -17,7 +17,7 @@ function PrivateRoute({
     } else if (isAdmin && userState.role !== "admin") {
       history.push("/");
     }
-  }, [userState, isAdmin]);
+  }, [userState, isAdmin, LoadUser, history]);
 
   return (
     <Route

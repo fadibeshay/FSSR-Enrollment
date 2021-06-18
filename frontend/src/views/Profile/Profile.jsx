@@ -1,25 +1,23 @@
-import React, { useEffect } from "react";
 import { Avatar, CircularProgress, Grid, Typography } from "@material-ui/core";
-import { connect } from "react-redux";
-import { Layout } from "../../container";
-import style from "./Profile.module.css";
-import Moment from "react-moment";
-import { LoadUser } from "../../redux/actions/userAction";
-
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import ContactsIcon from "@material-ui/icons/Contacts";
 // Icons
 import EmailIcon from "@material-ui/icons/Email";
-import PhoneIcon from "@material-ui/icons/Phone";
-import EditLocationIcon from "@material-ui/icons/EditLocation";
-import FingerprintIcon from "@material-ui/icons/Fingerprint";
-import SchoolIcon from "@material-ui/icons/School";
-import PersonIcon from "@material-ui/icons/Person";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import ContactsIcon from "@material-ui/icons/Contacts";
+import PersonIcon from "@material-ui/icons/Person";
+import PhoneIcon from "@material-ui/icons/Phone";
+import SchoolIcon from "@material-ui/icons/School";
+import React, { useEffect } from "react";
+import Moment from "react-moment";
+import { connect } from "react-redux";
+import { Layout } from "../../container";
+import { LoadUser } from "../../redux/actions/userAction";
+import style from "./Profile.module.css";
+
 function Profile({ user, isLoading, LoadUser }) {
   useEffect(() => {
     LoadUser();
-  }, []);
+  }, [LoadUser]);
   return (
     <Layout>
       {user.nid ? (

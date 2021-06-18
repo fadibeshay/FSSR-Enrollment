@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Layout } from "../../container";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  LoadEnrollmentById,
-  DeleteEnrollment,
-  ApproveEnrollment,
-  AddCourseToEnrollment,
-} from "../../redux/actions/enrollmentsActions";
-import { LoadSemester } from "../../redux/actions/semesterAction";
+import { Chip, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import IconButton from "@material-ui/core/IconButton";
+import InputBase from "@material-ui/core/InputBase";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import { isEmpty } from "../../helper";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { Chip, Typography } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
 import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
+import SearchIcon from "@material-ui/icons/Search";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { Layout } from "../../container";
+import {
+  AddCourseToEnrollment,
+  ApproveEnrollment,
+  DeleteEnrollment,
+  LoadEnrollmentById,
+} from "../../redux/actions/enrollmentsActions";
+import { LoadSemester } from "../../redux/actions/semesterAction";
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
@@ -73,7 +72,7 @@ function EnrollmentsDetails() {
 
   useEffect(() => {
     dispatch(LoadEnrollmentById(id));
-  }, [id, LoadEnrollmentById]);
+  }, [id, LoadEnrollmentById, dispatch]);
 
   const approveEnrollment = (id, data) => {
     dispatch(ApproveEnrollment(id, { isApproved: data }));

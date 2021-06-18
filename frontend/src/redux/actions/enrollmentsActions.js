@@ -1,16 +1,15 @@
 import axios from "axios";
 import {
-  ENROLLMENTS_LOADED,
-  ENROLLMENTS_STUDENT_LOADED,
-  ENROLLMENTS_LOADING,
-  COURSE_SELECTED,
+  ENROLLMENTS_ADD_COURSE,
   ENROLLMENTS_APPROVED,
   ENROLLMENTS_FAIL,
+  ENROLLMENTS_LOADED,
+  ENROLLMENTS_LOADING,
+  ENROLLMENTS_STUDENT_LOADED,
   ENROLLMENT_COURSE_DELETED,
-  ENROLLMENTS_ADD_COURSE,
 } from "./actionTypes";
-import { getErrors, clearErrors } from "./errorsAction";
-import { getMessage, clearMessage } from "./messageAction";
+import { clearErrors, getErrors } from "./errorsAction";
+import { clearMessage, getMessage } from "./messageAction";
 import { headerConfig } from "./userAction";
 
 // ! Admin Actions Enrollments
@@ -187,7 +186,7 @@ export const SelectedCourse = (id) => async (dispatch) => {
 
     const config = headerConfig();
 
-    const { data } = await axios.put(`/api/enrols/my`, id, config);
+    await axios.put(`/api/enrols/my`, id, config);
 
     dispatch(LoadStudentEnrollments());
 

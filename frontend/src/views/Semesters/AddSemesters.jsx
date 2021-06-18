@@ -1,12 +1,12 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
-  Checkbox,
-  FormControlLabel,
 } from "@material-ui/core";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -217,7 +217,6 @@ function AddSemesters({
               name="isEnrollAvail"
               color="primary"
               id="isEnrollAvail"
-              name="isEnrollAvail"
             />
           }
           name="isEnrollAvail"
