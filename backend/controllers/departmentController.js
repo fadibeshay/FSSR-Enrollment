@@ -1,19 +1,19 @@
-import asyncHandler from 'express-async-handler';
-import { check, validationResult } from 'express-validator';
-import Department from '../models/departmentModel.js';
-import Subject from '../models/subjectModel.js';
+import asyncHandler from "express-async-handler";
+import { check, validationResult } from "express-validator";
+import Department from "../models/departmentModel.js";
+import Subject from "../models/subjectModel.js";
 
 const departValidations = [
-  check('name', 'Department name is required.').notEmpty()
+  check("name", "Department name is required.").notEmpty()
 ];
 
 const subjectValidations = [
-  check('code', 'Subject code is required.').notEmpty(),
+  check("code", "Subject code is required.").notEmpty(),
   check(
-    'type',
-    'Type should be either general, major, elective, or minor.'
-  ).isIn(['general', 'major', 'elective', 'minor']),
-  check('level', 'Level should be between 1 and 4.').isInt({ min: 1, max: 4 })
+    "type",
+    "Type should be either general, major, elective, or minor."
+  ).isIn(["general", "major", "elective", "minor"]),
+  check("level", "Level should be between 1 and 4.").isInt({ min: 1, max: 4 })
 ];
 
 // @desc   Create a department
@@ -27,7 +27,7 @@ const createDepart = asyncHandler(async (req, res) => {
       errors
         .array()
         .map((err) => err.msg)
-        .join(' ')
+        .join(" ")
     );
   }
 
@@ -36,7 +36,7 @@ const createDepart = asyncHandler(async (req, res) => {
   const departExists = await Department.findOne({ name });
   if (departExists) {
     res.status(400);
-    throw new Error('Department already exists.');
+    throw new Error("Department already exists.");
   }
 
   const department = new Department({ name });
@@ -50,15 +50,15 @@ const createDepart = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const getDepartById = asyncHandler(async (req, res) => {
   const depart = await Department.findById(req.params.id).populate(
-    'subjects.subject',
-    'code title'
+    "subjects.subject",
+    "code title"
   );
 
   if (depart) {
     res.json(depart);
   } else {
     res.status(404);
-    throw new Error('Department not found.');
+    throw new Error("Department not found.");
   }
 });
 
@@ -69,7 +69,7 @@ const updateDepart = asyncHandler(async (req, res) => {
   const depart = await Department.findById(req.params.id);
   if (!depart) {
     res.status(404);
-    throw new Error('Department not found.');
+    throw new Error("Department not found.");
   }
 
   const errors = validationResult(req);
@@ -79,7 +79,7 @@ const updateDepart = asyncHandler(async (req, res) => {
       errors
         .array()
         .map((err) => err.msg)
-        .join(' ')
+        .join(" ")
     );
   }
 
@@ -88,7 +88,7 @@ const updateDepart = asyncHandler(async (req, res) => {
   const departExists = await Department.findOne({ name });
   if (departExists && departExists._id.toString() !== depart._id.toString()) {
     res.status(400);
-    throw new Error('Department already exists.');
+    throw new Error("Department already exists.");
   }
 
   depart.name = name;
@@ -105,10 +105,10 @@ const deleteDepart = asyncHandler(async (req, res) => {
 
   if (depart) {
     await depart.remove();
-    res.json({ message: 'Department removed.' });
+    res.json({ message: "Department removed." });
   } else {
     res.status(404);
-    throw new Error('Department not found.');
+    throw new Error("Department not found.");
   }
 });
 
@@ -119,7 +119,7 @@ const addSubToDepart = asyncHandler(async (req, res) => {
   const depart = await Department.findById(req.params.id);
   if (!depart) {
     res.status(404);
-    throw new Error('Department not found.');
+    throw new Error("Department not found.");
   }
 
   const errors = validationResult(req);
@@ -129,7 +129,7 @@ const addSubToDepart = asyncHandler(async (req, res) => {
       errors
         .array()
         .map((err) => err.msg)
-        .join(' ')
+        .join(" ")
     );
   }
 
@@ -138,7 +138,7 @@ const addSubToDepart = asyncHandler(async (req, res) => {
   const subject = await Subject.findOne({ code });
   if (!subject) {
     res.status(404);
-    throw new Error('Subject not found.');
+    throw new Error("Subject not found.");
   }
 
   depart.subjects.push({
@@ -161,16 +161,16 @@ const removeSubFromDepart = asyncHandler(async (req, res) => {
   const depart = await Department.findById(departId);
   if (!depart) {
     res.status(404);
-    throw new Error('Department not found.');
+    throw new Error("Department not found.");
   }
 
   const updatedSubjects = depart.subjects.filter(
-    (s) => s._id.toString() !== subjectId.toString()
+    (s) => s.subject.toString() !== subjectId.toString()
   );
   depart.subjects = updatedSubjects;
 
   await depart.save();
-  res.json({ message: 'Subject removed.' });
+  res.json({ message: "Subject removed." });
 });
 
 // @desc   Get all departments
@@ -181,12 +181,12 @@ const getDeparts = asyncHandler(async (req, res) => {
     ? {
         name: {
           $regex: req.query.name,
-          $options: 'i'
+          $options: "i"
         }
       }
     : {};
 
-  const departs = await Department.find({ ...keyword }).select('name');
+  const departs = await Department.find({ ...keyword }).select("name");
 
   res.json(departs);
 });
