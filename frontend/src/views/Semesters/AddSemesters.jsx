@@ -5,7 +5,7 @@ import {
   FormControlLabel,
   InputLabel,
   MenuItem,
-  Select,
+  Select
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -21,7 +21,7 @@ import { Layout } from "../../container";
 import {
   CreateSemester,
   LoadSemester,
-  UpdateSemester,
+  UpdateSemester
 } from "../../redux/actions/semesterAction";
 
 // Validation
@@ -29,16 +29,16 @@ const semesterSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   startDate: yup.string().required("Start date is required"),
   endDate: yup.string().required("End date is required"),
-  isEnrollAvail: yup.boolean(),
+  isEnrollAvail: yup.boolean()
 });
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
 function AddSemesters({
@@ -46,8 +46,8 @@ function AddSemesters({
   CreateSemester,
   LoadSemester,
   UpdateSemester,
-  semester,
-  success,
+  semesterState,
+  success
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -56,12 +56,13 @@ function AddSemesters({
     handleSubmit,
     setValue,
     formState: { errors },
-    control,
+    control
   } = useForm({
-    resolver: yupResolver(semesterSchema),
+    resolver: yupResolver(semesterSchema)
   });
 
   const [enrollChecked, setChecked] = useState(false);
+  const { semester } = semesterState;
 
   useEffect(() => {
     if (success) {
@@ -70,6 +71,7 @@ function AddSemesters({
 
     if (id) {
       if (!semester._id || semester._id !== id) {
+        console.log("load");
         LoadSemester(id);
       } else {
         const startdateFormated = new Date(semester.startDate)
@@ -171,7 +173,7 @@ function AddSemesters({
               onChange={onChange}
               value={value}
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
             />
           )}
@@ -199,7 +201,7 @@ function AddSemesters({
               onChange={onChange}
               value={value}
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
             />
           )}
@@ -240,12 +242,12 @@ function AddSemesters({
 
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
-  semester: state.semester.semester,
-  success: state.semester.success,
+  semesterState: state.semester.semester,
+  success: state.semester.success
 });
 
 export default connect(mapStateToProps, {
   CreateSemester,
   LoadSemester,
-  UpdateSemester,
+  UpdateSemester
 })(AddSemesters);
