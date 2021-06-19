@@ -54,9 +54,14 @@ const departmentReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        departments: state.departments.map((department) =>
-          department._id === action.payload._id ? action.payload : department
-        ),
+        departments:
+          state.departments.length > 0
+            ? state.departments.map((department) =>
+                department._id === action.payload._id
+                  ? action.payload
+                  : department
+              )
+            : state.departments,
         department: action.payload,
         success: true,
       };
@@ -65,7 +70,10 @@ const departmentReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        departments: state.departments.filter((s) => s._id !== action.payload),
+        departments:
+          state.departments.length > 0
+            ? state.departments.filter((s) => s._id !== action.payload)
+            : state.departments,
         department: {},
         success: false,
       };

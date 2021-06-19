@@ -6,15 +6,15 @@ import {
   SUBJECT_CREATED,
   SUBJECT_UPDATED,
   SUBJECT_DELETED,
-  LOGOUT_SUCCESS,
+  LOGOUT_SUCCESS
 } from "../actions/actionTypes";
 
 const initialState = {
-  subjects: [],
+  subjects: { subjects: [] },
   subject: {},
   message: "",
   isLoading: false,
-  success: false,
+  success: false
 };
 
 const subjectReducer = (state = initialState, action) => {
@@ -24,7 +24,7 @@ const subjectReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: true,
-        success: false,
+        success: false
       };
     case SUBJECTS_LOADED:
       return {
@@ -32,7 +32,7 @@ const subjectReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         subjects: action.payload,
-        success: false,
+        success: false
       };
     case SUBJECT_LOADED:
       return {
@@ -40,7 +40,7 @@ const subjectReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         subject: action.payload,
-        success: false,
+        success: false
       };
     case SUBJECT_CREATED:
       return {
@@ -48,34 +48,30 @@ const subjectReducer = (state = initialState, action) => {
         isLoading: false,
         subject: action.payload,
         message: "Subject created successfully",
-        success: true,
+        success: true
       };
     case SUBJECT_UPDATED:
       return {
         ...state,
         isLoading: false,
-        subjects: state.subjects.map((subject) =>
-          subject._id === action.payload._id ? action.payload : subject
-        ),
         subject: action.payload,
         message: "Subject updated successfully",
-        success: true,
+        success: true
       };
     case SUBJECT_DELETED:
       return {
         ...state,
         isLoading: false,
-        subjects: state.subjects.filter((s) => s._id !== action.payload),
         subject: {},
         message: "Subject deleted successfully",
-        success: true,
+        success: true
       };
     case SUBJECT_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
-        success: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;

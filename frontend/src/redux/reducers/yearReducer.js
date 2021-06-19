@@ -7,12 +7,12 @@ import {
   YEAR_DELETED,
   YEAR_FAIL,
   LOGOUT_SUCCESS
-} from '../actions/actionTypes';
+} from "../actions/actionTypes";
 
 const initialState = {
-  years: [],
+  years: { acadYears: [] },
   year: { semesters: [] },
-  message: '',
+  message: "",
   isLoading: false,
   success: false
 };
@@ -22,7 +22,7 @@ const yearReducer = (state = initialState, action) => {
     case YEAR_LOADING:
       return {
         ...state,
-        message: '',
+        message: "",
         isLoading: true,
         success: false
       };
@@ -30,7 +30,7 @@ const yearReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        message: '',
+        message: "",
         years: action.payload,
         success: false
       };
@@ -38,7 +38,7 @@ const yearReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        message: '',
+        message: "",
         year: action.payload,
         success: false
       };
@@ -48,33 +48,29 @@ const yearReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         year: action.payload,
-        message: 'Year created successfully',
+        message: "Year created successfully",
         success: true
       };
     case YEAR_UPDATED:
       return {
         ...state,
         isLoading: false,
-        years: state.years.map((year) =>
-          year._id === action.payload._id ? action.payload : year
-        ),
         year: action.payload,
-        message: 'Year updated successfully',
+        message: "Year updated successfully",
         success: true
       };
     case YEAR_DELETED:
       return {
         ...state,
         isLoading: false,
-        years: state.years.filter((s) => s._id !== action.payload),
         year: {},
-        message: 'Year deleted successfully',
+        message: "Year deleted successfully",
         success: true
       };
     case YEAR_FAIL:
       return {
         ...state,
-        message: '',
+        message: "",
         isLoading: false,
         success: false
       };

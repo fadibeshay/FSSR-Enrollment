@@ -1,23 +1,23 @@
-import dotenv from 'dotenv';
-import colors from 'colors';
+import dotenv from "dotenv";
+import colors from "colors";
 
-import subjects from './data/subjects.js';
-import departs from './data/departs.js';
-import users from './data/users.js';
-import students from './data/students.js';
-import { year, semesters } from './data/years.js';
+import subjects from "./data/subjects.js";
+import departs from "./data/departs.js";
+import users from "./data/users.js";
+import students from "./data/students.js";
+import { year, semesters } from "./data/years.js";
 
-import Subject from './models/subjectModel.js';
-import Department from './models/departmentModel.js';
-import User from './models/userModel.js';
-import Student from './models/studentModel.js';
-import AcadYear from './models/acadYearModel.js';
-import Semester from './models/semesterModel.js';
-import Course from './models/courseModel.js';
-import Grade from './models/gradeModel.js';
-import Enrolment from './models/enrolModel.js';
+import Subject from "./models/subjectModel.js";
+import Department from "./models/departmentModel.js";
+import User from "./models/userModel.js";
+import Student from "./models/studentModel.js";
+import AcadYear from "./models/acadYearModel.js";
+import Semester from "./models/semesterModel.js";
+import Course from "./models/courseModel.js";
+import Grade from "./models/gradeModel.js";
+import Enrolment from "./models/enrolModel.js";
 
-import connectDB from './config/db.js';
+import connectDB from "./config/db.js";
 
 dotenv.config();
 connectDB();
@@ -65,13 +65,20 @@ const importData = async () => {
     await Student.insertMany(sampleStudents);
 
     // Insert years and semesters
-    const insertedSems = await Semester.insertMany(semesters);
+    let insertedYear = new AcadYear(year);
+    insertedYear = await insertedYear.save();
+
+    const sems = semesters.map((s) => {
+      return { ...s, acadYear: insertedYear._id };
+    });
+
+    const insertedSems = await Semester.insertMany(sems);
     const insertedSemsIds = insertedSems.map((s) => s._id);
-    year.semesters = insertedSemsIds;
-    const insertedYear = new AcadYear(year);
+
+    insertedYear.semesters = insertedSemsIds;
     await insertedYear.save();
 
-    console.log('Data Imported!'.green.inverse);
+    console.log("Data Imported!".green.inverse);
     process.exit();
   } catch (error) {
     console.error(`${error}`.red.inverse);
@@ -91,7 +98,7 @@ const destroytData = async () => {
     await Grade.deleteMany();
     await Enrolment.deleteMany();
 
-    console.log('Data Destroyed!'.red.inverse);
+    console.log("Data Destroyed!".red.inverse);
     process.exit();
   } catch (error) {
     console.error(`${error}`.red.inverse);
@@ -99,7 +106,7 @@ const destroytData = async () => {
   }
 };
 
-if (process.argv[2] === '-d') {
+if (process.argv[2] === "-d") {
   destroytData();
 } else {
   importData();

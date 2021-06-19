@@ -50,10 +50,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
+function Subjects({
+  subjectsState,
+  DeleteSubject,
+  LoadSubjects,
+  isLoading,
+  success,
+}) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
+  const { subjects, page, totalPages } = subjectsState;
 
   const confirmDeleteSubject = (id) => {
     window.confirm("Are You Sure?") && DeleteSubject(id);
@@ -61,7 +68,7 @@ function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
 
   useEffect(() => {
     LoadSubjects();
-  }, [LoadSubjects]);
+  }, [LoadSubjects, success]);
 
   const onSubjectsSearch = (e) => {
     setSearch(e.target.value);
@@ -117,8 +124,7 @@ function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
 
       <Grid container className={classes.root} spacing={2}>
         {!isLoading &&
-          subjects.subjects &&
-          subjects.subjects.map((subject) => (
+          subjects.map((subject) => (
             <Grid item md={4} key={subject._id}>
               <Card className={classes.root}>
                 <CardContent>
@@ -150,11 +156,11 @@ function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
           ))}
       </Grid>
 
-      {!isLoading && subjects.subjects && subjects.subjects.length > 0 && (
+      {!isLoading && subjects.length > 0 && (
         <div className={style.paginate}>
           <Pagination
-            count={subjects.totalPages}
-            page={subjects.page}
+            count={totalPages}
+            page={page}
             siblingCount={1}
             boundaryCount={1}
             showFirstButton={true}
@@ -175,8 +181,9 @@ function Subjects({ subjects, DeleteSubject, LoadSubjects, isLoading }) {
 }
 
 const mapStateToProps = (state) => ({
-  subjects: state.subject.subjects,
+  subjectsState: state.subject.subjects,
   isLoading: state.subject.isLoading,
+  success: state.subject.success,
 });
 
 export default connect(mapStateToProps, { LoadSubjects, DeleteSubject })(

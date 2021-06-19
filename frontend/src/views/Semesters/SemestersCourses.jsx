@@ -8,46 +8,50 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Layout } from "../../container";
+import Pagination from "@material-ui/lab/Pagination";
+import style from "./Semesters.module.css";
+
 import {
   DeleteSemester,
-  LoadSemester,
+  LoadSemester
 } from "../../redux/actions/semesterAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: 275
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 250,
+    width: 250
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
+    flex: 1
   },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
-    transform: "scale(0.8)",
+    transform: "scale(0.8)"
   },
   title: {
-    fontSize: 14,
+    fontSize: 14
   },
   pos: {
-    marginBottom: 12,
-  },
+    marginBottom: 12
+  }
 }));
 
 function SemesterCourses({
-  semester,
+  semesterState,
   isLoading,
   LoadSemester,
-  DeleteSemester,
+  DeleteSemester
 }) {
   const classes = useStyles();
   const { id } = useParams();
+  const { semester, page, totalPages } = semesterState;
 
   // const confirmDeleteSemester = (id) => {
   //   window.confirm("Are You Sure?") && DeleteSemester(id);
@@ -56,6 +60,11 @@ function SemesterCourses({
   useEffect(() => {
     LoadSemester(id);
   }, [LoadSemester, id]);
+
+  const onPageChange = (e, v) => {
+    e.preventDefault();
+    LoadSemester("current", "", v);
+  };
 
   return (
     <Layout>
@@ -97,6 +106,20 @@ function SemesterCourses({
           ))}
       </Grid>
 
+      {!isLoading && semester.courses.length > 0 && (
+        <div className={style.paginate}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            siblingCount={1}
+            boundaryCount={1}
+            showFirstButton={true}
+            shape="rounded"
+            color="primary"
+            onChange={onPageChange}
+          />
+        </div>
+      )}
       {isLoading && (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
@@ -107,8 +130,8 @@ function SemesterCourses({
 }
 
 const mapStateToProps = (state) => ({
-  semester: state.semester.semester,
-  isLoading: state.semester.isLoading,
+  semesterState: state.semester.semester,
+  isLoading: state.semester.isLoading
 });
 
 export default connect(mapStateToProps, { LoadSemester, DeleteSemester })(
