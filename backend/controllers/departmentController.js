@@ -141,6 +141,19 @@ const addSubToDepart = asyncHandler(async (req, res) => {
     throw new Error("Subject not found.");
   }
 
+  const subjectExists = depart.subjects.find(
+    (s) =>
+      s.subject.toString() === subject._id.toString() &&
+      !(
+        (s.type.toLowerCase() === "major" && type.toLowerCase() === "minor") ||
+        (s.type.toLowerCase() === "minor" && type.toLowerCase() === "major")
+      )
+  );
+  if (subjectExists) {
+    res.status(400);
+    throw new Error("Subject already added before.");
+  }
+
   depart.subjects.push({
     subject: subject._id,
     type,
