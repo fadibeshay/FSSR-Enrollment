@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   DEPARTMENT_LOADING,
   DEPARTMENTS_LOADED,
@@ -6,19 +6,19 @@ import {
   DEPARTMENT_CREATED,
   DEPARTMENT_UPDATED,
   DEPARTMENT_DELETED,
-  DEPARTMENT_FAIL
-} from './actionTypes';
-import { getErrors, clearErrors } from './errorsAction';
-import { getMessage, clearMessage } from './messageAction';
-import { headerConfig } from './userAction';
+  DEPARTMENT_FAIL,
+} from "./actionTypes";
+import { getErrors, clearErrors } from "./errorsAction";
+import { getMessage, clearMessage } from "./messageAction";
+import { headerConfig } from "./userAction";
 
 // Load DEPARTMENTs
 export const LoadDepartments =
-  (name = '') =>
+  (name = "") =>
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: DEPARTMENT_LOADING
+        type: DEPARTMENT_LOADING,
       });
 
       const config = headerConfig(getState);
@@ -27,7 +27,7 @@ export const LoadDepartments =
 
       dispatch({
         type: DEPARTMENTS_LOADED,
-        payload: data
+        payload: data,
       });
 
       dispatch(clearErrors());
@@ -41,7 +41,7 @@ export const LoadDepartments =
 export const LoadDepartment = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: DEPARTMENT_LOADING
+      type: DEPARTMENT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -50,7 +50,7 @@ export const LoadDepartment = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: DEPARTMENT_LOADED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -64,20 +64,20 @@ export const LoadDepartment = (_id) => async (dispatch, getState) => {
 export const CreateDepartment = (department) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: DEPARTMENT_LOADING
+      type: DEPARTMENT_LOADING,
     });
 
     const config = headerConfig(getState);
 
-    const { data } = await axios.post('/api/departments', department, config);
+    const { data } = await axios.post("/api/departments", department, config);
 
     dispatch({
       type: DEPARTMENT_CREATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage('Department created successfully'));
+    dispatch(getMessage("Department created successfully"));
   } catch (err) {
     dispatch(clearMessage());
     dispatch(getErrors(err));
@@ -90,7 +90,7 @@ export const UpdateDepartment =
   (department, id) => async (dispatch, getState) => {
     try {
       dispatch({
-        type: DEPARTMENT_LOADING
+        type: DEPARTMENT_LOADING,
       });
 
       const config = headerConfig(getState);
@@ -103,11 +103,11 @@ export const UpdateDepartment =
 
       dispatch({
         type: DEPARTMENT_UPDATED,
-        payload: data
+        payload: data,
       });
 
       dispatch(clearErrors());
-      dispatch(getMessage('Department updated successfully'));
+      dispatch(getMessage("Department updated successfully"));
     } catch (err) {
       dispatch(clearMessage());
 
@@ -120,7 +120,7 @@ export const UpdateDepartment =
 export const DeleteDepartment = (_id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: DEPARTMENT_LOADING
+      type: DEPARTMENT_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -129,11 +129,11 @@ export const DeleteDepartment = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: DEPARTMENT_DELETED,
-      payload: _id
+      payload: _id,
     });
 
     dispatch(clearErrors());
-    dispatch(getMessage('Department deleted successfully'));
+    dispatch(getMessage("Department deleted successfully"));
   } catch (err) {
     dispatch(clearMessage());
     dispatch(getErrors(err));
