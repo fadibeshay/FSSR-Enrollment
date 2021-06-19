@@ -8,6 +8,7 @@ export { default as Profile } from "./Profile/Profile";
 // Departments
 export { default as Departments } from "./Departments/Departments";
 export { default as AddDepartments } from "./Departments/AddDepartments";
+export { default as AddSubjectToDepartment } from "./Departments/AddSubjectToDepartment";
 export { default as DepartmentsDetails } from "./Departments/DepartmentsDetails";
 
 // Subjects

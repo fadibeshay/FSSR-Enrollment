@@ -19,6 +19,7 @@ import {
   Enrollments,
   EnrollmentsDetails,
   DepartmentsDetails,
+  AddSubjectToDepartment,
 } from "../views";
 
 const routes = [
@@ -65,6 +66,12 @@ const routes = [
     path: ROUTE.DEPARTMENTS_DETAILS,
     exact: true,
     component: DepartmentsDetails,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.DEPARTMENTS_SUBJECT_ADD,
+    exact: true,
+    component: AddSubjectToDepartment,
     isAdmin: true,
   },
 

@@ -8,6 +8,7 @@ export const ROUTE = {
   // Department
   DEPARTMENTS: "/departments",
   DEPARTMENTS_ADD: "/departments/add/:id?",
+  DEPARTMENTS_SUBJECT_ADD: "/departments/subject/:id",
   DEPARTMENTS_DETAILS: "/departments/show/:id",
 
   // SUBJECT

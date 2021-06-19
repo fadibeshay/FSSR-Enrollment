@@ -7,6 +7,7 @@ import {
   DEPARTMENT_DELETED,
   DEPARTMENT_FAIL,
   LOGOUT_SUCCESS,
+  DEPARTMENT_SUBJECT_DELETED,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -59,6 +60,7 @@ const departmentReducer = (state = initialState, action) => {
         department: action.payload,
         success: true,
       };
+
     case DEPARTMENT_DELETED:
       return {
         ...state,
@@ -67,6 +69,21 @@ const departmentReducer = (state = initialState, action) => {
         department: {},
         success: false,
       };
+
+    case DEPARTMENT_SUBJECT_DELETED:
+      //
+      return {
+        ...state,
+        isLoading: false,
+        department: {
+          ...state.department,
+          subjects: state.department.subjects.filter(
+            (s) => s.subject._id !== action.payload
+          ),
+        },
+        success: false,
+      };
+
     case DEPARTMENT_FAIL:
       return {
         ...state,
