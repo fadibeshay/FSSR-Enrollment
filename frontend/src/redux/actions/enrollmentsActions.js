@@ -6,7 +6,7 @@ import {
   ENROLLMENTS_LOADED,
   ENROLLMENTS_LOADING,
   ENROLLMENTS_STUDENT_LOADED,
-  ENROLLMENT_COURSE_DELETED,
+  ENROLLMENT_COURSE_DELETED
 } from "./actionTypes";
 import { clearErrors, getErrors } from "./errorsAction";
 import { clearMessage, getMessage } from "./messageAction";
@@ -19,7 +19,7 @@ export const LoadAdminEnrollments =
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: ENROLLMENTS_LOADING,
+        type: ENROLLMENTS_LOADING
       });
 
       const config = headerConfig(getState);
@@ -31,7 +31,7 @@ export const LoadAdminEnrollments =
 
       dispatch({
         type: ENROLLMENTS_LOADED,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -44,7 +44,7 @@ export const LoadAdminEnrollments =
 export const LoadEnrollmentById = (_id) => async (dispatch) => {
   try {
     dispatch({
-      type: ENROLLMENTS_LOADING,
+      type: ENROLLMENTS_LOADING
     });
 
     const config = headerConfig();
@@ -53,7 +53,7 @@ export const LoadEnrollmentById = (_id) => async (dispatch) => {
 
     dispatch({
       type: ENROLLMENTS_STUDENT_LOADED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -68,7 +68,7 @@ export const DeleteEnrollment =
   (enrollmentId, courseId) => async (dispatch) => {
     try {
       dispatch({
-        type: ENROLLMENTS_LOADING,
+        type: ENROLLMENTS_LOADING
       });
 
       const config = headerConfig();
@@ -80,7 +80,7 @@ export const DeleteEnrollment =
 
       dispatch({
         type: ENROLLMENT_COURSE_DELETED,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -97,7 +97,7 @@ export const DeleteEnrollment =
 export const ApproveEnrollment = (_id, isApproved) => async (dispatch) => {
   try {
     dispatch({
-      type: ENROLLMENTS_LOADING,
+      type: ENROLLMENTS_LOADING
     });
 
     const config = headerConfig();
@@ -109,7 +109,7 @@ export const ApproveEnrollment = (_id, isApproved) => async (dispatch) => {
     );
     dispatch({
       type: ENROLLMENTS_APPROVED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -127,7 +127,7 @@ export const AddCourseToEnrollment =
   (enrollmentId, courseId) => async (dispatch) => {
     try {
       dispatch({
-        type: ENROLLMENTS_LOADING,
+        type: ENROLLMENTS_LOADING
       });
 
       const config = headerConfig();
@@ -140,7 +140,7 @@ export const AddCourseToEnrollment =
 
       dispatch({
         type: ENROLLMENTS_ADD_COURSE,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -158,7 +158,7 @@ export const AddCourseToEnrollment =
 export const LoadStudentEnrollments = () => async (dispatch, getState) => {
   try {
     dispatch({
-      type: ENROLLMENTS_LOADING,
+      type: ENROLLMENTS_LOADING
     });
 
     const config = headerConfig(getState);
@@ -167,7 +167,7 @@ export const LoadStudentEnrollments = () => async (dispatch, getState) => {
 
     dispatch({
       type: ENROLLMENTS_STUDENT_LOADED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -178,15 +178,15 @@ export const LoadStudentEnrollments = () => async (dispatch, getState) => {
 };
 
 // Select Course
-export const SelectedCourse = (id) => async (dispatch) => {
+export const UpdateStudentEnrollment = (courses) => async (dispatch) => {
   try {
     dispatch({
-      type: ENROLLMENTS_LOADING,
+      type: ENROLLMENTS_LOADING
     });
 
     const config = headerConfig();
 
-    await axios.put(`/api/enrols/my`, id, config);
+    await axios.put(`/api/enrols/my`, courses, config);
 
     dispatch(LoadStudentEnrollments());
 

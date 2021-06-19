@@ -15,67 +15,77 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   LoadStudentEnrollments,
-  SelectedCourse,
+  UpdateStudentEnrollment
 } from "../../redux/actions/enrollmentsActions";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650,
+    minWidth: 650
   },
   iconButton: {
-    padding: 10,
+    padding: 10
   },
   divider: {
     height: 28,
-    margin: 4,
+    margin: 4
   },
   studentContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "10px",
+    paddingTop: "10px"
   },
 
   CardBottom: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "10px",
+    paddingTop: "10px"
   },
   topContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "10px",
-  },
+    marginBottom: "10px"
+  }
 }));
 
 function StudentEnrollments() {
   const classes = useStyles();
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [courses, setCourses] = useState([]);
   const isLoading = useSelector((state) => state.enrollment.isLoading);
   const dispatch = useDispatch();
   const enrollment = useSelector((state) => state.enrollment.enrollment);
 
   useEffect(() => {
-    dispatch(LoadStudentEnrollments());
-  }, [dispatch]);
-
-  const selectCourse = (e, id) => {
-    const checkedValue = e.target.checked;
-    if (checkedValue) {
-      setSelectedCourses((prev) => [...prev, id]);
+    if (!enrollment._id) {
+      dispatch(LoadStudentEnrollments());
     } else {
-      let newSelectedCourses = selectedCourses.filter(
-        (selected) => selected !== id
+      setCourses(
+        enrollment.courses.map((c) => {
+          return { _id: c._id, selected: c.selected };
+        })
       );
-      setSelectedCourses(newSelectedCourses);
     }
+  }, [dispatch, enrollment]);
+
+  const onCheckChange = (index) => {
+    const newSelection = courses;
+    newSelection[index].selected = !newSelection[index].selected;
+    setCourses([...newSelection]);
   };
 
-  const sendIds = (ids) => {
-    dispatch(SelectedCourse({ courses: ids }));
-    setSelectedCourses([]);
+  const onSubmit = () => {
+    const selectionIds = courses.filter((c) => c.selected).map((c) => c._id);
+    dispatch(UpdateStudentEnrollment({ courses: selectionIds }));
+  };
+
+  const onReset = () => {
+    setCourses(
+      enrollment.courses.map((c) => {
+        return { _id: c._id, selected: c.selected };
+      })
+    );
   };
 
   return (
@@ -86,8 +96,7 @@ function StudentEnrollments() {
         </Typography>
 
         <div className={classes.CardBottom}>
-          <div>Request Status :</div>
-
+          <div style={{ marginRight: "1rem" }}>Request Status: </div>
           {enrollment.isApproved ? (
             <Chip label="Approved" color="primary" />
           ) : (
@@ -95,64 +104,69 @@ function StudentEnrollments() {
           )}
         </div>
       </div>
-
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="left">Code</TableCell>
-              <TableCell align="left">title</TableCell>
-              <TableCell align="left">type</TableCell>
-              <TableCell align="left">credit</TableCell>
-              <TableCell align="left">instructor</TableCell>
-              <TableCell align="left">status</TableCell>
+              <TableCell align="left">Title</TableCell>
+              <TableCell align="left">Type</TableCell>
+              <TableCell align="left">Credit</TableCell>
+              <TableCell align="left">Instructor</TableCell>
+              <TableCell align="left">Current Status</TableCell>
               <TableCell align="center" colSpan={2}>
                 Actions
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isLoading &&
-              enrollment.courses &&
-              enrollment.courses.map((enroll) => (
-                <TableRow key={enroll._id}>
-                  <TableCell align="left">{enroll.code}</TableCell>
-                  <TableCell align="left">{enroll.title}</TableCell>
-                  <TableCell align="left">{enroll.type}</TableCell>
-                  <TableCell align="left">{enroll.credit}</TableCell>
-                  <TableCell align="left">{enroll.instructor}</TableCell>
-                  <TableCell align="left">
-                    {enroll.selected ? (
-                      <Chip label="Selected" color="primary" />
-                    ) : (
-                      <Chip label="Not Selected" color="secondary" />
-                    )}
-                  </TableCell>
+            {courses.length > 0 &&
+              enrollment.courses.map((course, index) => {
+                return (
+                  <TableRow key={course._id}>
+                    <TableCell align="left">{course.code}</TableCell>
+                    <TableCell align="left">{course.title}</TableCell>
+                    <TableCell align="left">{course.type}</TableCell>
+                    <TableCell align="left">{course.credit}</TableCell>
+                    <TableCell align="left">{course.instructor}</TableCell>
+                    <TableCell align="left">
+                      {course.selected ? (
+                        <Chip label="Selected" color="primary" />
+                      ) : (
+                        <Chip label="Not Selected" color="secondary" />
+                      )}
+                    </TableCell>
 
-                  <TableCell align="left">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={(e) => selectCourse(e, enroll._id)}
-                          color="primary"
-                        />
-                      }
-                      label="Selected"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell align="left">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={courses[index].selected}
+                            onChange={(e) => onCheckChange(index)}
+                            color="primary"
+                          />
+                        }
+                        label="Select"
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
-      {selectedCourses.length > 0 && (
+      {!isLoading && (
         <div className={classes.studentContainer}>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => sendIds(selectedCourses)}
+            onClick={onSubmit}
+            style={{ marginRight: "2rem" }}
           >
-            Send
+            Submit
+          </Button>
+          <Button variant="contained" color="secondary" onClick={onReset}>
+            Reset
           </Button>
         </div>
       )}
