@@ -10,7 +10,7 @@ import {
 } from "../actions/actionTypes";
 
 const initialState = {
-  students: [],
+  students: { students: [] },
   student: {},
   message: "",
   isLoading: false,
@@ -51,16 +51,9 @@ const studentReducer = (state = initialState, action) => {
         success: true
       };
     case STUDENT_UPDATED:
-      // console.log(action.payload);
       return {
         ...state,
         isLoading: false,
-        students:
-          state.students.length > 0
-            ? state.students.map((student) =>
-                student._id === action.payload._id ? action.payload : student
-              )
-            : state.students,
         student: action.payload,
         message: "Student updated successfully",
         success: true
@@ -69,10 +62,9 @@ const studentReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        students: state.students.filter((s) => s._id !== action.payload),
         student: {},
         message: "Student deleted successfully",
-        success: false
+        success: true
       };
     case STUDENT_FAIL:
       return {

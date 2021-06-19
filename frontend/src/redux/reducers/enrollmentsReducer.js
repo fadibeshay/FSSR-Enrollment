@@ -6,7 +6,7 @@ import {
   ENROLLMENTS_LOADING,
   ENROLLMENTS_STUDENT_LOADED,
   ENROLLMENT_COURSE_DELETED,
-  LOGOUT_SUCCESS,
+  LOGOUT_SUCCESS
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
   enrollment: [],
   message: "",
   isLoading: false,
-  success: false,
+  success: false
 };
 
 const enrollmentsReducer = (state = initialState, action) => {
@@ -24,7 +24,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: true,
-        success: false,
+        success: false
       };
 
     case ENROLLMENTS_LOADED:
@@ -33,7 +33,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         enrollments: action.payload,
-        success: false,
+        success: false
       };
 
     case ENROLLMENTS_ADD_COURSE:
@@ -42,20 +42,15 @@ const enrollmentsReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         enrollment: action.payload,
-        success: false,
+        success: false
       };
 
     case ENROLLMENTS_APPROVED:
       return {
         ...state,
         isLoading: false,
-        enrollments: {
-          enrols: state.enrollments.enrols.map((enrollment) =>
-            enrollment._id === action.payload._id ? action.payload : enrollment
-          ),
-        },
         enrollment: action.payload,
-        success: true,
+        success: true
       };
 
     case ENROLLMENTS_STUDENT_LOADED:
@@ -64,7 +59,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         enrollment: action.payload,
-        success: false,
+        success: false
       };
 
     // case COURSE_SELECTED:
@@ -80,7 +75,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         enrollment: action.payload,
-        success: false,
+        success: false
       };
 
     // case DEPARTMENT_UPDATED:
@@ -99,7 +94,7 @@ const enrollmentsReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: false,
-        success: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;

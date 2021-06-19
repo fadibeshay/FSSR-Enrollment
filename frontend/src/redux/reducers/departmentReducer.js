@@ -6,7 +6,7 @@ import {
   DEPARTMENT_UPDATED,
   DEPARTMENT_DELETED,
   DEPARTMENT_FAIL,
-  LOGOUT_SUCCESS,
+  LOGOUT_SUCCESS
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
   department: {},
   message: "",
   isLoading: false,
-  success: false,
+  success: false
 };
 
 const departmentReducer = (state = initialState, action) => {
@@ -24,7 +24,7 @@ const departmentReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: true,
-        success: false,
+        success: false
       };
     case DEPARTMENTS_LOADED:
       return {
@@ -32,7 +32,7 @@ const departmentReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         departments: action.payload,
-        success: false,
+        success: false
       };
     case DEPARTMENT_LOADED:
       return {
@@ -40,39 +40,47 @@ const departmentReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         department: action.payload,
-        success: false,
+        success: false
       };
     case DEPARTMENT_CREATED:
       return {
         ...state,
         isLoading: false,
         department: action.payload,
-        success: true,
+        success: true
       };
     case DEPARTMENT_UPDATED:
       return {
         ...state,
         isLoading: false,
-        departments: state.departments.map((department) =>
-          department._id === action.payload._id ? action.payload : department
-        ),
+        departments:
+          state.departments.length > 0
+            ? state.departments.map((department) =>
+                department._id === action.payload._id
+                  ? action.payload
+                  : department
+              )
+            : state.departments,
         department: action.payload,
-        success: true,
+        success: true
       };
     case DEPARTMENT_DELETED:
       return {
         ...state,
         isLoading: false,
-        departments: state.departments.filter((s) => s._id !== action.payload),
+        departments:
+          state.departments.length > 0
+            ? state.departments.filter((s) => s._id !== action.payload)
+            : state.departments,
         department: {},
-        success: false,
+        success: false
       };
     case DEPARTMENT_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
-        success: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;
