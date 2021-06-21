@@ -60,7 +60,9 @@ function Students({
   const { students, page, totalPages } = studentsState;
 
   const confirmDeleteStudent = (id) => {
-    window.confirm("Are You Sure?") && DeleteStudent(id);
+    if (window.confirm("Are You Sure?")) {
+      DeleteStudent(id);
+    }
   };
 
   useEffect(() => {

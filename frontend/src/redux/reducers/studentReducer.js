@@ -5,6 +5,7 @@ import {
   STUDENT_FAIL,
   STUDENT_CREATED,
   STUDENT_UPDATED,
+  STUDENT_UPDATED_CLEAR,
   STUDENT_DELETED,
   LOGOUT_SUCCESS
 } from "../actions/actionTypes";
@@ -23,8 +24,7 @@ const studentReducer = (state = initialState, action) => {
       return {
         ...state,
         message: "",
-        isLoading: true,
-        success: false
+        isLoading: true
       };
     case STUDENTS_LOADED:
       return {
@@ -39,13 +39,16 @@ const studentReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        student: action.payload,
-        success: false
+        student: action.payload
       };
     case STUDENT_CREATED:
       return {
         ...state,
         isLoading: false,
+        students: {
+          ...state.students,
+          students: [action.payload, ...state.students.students]
+        },
         student: action.payload,
         message: "Student created successfully",
         success: true
@@ -54,15 +57,31 @@ const studentReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        students: {
+          ...state.students,
+          students: state.students.students.map((s) =>
+            s._id !== action.payload._id ? s : action.payload
+          )
+        },
         student: action.payload,
         message: "Student updated successfully",
         success: true
+      };
+    case STUDENT_UPDATED_CLEAR:
+      return {
+        ...state,
+        success: false
       };
     case STUDENT_DELETED:
       return {
         ...state,
         isLoading: false,
-        student: {},
+        students: {
+          ...state.students,
+          students: state.students.students.filter(
+            (s) => s._id !== action.payload
+          )
+        },
         message: "Student deleted successfully",
         success: true
       };
