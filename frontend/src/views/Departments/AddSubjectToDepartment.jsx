@@ -14,22 +14,25 @@ import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import { LoadSubjects } from "../../redux/actions/subjectAction";
-import { CreateDepartmentSubject } from "../../redux/actions/departmentAction";
+import {
+  CreateDepartmentSubject,
+  ClearUpdateSuccess
+} from "../../redux/actions/departmentAction";
 
 // Validation
 const subjectSchema = yup.object().shape({
   code: yup.string().required(),
   level: yup.string().required(),
-  type: yup.string().required(),
+  type: yup.string().required()
 });
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
 function AddSubjectToDepartment() {
@@ -43,21 +46,21 @@ function AddSubjectToDepartment() {
   const dispatch = useDispatch();
   const {
     handleSubmit,
-    setValue,
     formState: { errors },
     control,
-    register,
+    register
   } = useForm({
-    resolver: yupResolver(subjectSchema),
+    resolver: yupResolver(subjectSchema)
   });
 
   useEffect(() => {
     if (success) {
+      dispatch(ClearUpdateSuccess());
       history.push(`/departments/show/${id}`);
     }
 
     dispatch(LoadSubjects("", "", 2000));
-  }, [id, success, history, LoadSubjects, setValue]);
+  }, [id, success, history, dispatch]);
 
   const onSubmitForm = (data) => {
     dispatch(CreateDepartmentSubject(id, data));
@@ -92,7 +95,7 @@ function AddSubjectToDepartment() {
               margin="normal"
               required
               fullWidth
-              label="Department code"
+              label="Subject code"
               {...register("code")}
             />
           )}

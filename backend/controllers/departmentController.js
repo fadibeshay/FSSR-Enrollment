@@ -161,7 +161,11 @@ const addSubToDepart = asyncHandler(async (req, res) => {
   });
 
   await depart.save();
-  res.json(subject);
+  res.json({
+    subject,
+    type,
+    level
+  });
 });
 
 // @desc   Remove a subject from department

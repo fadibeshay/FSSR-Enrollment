@@ -5,9 +5,11 @@ import {
   DEPARTMENT_LOADED,
   DEPARTMENT_CREATED,
   DEPARTMENT_UPDATED,
+  DEPARTMENT_UPDATED_CLEAR,
   DEPARTMENT_DELETED,
   DEPARTMENT_FAIL,
-  DEPARTMENT_SUBJECT_DELETED,
+  DEPARTMENT_SUBJECT_ADDED,
+  DEPARTMENT_SUBJECT_DELETED
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { getMessage, clearMessage } from "./messageAction";
@@ -15,23 +17,31 @@ import { headerConfig } from "./userAction";
 
 // Load DEPARTMENTs
 export const LoadDepartments =
-  (name = "") =>
+  (keyword = "") =>
   async (dispatch, getState) => {
     try {
-      dispatch({
-        type: DEPARTMENT_LOADING,
-      });
+      if (
+        getState().department.departments.length === 0 ||
+        getState().department.search !== keyword
+      ) {
+        dispatch({
+          type: DEPARTMENT_LOADING
+        });
 
-      const config = headerConfig(getState);
+        const config = headerConfig(getState);
 
-      const { data } = await axios.get(`/api/departments?name=${name}`, config);
+        const { data } = await axios.get(
+          `/api/departments?name=${keyword}`,
+          config
+        );
 
-      dispatch({
-        type: DEPARTMENTS_LOADED,
-        payload: data,
-      });
+        dispatch({
+          type: DEPARTMENTS_LOADED,
+          payload: { departments: data, search: keyword }
+        });
 
-      dispatch(clearErrors());
+        dispatch(clearErrors());
+      }
     } catch (err) {
       dispatch(getErrors(err));
       dispatch({ type: DEPARTMENT_FAIL });
@@ -41,19 +51,20 @@ export const LoadDepartments =
 // Load DEPARTMENT by id
 export const LoadDepartment = (_id) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: DEPARTMENT_LOADING,
-    });
+    if (getState().department.department._id !== _id) {
+      dispatch({
+        type: DEPARTMENT_LOADING
+      });
 
-    const config = headerConfig(getState);
+      const config = headerConfig(getState);
 
-    const { data } = await axios.get(`/api/departments/${_id}`, config);
+      const { data } = await axios.get(`/api/departments/${_id}`, config);
 
-    dispatch({
-      type: DEPARTMENT_LOADED,
-      payload: data,
-    });
-
+      dispatch({
+        type: DEPARTMENT_LOADED,
+        payload: data
+      });
+    }
     dispatch(clearErrors());
   } catch (err) {
     dispatch(getErrors(err));
@@ -64,9 +75,9 @@ export const LoadDepartment = (_id) => async (dispatch, getState) => {
 // Create DEPARTMENT
 export const CreateDepartment = (department) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: DEPARTMENT_LOADING,
-    });
+    // dispatch({
+    //   type: DEPARTMENT_LOADING
+    // });
 
     const config = headerConfig(getState);
 
@@ -74,7 +85,7 @@ export const CreateDepartment = (department) => async (dispatch, getState) => {
 
     dispatch({
       type: DEPARTMENT_CREATED,
-      payload: data,
+      payload: data
     });
 
     dispatch(clearErrors());
@@ -85,46 +96,11 @@ export const CreateDepartment = (department) => async (dispatch, getState) => {
     dispatch({ type: DEPARTMENT_FAIL });
   }
 };
-// Create DEPARTMENT Subject
-export const CreateDepartmentSubject =
-  (departmentId, subject) => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: DEPARTMENT_LOADING,
-      });
-
-      const config = headerConfig(getState);
-
-      const { data } = await axios.post(
-        `/api/departments/${departmentId}/subjects`,
-        subject,
-        config
-      );
-
-      console.log("subject :>> ", data);
-
-      dispatch({
-        type: DEPARTMENT_CREATED,
-        payload: data,
-      });
-
-      dispatch(clearErrors());
-      dispatch(getMessage("Subject Add To Department successfully"));
-    } catch (err) {
-      dispatch(clearMessage());
-      dispatch(getErrors(err));
-      dispatch({ type: DEPARTMENT_FAIL });
-    }
-  };
 
 // Update Department
 export const UpdateDepartment =
   (department, id) => async (dispatch, getState) => {
     try {
-      dispatch({
-        type: DEPARTMENT_LOADING,
-      });
-
       const config = headerConfig(getState);
 
       const { data } = await axios.put(
@@ -135,7 +111,7 @@ export const UpdateDepartment =
 
       dispatch({
         type: DEPARTMENT_UPDATED,
-        payload: data,
+        payload: data
       });
 
       dispatch(clearErrors());
@@ -148,20 +124,22 @@ export const UpdateDepartment =
     }
   };
 
+export const ClearUpdateSuccess = () => (dispatch) => {
+  dispatch({
+    type: DEPARTMENT_UPDATED_CLEAR
+  });
+};
+
 // Delete Department
 export const DeleteDepartment = (_id) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: DEPARTMENT_LOADING,
-    });
-
     const config = headerConfig(getState);
 
     await axios.delete(`/api/departments/${_id}`, config);
 
     dispatch({
       type: DEPARTMENT_DELETED,
-      payload: _id,
+      payload: _id
     });
 
     dispatch(clearErrors());
@@ -173,14 +151,41 @@ export const DeleteDepartment = (_id) => async (dispatch, getState) => {
     dispatch({ type: DEPARTMENT_FAIL });
   }
 };
+
+// Create DEPARTMENT Subject
+export const CreateDepartmentSubject =
+  (departmentId, subject) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: DEPARTMENT_LOADING
+      });
+
+      const config = headerConfig(getState);
+
+      const { data } = await axios.post(
+        `/api/departments/${departmentId}/subjects`,
+        subject,
+        config
+      );
+
+      dispatch({
+        type: DEPARTMENT_SUBJECT_ADDED,
+        payload: data
+      });
+
+      dispatch(clearErrors());
+      dispatch(getMessage("Subject Added To Department successfully"));
+    } catch (err) {
+      dispatch(clearMessage());
+      dispatch(getErrors(err));
+      dispatch({ type: DEPARTMENT_FAIL });
+    }
+  };
+
 // Delete Department subject
 export const DeleteDepartmentSubject =
   (_id, subjectId) => async (dispatch, getState) => {
     try {
-      dispatch({
-        type: DEPARTMENT_LOADING,
-      });
-
       const config = headerConfig(getState);
 
       await axios.delete(
@@ -190,7 +195,7 @@ export const DeleteDepartmentSubject =
 
       dispatch({
         type: DEPARTMENT_SUBJECT_DELETED,
-        payload: subjectId,
+        payload: subjectId
       });
 
       dispatch(clearErrors());

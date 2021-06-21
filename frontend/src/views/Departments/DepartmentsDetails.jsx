@@ -10,52 +10,50 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DeleteIcon from "@material-ui/icons/Delete";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Layout } from "../../container";
 import {
   DeleteDepartmentSubject,
-  LoadDepartment,
+  LoadDepartment
 } from "../../redux/actions/departmentAction";
 
 import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650,
+    minWidth: 650
   },
   iconButton: {
-    padding: 10,
+    padding: 10
   },
   divider: {
     height: 28,
-    margin: 4,
+    margin: 4
   },
   studentContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: "10px",
+    paddingBottom: "10px"
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
     width: 250,
-    marginTop: "1rem",
+    marginTop: "1rem"
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
-  },
+    flex: 1
+  }
 }));
 
 function DepartmentsDetails() {
   const classes = useStyles();
-  const [search, setSearch] = useState("");
-  const [counter, setCounter] = useState(null);
 
-  const { name, subjects, _id } = useSelector(
+  const { name, subjects } = useSelector(
     (state) => state.department.department
   );
 
@@ -65,7 +63,7 @@ function DepartmentsDetails() {
 
   useEffect(() => {
     dispatch(LoadDepartment(id));
-  }, [id, LoadDepartment, dispatch]);
+  }, [id, dispatch]);
 
   const confirmDeleteSubject = (subjectId) => {
     window.confirm("Are You Sure?") &&
@@ -87,7 +85,7 @@ function DepartmentsDetails() {
             <Link
               to={`/departments/subject/${id}`}
               style={{
-                color: "#FFF",
+                color: "#FFF"
               }}
             >
               Add new Subject

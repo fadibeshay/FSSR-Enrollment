@@ -14,20 +14,21 @@ import {
   CreateDepartment,
   LoadDepartment,
   UpdateDepartment,
+  ClearUpdateSuccess
 } from "../../redux/actions/departmentAction";
 
 // Validation
 const departmentSchema = yup.object().shape({
-  name: yup.string().required(),
+  name: yup.string().required()
 });
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
 function AddDepartments({
@@ -35,8 +36,9 @@ function AddDepartments({
   CreateDepartment,
   LoadDepartment,
   UpdateDepartment,
+  ClearUpdateSuccess,
   department,
-  success,
+  success
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -45,13 +47,14 @@ function AddDepartments({
     handleSubmit,
     setValue,
     formState: { errors },
-    control,
+    control
   } = useForm({
-    resolver: yupResolver(departmentSchema),
+    resolver: yupResolver(departmentSchema)
   });
 
   useEffect(() => {
     if (success) {
+      ClearUpdateSuccess();
       history.push("/departments");
     }
 
@@ -62,7 +65,15 @@ function AddDepartments({
         setValue("name", department.name);
       }
     }
-  }, [id, success, department, history, LoadDepartment, setValue]);
+  }, [
+    id,
+    success,
+    department,
+    history,
+    LoadDepartment,
+    ClearUpdateSuccess,
+    setValue
+  ]);
 
   const onSubmitForm = (data) => {
     if (id) {
@@ -128,11 +139,12 @@ function AddDepartments({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   department: state.department.department,
-  success: state.department.success,
+  success: state.department.success
 });
 
 export default connect(mapStateToProps, {
   CreateDepartment,
   LoadDepartment,
   UpdateDepartment,
+  ClearUpdateSuccess
 })(AddDepartments);

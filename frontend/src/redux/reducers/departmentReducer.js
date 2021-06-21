@@ -4,10 +4,12 @@ import {
   DEPARTMENT_LOADED,
   DEPARTMENT_CREATED,
   DEPARTMENT_UPDATED,
+  DEPARTMENT_UPDATED_CLEAR,
   DEPARTMENT_DELETED,
   DEPARTMENT_FAIL,
   LOGOUT_SUCCESS,
-  DEPARTMENT_SUBJECT_DELETED,
+  DEPARTMENT_SUBJECT_ADDED,
+  DEPARTMENT_SUBJECT_DELETED
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -16,6 +18,7 @@ const initialState = {
   message: "",
   isLoading: false,
   success: false,
+  search: ""
 };
 
 const departmentReducer = (state = initialState, action) => {
@@ -25,15 +28,16 @@ const departmentReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: true,
-        success: false,
+        success: false
       };
     case DEPARTMENTS_LOADED:
       return {
         ...state,
         isLoading: false,
         message: "",
-        departments: action.payload,
-        success: false,
+        departments: action.payload.departments,
+        search: action.payload.search,
+        success: false
       };
     case DEPARTMENT_LOADED:
       return {
@@ -41,45 +45,53 @@ const departmentReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         department: action.payload,
-        success: false,
+        success: false
       };
     case DEPARTMENT_CREATED:
       return {
         ...state,
         isLoading: false,
+        departments: [...state.departments, action.payload],
         department: action.payload,
-        success: true,
+        success: true
       };
     case DEPARTMENT_UPDATED:
       return {
         ...state,
         isLoading: false,
-        departments:
-          state.departments.length > 0
-            ? state.departments.map((department) =>
-                department._id === action.payload._id
-                  ? action.payload
-                  : department
-              )
-            : state.departments,
+        departments: state.departments.map((d) =>
+          d._id === action.payload._id ? action.payload : d
+        ),
         department: action.payload,
-        success: true,
+        success: true
+      };
+
+    case DEPARTMENT_UPDATED_CLEAR:
+      return {
+        ...state,
+        success: false
       };
 
     case DEPARTMENT_DELETED:
       return {
         ...state,
         isLoading: false,
-        departments:
-          state.departments.length > 0
-            ? state.departments.filter((s) => s._id !== action.payload)
-            : state.departments,
-        department: {},
-        success: false,
+        departments: state.departments.filter((s) => s._id !== action.payload),
+        success: false
+      };
+
+    case DEPARTMENT_SUBJECT_ADDED:
+      return {
+        ...state,
+        isLoading: false,
+        department: {
+          ...state.department,
+          subjects: [...state.department.subjects, action.payload]
+        },
+        success: true
       };
 
     case DEPARTMENT_SUBJECT_DELETED:
-      //
       return {
         ...state,
         isLoading: false,
@@ -87,9 +99,9 @@ const departmentReducer = (state = initialState, action) => {
           ...state.department,
           subjects: state.department.subjects.filter(
             (s) => s.subject._id !== action.payload
-          ),
+          )
         },
-        success: false,
+        success: false
       };
 
     case DEPARTMENT_FAIL:
@@ -97,7 +109,7 @@ const departmentReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: false,
-        success: false,
+        success: false
       };
     case LOGOUT_SUCCESS:
       return initialState;

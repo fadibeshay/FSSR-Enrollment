@@ -12,7 +12,7 @@ import style from "./Departments.module.css";
 import { connect } from "react-redux";
 import {
   LoadDepartments,
-  DeleteDepartment,
+  DeleteDepartment
 } from "../../redux/actions/departmentAction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -23,36 +23,37 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: 275
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 250,
+    width: 250
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
+    flex: 1
   },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
-    transform: "scale(0.8)",
+    transform: "scale(0.8)"
   },
   title: {
-    fontSize: 14,
+    fontSize: 14
   },
   pos: {
-    marginBottom: 12,
-  },
+    marginBottom: 12
+  }
 }));
 
 function Departments({
   departments,
+  keyword,
   DeleteDepartment,
   LoadDepartments,
-  isLoading,
+  isLoading
 }) {
   const classes = useStyles();
   const [counter, setCounter] = useState(null);
@@ -62,8 +63,8 @@ function Departments({
   };
 
   useEffect(() => {
-    LoadDepartments();
-  }, [LoadDepartments]);
+    LoadDepartments(keyword);
+  }, [LoadDepartments, keyword]);
 
   const onDepartmentsSearch = (e) => {
     if (counter) {
@@ -83,7 +84,7 @@ function Departments({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "10px",
+          marginBottom: "10px"
         }}
       >
         <Button variant="contained" color="primary">
@@ -96,6 +97,7 @@ function Departments({
           <InputBase
             className={classes.input}
             placeholder="Search Departments"
+            defaultValue={keyword}
             inputProps={{ "aria-label": "Search Departments" }}
             onChange={onDepartmentsSearch}
           />
@@ -118,7 +120,7 @@ function Departments({
                 <Link
                   to={`/departments/show/${department._id}`}
                   style={{
-                    color: "rgba(0, 0, 0, 0.87)",
+                    color: "rgba(0, 0, 0, 0.87)"
                   }}
                 >
                   <CardContent>
@@ -136,7 +138,7 @@ function Departments({
                     <Link
                       to={`/departments/add/${department._id}`}
                       style={{
-                        color: "rgba(0, 0, 0, 0.87)",
+                        color: "rgba(0, 0, 0, 0.87)"
                       }}
                     >
                       <EditIcon />
@@ -165,7 +167,8 @@ function Departments({
 
 const mapStateToProps = (state) => ({
   departments: state.department.departments,
-  isLoading: state.department.isLoading,
+  keyword: state.department.search,
+  isLoading: state.department.isLoading
 });
 
 export default connect(mapStateToProps, { LoadDepartments, DeleteDepartment })(

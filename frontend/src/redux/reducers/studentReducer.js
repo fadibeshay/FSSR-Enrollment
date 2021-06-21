@@ -12,6 +12,7 @@ import {
 
 const initialState = {
   students: { students: [] },
+  search: "",
   student: {},
   message: "",
   isLoading: false,
@@ -31,7 +32,8 @@ const studentReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        students: action.payload,
+        students: action.payload.students,
+        search: action.payload.search,
         success: false
       };
     case STUDENT_LOADED:

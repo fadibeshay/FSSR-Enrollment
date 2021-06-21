@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Students({
   studentsState,
+  keyword,
   DeleteStudent,
   LoadStudents,
   isLoading,
@@ -66,8 +67,8 @@ function Students({
   };
 
   useEffect(() => {
-    LoadStudents();
-  }, [LoadStudents, success]);
+    LoadStudents(keyword);
+  }, [LoadStudents, success, keyword]);
 
   const onStudentsSearch = (e) => {
     setSearch(e.target.value);
@@ -106,6 +107,7 @@ function Students({
           <InputBase
             className={classes.input}
             placeholder="Search Students"
+            defaultValue={keyword}
             inputProps={{ "aria-label": "Search Students" }}
             onChange={onStudentsSearch}
           />
@@ -192,6 +194,7 @@ function Students({
 const mapStateToProps = (state) => ({
   studentsState: state.student.students,
   isLoading: state.student.isLoading,
+  keyword: state.student.search,
   success: state.student.success
 });
 

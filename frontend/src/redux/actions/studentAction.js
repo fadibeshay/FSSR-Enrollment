@@ -21,6 +21,7 @@ export const LoadStudents =
       if (
         getState().student.students.students.length === 0 ||
         !getState().student.students.page ||
+        getState().student.search !== keyword ||
         getState().student.students.page !== page
       ) {
         dispatch({
@@ -36,7 +37,7 @@ export const LoadStudents =
 
         dispatch({
           type: STUDENTS_LOADED,
-          payload: data
+          payload: { students: data, search: keyword }
         });
 
         dispatch(clearErrors());
