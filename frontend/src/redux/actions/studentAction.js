@@ -84,6 +84,10 @@ export const LoadStudent = (_id) => async (dispatch, getState) => {
 // Create student
 export const CreateStudent = (student) => async (dispatch, getState) => {
   try {
+    dispatch({
+      type: STUDENT_LOADING
+    });
+
     const config = headerConfig(getState);
 
     const { data } = await axios.post("/api/students", student, config);
@@ -106,6 +110,10 @@ export const CreateStudent = (student) => async (dispatch, getState) => {
 // Update student
 export const UpdateStudent = (student, id) => async (dispatch, getState) => {
   try {
+    dispatch({
+      type: STUDENT_LOADING
+    });
+
     const config = headerConfig(getState);
 
     const { data } = await axios.put(`/api/students/${id}`, student, config);

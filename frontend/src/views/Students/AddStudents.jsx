@@ -37,6 +37,7 @@ function AddStudents({
   departments,
   CreateStudent,
   LoadStudent,
+  isLoading,
   student,
   UpdateStudent,
   ClearUpdateSuccess,
@@ -69,6 +70,7 @@ function AddStudents({
     address: yup.string().required(),
     phoneNumber: yup.string().required(),
     department: yup.string().required(),
+    minor: yup.string(),
     level: yup.string().required(),
     password: !id && yup.string().min(6).required()
   });
@@ -112,6 +114,7 @@ function AddStudents({
         setValue("address", student.address);
         setValue("phoneNumber", student.phoneNumber);
         setValue("department", student.major.name);
+        setValue("minor", student.minor?.name);
         setValue("level", student.level);
       }
     }
@@ -335,7 +338,10 @@ function AddStudents({
           <Alert severity="error">{errors.address?.message} </Alert>
         )}
 
-        <FormControl fullWidth style={{ marginBottom: "1rem" }}>
+        <FormControl
+          fullWidth
+          style={{ marginBottom: "1.5rem", marginTop: "1rem" }}
+        >
           <InputLabel id="demo-controlled-open-select-label">gender</InputLabel>
 
           <Controller
@@ -494,7 +500,10 @@ function AddStudents({
           <Alert severity="error">{errors.gradYear?.message} </Alert>
         )}
 
-        <FormControl fullWidth>
+        <FormControl
+          fullWidth
+          style={{ marginBottom: "1.5rem", marginTop: "1rem" }}
+        >
           <InputLabel id="demo-controlled-open-select-label">
             Department
           </InputLabel>
@@ -528,6 +537,39 @@ function AddStudents({
 
           {errors.department && (
             <Alert severity="error">{errors.department?.message} </Alert>
+          )}
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel id="minor">Minor</InputLabel>
+
+          {(departments || student.minor) && (
+            <Controller
+              name="minor"
+              control={control}
+              defaultValue=""
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  labelId="minor"
+                  id="minor"
+                  label="minor"
+                  fullWidth
+                  name="minor"
+                  variant="outlined"
+                  onChange={onChange}
+                  value={value}
+                >
+                  {departments.map((dep) => (
+                    <MenuItem value={dep.name} key={dep._id}>
+                      {dep.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem value="none" key={1000}>
+                    None
+                  </MenuItem>
+                </Select>
+              )}
+            />
           )}
         </FormControl>
 
@@ -580,15 +622,22 @@ function AddStudents({
           <Alert severity="error">{errors.password?.message} </Alert>
         )}
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          {id ? "Edit " : "Add New"}
-        </Button>
+        {!isLoading && (
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {id ? "Edit " : "Add New"}
+          </Button>
+        )}
+        {isLoading && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </form>
     </Layout>
   );

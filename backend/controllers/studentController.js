@@ -87,11 +87,15 @@ const createStudent = asyncHandler(async (req, res) => {
   }
 
   let minDepart;
-  if (minor) {
+  if (minor && minor !== "none") {
     minDepart = await Department.findOne({ name: minor });
     if (!minDepart) {
       res.status(404);
       throw new Error("Minor not found.");
+    }
+    if (minDepart._id.toString() === majorDepart._id.toString()) {
+      res.status(400);
+      throw new Error("Minor can't be same as Major.");
     }
   }
 
@@ -121,7 +125,7 @@ const createStudent = asyncHandler(async (req, res) => {
   });
 
   if (minor) {
-    student.minor = minDepart._id;
+    student.minor = minDepart ? minDepart._id : null;
   }
 
   const createdStudent = await student.save();
@@ -275,10 +279,18 @@ const updateStudent = asyncHandler(async (req, res) => {
 
   let minDepart;
   if (minor) {
-    minDepart = await Department.findOne({ name: minor });
-    if (!minDepart) {
-      res.status(404);
-      throw new Error("Minor not found.");
+    if (minor === "none") {
+      minDepart = null;
+    } else {
+      minDepart = await Department.findOne({ name: minor });
+      if (!minDepart) {
+        res.status(404);
+        throw new Error("Minor not found.");
+      }
+      if (minDepart._id.toString() === majorDepart._id.toString()) {
+        res.status(400);
+        throw new Error("Minor can't be same as Major.");
+      }
     }
   }
 
@@ -300,7 +312,7 @@ const updateStudent = asyncHandler(async (req, res) => {
   student.phoneNumber = phoneNumber;
   student.level = level;
   student.major = majorDepart._id;
-  if (minor) student.minor = minDepart._id;
+  student.minor = minDepart ? minDepart._id : null;
 
   await student.save();
 
