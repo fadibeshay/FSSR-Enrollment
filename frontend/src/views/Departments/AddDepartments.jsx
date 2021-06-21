@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { Layout } from "../../container";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   CreateDepartment,
   LoadDepartment,
@@ -38,7 +39,8 @@ function AddDepartments({
   UpdateDepartment,
   ClearUpdateSuccess,
   department,
-  success
+  success,
+  isLoading
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -122,15 +124,23 @@ function AddDepartments({
 
         {errors.name && <Alert severity="error">{errors.name?.message} </Alert>}
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          {id ? "Edit " : "Add New"}
-        </Button>
+        {!isLoading && (
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {id ? "Edit " : "Add New"}
+          </Button>
+        )}
+
+        {isLoading && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </form>
     </Layout>
   );
@@ -139,7 +149,8 @@ function AddDepartments({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   department: state.department.department,
-  success: state.department.success
+  success: state.department.success,
+  isLoading: state.department.isLoading
 });
 
 export default connect(mapStateToProps, {

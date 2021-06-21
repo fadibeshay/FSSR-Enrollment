@@ -75,9 +75,9 @@ export const LoadDepartment = (_id) => async (dispatch, getState) => {
 // Create DEPARTMENT
 export const CreateDepartment = (department) => async (dispatch, getState) => {
   try {
-    // dispatch({
-    //   type: DEPARTMENT_LOADING
-    // });
+    dispatch({
+      type: DEPARTMENT_LOADING
+    });
 
     const config = headerConfig(getState);
 
@@ -101,6 +101,10 @@ export const CreateDepartment = (department) => async (dispatch, getState) => {
 export const UpdateDepartment =
   (department, id) => async (dispatch, getState) => {
     try {
+      dispatch({
+        type: DEPARTMENT_LOADING
+      });
+
       const config = headerConfig(getState);
 
       const { data } = await axios.put(

@@ -12,6 +12,7 @@ import * as yup from "yup";
 import { Layout } from "../../container";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { LoadSubjects } from "../../redux/actions/subjectAction";
 import {
@@ -40,6 +41,7 @@ function AddSubjectToDepartment() {
   const history = useHistory();
   const { id } = useParams();
   const success = useSelector((state) => state.department.success);
+  const isLoading = useSelector((state) => state.department.isLoading);
   const { subjects } = useSelector((state) => state.subject.subjects);
   const errorMessage = useSelector((state) => state.errors.message);
 
@@ -167,15 +169,22 @@ function AddSubjectToDepartment() {
           )}
         </FormControl>
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          Add New
-        </Button>
+        {!isLoading && (
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Add New
+          </Button>
+        )}
+        {isLoading && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </form>
     </Layout>
   );

@@ -22,74 +22,74 @@ function Home({ LoadStats, statsState }) {
         component="h2"
         color="textPrimary"
         style={{
-          marginBottom: "3rem",
+          marginBottom: "3rem"
         }}
       >
         Welcome to FSSR Enrollment System
       </Typography>
 
-      {!statsState.isLoading && (
-        <Grid container spacing={2}>
-          <Grid item xs={6} className="numberContainer">
-            <ScheduleIcon />
-            <h5>
-              Number : {statsState.stats.currentSemester.name}
-              <br />
-              Start Date{" "}
-              <Moment format="YYYY/MM/DD">
-                {statsState.stats.currentSemester.startDate}
-              </Moment>
-              <br />
-              End Date :{" "}
-              <Moment format="YYYY/MM/DD">
-                {statsState.stats.currentSemester.endDate}
-              </Moment>
-            </h5>
-            <Typography variant="h6" component="h5" color="textSecondary">
-              Current Semester
-            </Typography>
-          </Grid>
-
-          <Grid item xs={6} className="numberContainer">
-            <AccountBalanceIcon />
-            <h4>{statsState.stats.departCount}</h4>
-            <Typography variant="h6" component="h5" color="textSecondary">
-              Number Of Departments
-            </Typography>
-          </Grid>
-
-          <Grid item xs={6} className="numberContainer">
-            <LibraryBooksIcon />
-            <h4>{statsState.stats.courseCount}</h4>
-
-            <Typography variant="h6" component="h5" color="textSecondary">
-              Number Of Courses
-            </Typography>
-          </Grid>
-
-          <Grid item xs={6} className="numberContainer">
-            <PeopleIcon />
-            <h4>{statsState.stats.enroledStdCount}</h4>
-            <Typography variant="h6" component="h5" color="textSecondary">
-              Number Of Students
-            </Typography>
-          </Grid>
+      {/* {!statsState.isLoading && ( */}
+      <Grid container spacing={2}>
+        <Grid item xs={6} className="numberContainer">
+          <ScheduleIcon />
+          <h5>
+            Number : {statsState.stats.currentSemester.name}
+            <br />
+            Start Date{" "}
+            <Moment format="YYYY/MM/DD">
+              {statsState.stats.currentSemester.startDate}
+            </Moment>
+            <br />
+            End Date :{" "}
+            <Moment format="YYYY/MM/DD">
+              {statsState.stats.currentSemester.endDate}
+            </Moment>
+          </h5>
+          <Typography variant="h6" component="h5" color="textSecondary">
+            Current Semester
+          </Typography>
         </Grid>
-      )}
 
-      {statsState.isLoading && (
+        <Grid item xs={6} className="numberContainer">
+          <AccountBalanceIcon />
+          <h4>{statsState.stats.departCount}</h4>
+          <Typography variant="h6" component="h5" color="textSecondary">
+            Number Of Departments
+          </Typography>
+        </Grid>
+
+        <Grid item xs={6} className="numberContainer">
+          <LibraryBooksIcon />
+          <h4>{statsState.stats.courseCount}</h4>
+
+          <Typography variant="h6" component="h5" color="textSecondary">
+            Number Of Courses
+          </Typography>
+        </Grid>
+
+        <Grid item xs={6} className="numberContainer">
+          <PeopleIcon />
+          <h4>{statsState.stats.enroledStdCount}</h4>
+          <Typography variant="h6" component="h5" color="textSecondary">
+            Number Of Students
+          </Typography>
+        </Grid>
+      </Grid>
+      {/* )} */}
+
+      {/* {statsState.isLoading && (
         <div style={{ textAlign: "center" }}>
           <CircularProgress disableShrink />
         </div>
-      )}
+      )} */}
     </Layout>
   );
 }
 
 const mapStateToProps = (state) => ({
-  statsState: state.stats,
+  statsState: state.stats
 });
 
 export default connect(mapStateToProps, {
-  LoadStats,
+  LoadStats
 })(Home);

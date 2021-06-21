@@ -53,7 +53,8 @@ function Students({
   DeleteStudent,
   LoadStudents,
   isLoading,
-  success
+  success,
+  currentPage
 }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
@@ -67,8 +68,8 @@ function Students({
   };
 
   useEffect(() => {
-    LoadStudents(keyword);
-  }, [LoadStudents, success, keyword]);
+    LoadStudents(keyword, currentPage);
+  }, [LoadStudents, success, keyword, currentPage]);
 
   const onStudentsSearch = (e) => {
     setSearch(e.target.value);
@@ -195,7 +196,8 @@ const mapStateToProps = (state) => ({
   studentsState: state.student.students,
   isLoading: state.student.isLoading,
   keyword: state.student.search,
-  success: state.student.success
+  success: state.student.success,
+  currentPage: state.student.students.page
 });
 
 export default connect(mapStateToProps, { LoadStudents, DeleteStudent })(

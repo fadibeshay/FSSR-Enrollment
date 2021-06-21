@@ -10,7 +10,7 @@ import {
   Paper,
   Button,
   Grid,
-  CircularProgress,
+  CircularProgress
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -25,29 +25,29 @@ import { LoadSubjects, DeleteSubject } from "../../redux/actions/subjectAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: 275
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 250,
+    width: 250
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
+    flex: 1
   },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
-    transform: "scale(0.8)",
+    transform: "scale(0.8)"
   },
   title: {
-    fontSize: 14,
+    fontSize: 14
   },
   pos: {
-    marginBottom: 12,
-  },
+    marginBottom: 12
+  }
 }));
 
 function Subjects({
@@ -56,6 +56,8 @@ function Subjects({
   LoadSubjects,
   isLoading,
   success,
+  keyword,
+  currentPage
 }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
@@ -67,8 +69,8 @@ function Subjects({
   };
 
   useEffect(() => {
-    LoadSubjects();
-  }, [LoadSubjects, success]);
+    LoadSubjects(keyword, currentPage || 1);
+  }, [LoadSubjects, success, keyword, currentPage]);
 
   const onSubjectsSearch = (e) => {
     setSearch(e.target.value);
@@ -95,7 +97,7 @@ function Subjects({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "10px",
+          marginBottom: "10px"
         }}
       >
         <Button variant="contained" color="primary">
@@ -106,6 +108,7 @@ function Subjects({
 
         <Paper component="form" className={classes.inputContainer}>
           <InputBase
+            defaultValue={keyword}
             className={classes.input}
             placeholder="Search Subjects"
             inputProps={{ "aria-label": "Search Subjects" }}
@@ -140,7 +143,7 @@ function Subjects({
                     <Link
                       to={`/subjects/add/${subject._id}`}
                       style={{
-                        color: "rgba(0, 0, 0, 0.87)",
+                        color: "rgba(0, 0, 0, 0.87)"
                       }}
                     >
                       <EditIcon />
@@ -184,6 +187,8 @@ const mapStateToProps = (state) => ({
   subjectsState: state.subject.subjects,
   isLoading: state.subject.isLoading,
   success: state.subject.success,
+  keyword: state.subject.search,
+  currentPage: state.subject.subjects.page
 });
 
 export default connect(mapStateToProps, { LoadSubjects, DeleteSubject })(

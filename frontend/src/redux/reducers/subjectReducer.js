@@ -5,6 +5,7 @@ import {
   SUBJECT_FAIL,
   SUBJECT_CREATED,
   SUBJECT_UPDATED,
+  SUBJECT_UPDATED_CLEAR,
   SUBJECT_DELETED,
   LOGOUT_SUCCESS
 } from "../actions/actionTypes";
@@ -12,6 +13,7 @@ import {
 const initialState = {
   subjects: { subjects: [] },
   subject: {},
+  search: "",
   message: "",
   isLoading: false,
   success: false
@@ -31,7 +33,8 @@ const subjectReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        subjects: action.payload,
+        subjects: action.payload.subjects,
+        search: action.payload.search,
         success: false
       };
     case SUBJECT_LOADED:
@@ -46,6 +49,10 @@ const subjectReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        subjects: {
+          ...state.subjects,
+          subjects: [action.payload, ...state.subjects.subjects]
+        },
         subject: action.payload,
         message: "Subject created successfully",
         success: true
@@ -54,15 +61,31 @@ const subjectReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        subjects: {
+          ...state.subjects,
+          subjects: state.subjects.subjects.map((s) =>
+            s._id !== action.payload._id ? s : action.payload
+          )
+        },
         subject: action.payload,
         message: "Subject updated successfully",
         success: true
+      };
+    case SUBJECT_UPDATED_CLEAR:
+      return {
+        ...state,
+        success: false
       };
     case SUBJECT_DELETED:
       return {
         ...state,
         isLoading: false,
-        subject: {},
+        subjects: {
+          ...state.subjects,
+          subjects: state.subjects.subjects.filter(
+            (s) => s._id !== action.payload
+          )
+        },
         message: "Subject deleted successfully",
         success: true
       };
