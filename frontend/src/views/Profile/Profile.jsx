@@ -16,8 +16,10 @@ import style from "./Profile.module.css";
 
 function Profile({ user, isLoading, LoadUser }) {
   useEffect(() => {
-    LoadUser();
-  }, [LoadUser]);
+    if (!user.fullNameEn) {
+      LoadUser();
+    }
+  }, [LoadUser, user]);
   return (
     <Layout>
       {user.nid ? (
@@ -83,7 +85,7 @@ function Profile({ user, isLoading, LoadUser }) {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
-  isLoading: state.user.isLoading,
+  isLoading: state.user.isLoading
 });
 
 export default connect(mapStateToProps, { LoadUser })(Profile);

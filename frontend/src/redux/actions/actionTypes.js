@@ -57,6 +57,7 @@ export const YEARS_LOADED = "YEARS_LOADED";
 export const YEAR_LOADED = "YEAR_LOADED";
 export const YEAR_CREATED = "YEAR_CREATED";
 export const YEAR_UPDATED = "YEAR_UPDATED";
+export const YEAR_UPDATED_CLEAR = "YEAR_UPDATED_CLEAR";
 export const YEAR_DELETED = "YEAR_DELETED";
 export const YEAR_FAIL = "YEAR_FAIL";
 

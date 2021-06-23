@@ -151,6 +151,7 @@ const getAcadYears = asyncHandler(async (req, res) => {
   const count = await AcadYear.countDocuments({ ...keyword });
 
   const acadYears = await AcadYear.find({ ...keyword })
+    .select("year")
     .sort("-createdAt")
     .limit(pageSize)
     .skip(pageSize * (page - 1));

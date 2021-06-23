@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Students({
   studentsState,
-  keyword,
+  search,
   DeleteStudent,
   LoadStudents,
   isLoading,
@@ -57,7 +57,6 @@ function Students({
   currentPage
 }) {
   const classes = useStyles();
-  const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
   const { students, page, totalPages } = studentsState;
 
@@ -68,12 +67,10 @@ function Students({
   };
 
   useEffect(() => {
-    LoadStudents(keyword, currentPage);
-  }, [LoadStudents, success, keyword, currentPage]);
+    LoadStudents(search, currentPage);
+  }, [LoadStudents, success, search, currentPage]);
 
   const onStudentsSearch = (e) => {
-    setSearch(e.target.value);
-
     if (counter) {
       clearTimeout(counter);
     }
@@ -108,7 +105,7 @@ function Students({
           <InputBase
             className={classes.input}
             placeholder="Search Students"
-            defaultValue={keyword}
+            defaultValue={search}
             inputProps={{ "aria-label": "Search Students" }}
             onChange={onStudentsSearch}
           />
@@ -195,7 +192,7 @@ function Students({
 const mapStateToProps = (state) => ({
   studentsState: state.student.students,
   isLoading: state.student.isLoading,
-  keyword: state.student.search,
+  search: state.student.search,
   success: state.student.success,
   currentPage: state.student.students.page
 });

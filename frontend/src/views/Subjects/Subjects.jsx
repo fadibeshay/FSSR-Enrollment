@@ -56,11 +56,10 @@ function Subjects({
   LoadSubjects,
   isLoading,
   success,
-  keyword,
+  search,
   currentPage
 }) {
   const classes = useStyles();
-  const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
   const { subjects, page, totalPages } = subjectsState;
 
@@ -69,12 +68,10 @@ function Subjects({
   };
 
   useEffect(() => {
-    LoadSubjects(keyword, currentPage || 1);
-  }, [LoadSubjects, success, keyword, currentPage]);
+    LoadSubjects(search, currentPage || 1);
+  }, [LoadSubjects, success, search, currentPage]);
 
   const onSubjectsSearch = (e) => {
-    setSearch(e.target.value);
-
     if (counter) {
       clearTimeout(counter);
     }
@@ -108,7 +105,7 @@ function Subjects({
 
         <Paper component="form" className={classes.inputContainer}>
           <InputBase
-            defaultValue={keyword}
+            defaultValue={search}
             className={classes.input}
             placeholder="Search Subjects"
             inputProps={{ "aria-label": "Search Subjects" }}
@@ -187,7 +184,7 @@ const mapStateToProps = (state) => ({
   subjectsState: state.subject.subjects,
   isLoading: state.subject.isLoading,
   success: state.subject.success,
-  keyword: state.subject.search,
+  search: state.subject.search,
   currentPage: state.subject.subjects.page
 });
 

@@ -4,6 +4,7 @@ import {
   YEAR_LOADED,
   YEAR_CREATED,
   YEAR_UPDATED,
+  YEAR_UPDATED_CLEAR,
   YEAR_DELETED,
   YEAR_FAIL,
   LOGOUT_SUCCESS
@@ -11,10 +12,11 @@ import {
 
 const initialState = {
   years: { acadYears: [] },
-  year: { semesters: [] },
+  year: { semesters: [], current: false },
   message: "",
   isLoading: false,
-  success: false
+  success: false,
+  search: ""
 };
 
 const yearReducer = (state = initialState, action) => {
@@ -31,7 +33,8 @@ const yearReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        years: action.payload,
+        years: action.payload.years,
+        search: action.payload.search,
         success: false
       };
     case YEAR_LOADED:
@@ -47,6 +50,10 @@ const yearReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        years: {
+          ...state.years,
+          acadYears: [action.payload, ...state.years.acadYears]
+        },
         year: action.payload,
         message: "Year created successfully",
         success: true
@@ -56,14 +63,30 @@ const yearReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         year: action.payload,
+        years: {
+          ...state.years,
+          acadYears: state.years.acadYears.map((y) =>
+            y._id !== action.payload._id ? y : action.payload
+          )
+        },
         message: "Year updated successfully",
         success: true
+      };
+    case YEAR_UPDATED_CLEAR:
+      return {
+        ...state,
+        success: false
       };
     case YEAR_DELETED:
       return {
         ...state,
         isLoading: false,
-        year: {},
+        years: {
+          ...state.years,
+          acadYears: state.years.acadYears.filter(
+            (y) => y._id !== action.payload
+          )
+        },
         message: "Year deleted successfully",
         success: true
       };

@@ -46,7 +46,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Years({ yearsState, DeleteYear, LoadYears, isLoading }) {
+function Years({
+  yearsState,
+  DeleteYear,
+  LoadYears,
+  isLoading,
+  keyword,
+  currentPage
+}) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
@@ -57,8 +64,8 @@ function Years({ yearsState, DeleteYear, LoadYears, isLoading }) {
   // };
 
   useEffect(() => {
-    LoadYears();
-  }, [LoadYears]);
+    LoadYears(keyword, currentPage || 1);
+  }, [LoadYears, keyword, currentPage]);
 
   const onYearsSearch = (e) => {
     setSearch(e.target.value);
@@ -96,6 +103,7 @@ function Years({ yearsState, DeleteYear, LoadYears, isLoading }) {
 
         <Paper component="form" className={classes.inputContainer}>
           <InputBase
+            defaultValue={keyword}
             className={classes.input}
             placeholder="Search Years"
             inputProps={{ "aria-label": "Search Years" }}
@@ -175,7 +183,9 @@ function Years({ yearsState, DeleteYear, LoadYears, isLoading }) {
 
 const mapStateToProps = (state) => ({
   yearsState: state.year.years,
-  isLoading: state.year.isLoading
+  isLoading: state.year.isLoading,
+  keyword: state.year.search,
+  currentPage: state.year.years.page
 });
 
 export default connect(mapStateToProps, { LoadYears, DeleteYear })(Years);
