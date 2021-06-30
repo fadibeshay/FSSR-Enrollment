@@ -7,6 +7,13 @@ import {
   YEAR_UPDATED_CLEAR,
   YEAR_DELETED,
   YEAR_FAIL,
+  SEMESTER_LOADING,
+  SEMESTER_LOADED,
+  SEMESTER_CREATED,
+  SEMESTER_UPDATED,
+  SEMESTER_UPDATED_CLEAR,
+  SEMESTER_DELETED,
+  SEMESTER_FAIL,
   LOGOUT_SUCCESS
 } from "../actions/actionTypes";
 
@@ -22,6 +29,7 @@ const initialState = {
 const yearReducer = (state = initialState, action) => {
   switch (action.type) {
     case YEAR_LOADING:
+    case SEMESTER_LOADING:
       return {
         ...state,
         message: "",
@@ -45,7 +53,6 @@ const yearReducer = (state = initialState, action) => {
         year: action.payload,
         success: false
       };
-
     case YEAR_CREATED:
       return {
         ...state,
@@ -73,6 +80,7 @@ const yearReducer = (state = initialState, action) => {
         success: true
       };
     case YEAR_UPDATED_CLEAR:
+    case SEMESTER_UPDATED_CLEAR:
       return {
         ...state,
         success: false
@@ -91,12 +99,56 @@ const yearReducer = (state = initialState, action) => {
         success: true
       };
     case YEAR_FAIL:
+    case SEMESTER_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
         success: false
       };
+
+    case SEMESTER_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        success: false,
+        message: ""
+      };
+    case SEMESTER_CREATED:
+      return {
+        ...state,
+        isLoading: false,
+        year: {
+          ...state.year,
+          semesters: [...state.year.semesters, action.payload]
+        },
+        success: true
+      };
+    case SEMESTER_UPDATED:
+      return {
+        ...state,
+        isLoading: false,
+        year: {
+          ...state.year,
+          semesters: state.year.semesters.map((s) =>
+            s._id !== action.payload._id ? s : action.payload
+          )
+        },
+        success: true
+      };
+    case SEMESTER_DELETED:
+      return {
+        ...state,
+        isLoading: false,
+        year: {
+          ...state.year,
+          semesters: state.year.semesters.filter(
+            (s) => s._id !== action.payload
+          )
+        },
+        success: false
+      };
+
     case LOGOUT_SUCCESS:
       return initialState;
     default:

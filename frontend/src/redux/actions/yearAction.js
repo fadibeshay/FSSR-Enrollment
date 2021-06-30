@@ -52,7 +52,11 @@ export const LoadYear = (_id) => async (dispatch, getState) => {
   try {
     const current = _id === "current";
 
-    if (!getState().year.year._id || current !== getState().year.year.current) {
+    if (
+      !getState().year.year._id ||
+      current !== getState().year.year.current ||
+      (!current && _id !== getState().year.year._id)
+    ) {
       dispatch({
         type: YEAR_LOADING
       });

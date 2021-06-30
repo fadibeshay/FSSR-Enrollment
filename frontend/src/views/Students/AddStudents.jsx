@@ -96,6 +96,8 @@ function AddStudents({
     if (id) {
       if (!student._id || student._id !== id) {
         LoadStudent(id);
+        setValue("department", "");
+        setValue("minor", "");
       } else {
         const dateFormat = new Date(student.birthday)
           .toISOString()
@@ -114,7 +116,7 @@ function AddStudents({
         setValue("address", student.address);
         setValue("phoneNumber", student.phoneNumber);
         setValue("department", student.major.name);
-        setValue("minor", student.minor?.name);
+        student.minor && setValue("minor", student.minor.name);
         setValue("level", student.level);
       }
     }

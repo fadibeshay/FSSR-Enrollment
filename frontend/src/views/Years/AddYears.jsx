@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -38,7 +39,8 @@ function AddYears({
   UpdateYear,
   ClearUpdateSuccess,
   year,
-  success
+  success,
+  isLoading
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -113,15 +115,22 @@ function AddYears({
 
         {errors.year && <Alert severity="error">{errors.year.message} </Alert>}
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          {id ? "Edit " : "Add New"}
-        </Button>
+        {!isLoading && (
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {id ? "Edit " : "Add New"}
+          </Button>
+        )}
+        {isLoading && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </form>
     </Layout>
   );
@@ -130,7 +139,8 @@ function AddYears({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   year: state.year.year,
-  success: state.year.success
+  success: state.year.success,
+  isLoading: state.year.isLoading
 });
 
 export default connect(mapStateToProps, {

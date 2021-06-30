@@ -22,5 +22,5 @@ export default combineReducers({
   message: messageReducer,
   errors: errorsReducer,
   stats: statsReducer,
-  enrollment: enrollmentsReducer,
+  enrollment: enrollmentsReducer
 });

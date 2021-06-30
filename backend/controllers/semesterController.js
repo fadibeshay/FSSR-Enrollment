@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { check, validationResult } from "express-validator";
 import Semester from "../models/semesterModel.js";
+import AcadYear from "../models/acadYearModel.js";
 import Course from "../models/courseModel.js";
 import Subject from "../models/subjectModel.js";
 
@@ -126,7 +127,7 @@ const getCurSem = asyncHandler(async (req, res) => {
 // @route  PUT /api/semesters/:id
 // @access  Private/Admin
 const updateSem = asyncHandler(async (req, res) => {
-  const semester = await Semester.findById(req.params.id);
+  const semester = await Semester.findById(req.params.id).select("-courses");
 
   if (!semester) {
     res.status(404);
@@ -144,8 +145,18 @@ const updateSem = asyncHandler(async (req, res) => {
     );
   }
 
-  const { startDate, endDate, isEnrollAvail } = req.body;
+  const { name, startDate, endDate, isEnrollAvail } = req.body;
 
+  const acadYear = await AcadYear.findById(semester.acadYear).populate(
+    "semesters name"
+  );
+  const semExists = acadYear.semesters.find((s) => s.name === name);
+  if (semExists && name !== semester.name.toString()) {
+    res.status(400);
+    throw new Error("Semester already exists.");
+  }
+
+  semester.name = name;
   semester.startDate = startDate;
   semester.endDate = endDate;
   if (typeof isEnrollAvail === "boolean")

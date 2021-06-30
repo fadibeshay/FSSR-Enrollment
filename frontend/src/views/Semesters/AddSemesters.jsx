@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Alert from "@material-ui/lab/Alert";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -21,7 +22,8 @@ import { Layout } from "../../container";
 import {
   CreateSemester,
   LoadSemester,
-  UpdateSemester
+  UpdateSemester,
+  ClearUpdateSuccess
 } from "../../redux/actions/semesterAction";
 
 // Validation
@@ -46,8 +48,10 @@ function AddSemesters({
   CreateSemester,
   LoadSemester,
   UpdateSemester,
+  ClearUpdateSuccess,
   semesterState,
-  success
+  success,
+  isLoading
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -66,12 +70,12 @@ function AddSemesters({
 
   useEffect(() => {
     if (success) {
+      ClearUpdateSuccess();
       history.push("/semesters");
     }
 
     if (id) {
       if (!semester._id || semester._id !== id) {
-        console.log("load");
         LoadSemester(id);
       } else {
         const startdateFormated = new Date(semester.startDate)
@@ -89,7 +93,16 @@ function AddSemesters({
         setChecked(semester.isEnrollAvail);
       }
     }
-  }, [id, success, semester, history, LoadSemester, setValue, setChecked]);
+  }, [
+    id,
+    success,
+    semester,
+    history,
+    LoadSemester,
+    ClearUpdateSuccess,
+    setValue,
+    setChecked
+  ]);
 
   const handleCheckChange = (e) => {
     const newValue = !enrollChecked;
@@ -226,15 +239,22 @@ function AddSemesters({
           label="Enrollment Available?"
         />
 
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
-          {id ? "Edit " : "Add New"}
-        </Button>
+        {!isLoading && (
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {id ? "Edit " : "Add New"}
+          </Button>
+        )}
+        {isLoading && (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress disableShrink />
+          </div>
+        )}
       </form>
     </Layout>
   );
@@ -243,11 +263,13 @@ function AddSemesters({
 const mapStateToProps = (state) => ({
   errorMessage: state.errors.message,
   semesterState: state.semester.semester,
-  success: state.semester.success
+  success: state.year.success,
+  isLoading: state.year.isLoading
 });
 
 export default connect(mapStateToProps, {
   CreateSemester,
   LoadSemester,
-  UpdateSemester
+  UpdateSemester,
+  ClearUpdateSuccess
 })(AddSemesters);

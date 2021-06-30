@@ -22,172 +22,177 @@ import { LoadSemester } from "../../redux/actions/semesterAction";
 import { DeleteCourse } from "../../redux/actions/coursesAction";
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		minWidth: 275
-	},
-	inputContainer: {
-		padding: "2px 4px",
-		display: "flex",
-		alignItems: "center",
-		width: 250
-	},
-	input: {
-		marginLeft: theme.spacing(1),
-		flex: 1
-	},
-	bullet: {
-		display: "inline-block",
-		margin: "0 2px",
-		transform: "scale(0.8)"
-	},
-	title: {
-		fontSize: 14
-	},
-	pos: {
-		marginBottom: 12
-	}
+  root: {
+    minWidth: 275
+  },
+  inputContainer: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 250
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)"
+  },
+  title: {
+    fontSize: 14
+  },
+  pos: {
+    marginBottom: 12
+  }
 }));
 
 function Courses({
-	semesterState,
-	isLoading,
-	success,
-	LoadSemester,
-	DeleteCourse
+  semesterState,
+  isLoading,
+  success,
+  keyword,
+  currentPage,
+  LoadSemester,
+  DeleteCourse
 }) {
-	const classes = useStyles();
-	const [search, setSearch] = useState("");
-	const [counter, setCounter] = useState(null);
-	const { semester, page, totalPages } = semesterState;
+  const classes = useStyles();
+  const [search, setSearch] = useState("");
+  const [counter, setCounter] = useState(null);
+  const { semester, page, totalPages } = semesterState;
 
-	const confirmDeleteCourse = (id) => {
-		window.confirm("Are You Sure?") && DeleteCourse(id);
-	};
+  const confirmDeleteCourse = (id) => {
+    window.confirm("Are You Sure?") && DeleteCourse(id);
+  };
 
-	useEffect(() => {
-		LoadSemester("current");
-	}, [LoadSemester, success]);
+  useEffect(() => {
+    LoadSemester("current", keyword, currentPage || 1);
+  }, [LoadSemester, keyword, currentPage]);
 
-	const onCoursesSearch = (e) => {
-		setSearch(e.target.value);
+  const onCoursesSearch = (e) => {
+    setSearch(e.target.value);
 
-		if (counter) {
-			clearTimeout(counter);
-		}
-		setCounter(
-			setTimeout(() => {
-				LoadSemester("current", e.target.value);
-			}, 500)
-		);
-	};
+    if (counter) {
+      clearTimeout(counter);
+    }
+    setCounter(
+      setTimeout(() => {
+        LoadSemester("current", e.target.value);
+      }, 500)
+    );
+  };
 
-	const onPageChange = (e, v) => {
-		e.preventDefault();
-		LoadSemester("current", search, v);
-	};
+  const onPageChange = (e, v) => {
+    e.preventDefault();
+    LoadSemester("current", search, v);
+  };
 
-	return (
-		<Layout>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "center",
-					marginBottom: "10px"
-				}}
-			>
-				<Button variant="contained" color="primary">
-					<Link type="link" className={style.addBtn} to={"/courses/add"}>
-						Add Course
-					</Link>
-				</Button>
+  return (
+    <Layout>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px"
+        }}
+      >
+        <Button variant="contained" color="primary">
+          <Link type="link" className={style.addBtn} to={"/courses/add"}>
+            Add Course
+          </Link>
+        </Button>
 
-				<Paper component="form" className={classes.inputContainer}>
-					<InputBase
-						className={classes.input}
-						placeholder="Search Courses"
-						inputProps={{ "aria-label": "Search Courses" }}
-						onChange={onCoursesSearch}
-					/>
-					<IconButton
-						type="submit"
-						className={classes.iconButton}
-						aria-label="search"
-						onClick={onCoursesSearch}
-					>
-						<SearchIcon />
-					</IconButton>
-				</Paper>
-			</div>
+        <Paper component="form" className={classes.inputContainer}>
+          <InputBase
+            defaultValue={keyword}
+            className={classes.input}
+            placeholder="Search Courses"
+            inputProps={{ "aria-label": "Search Courses" }}
+            onChange={onCoursesSearch}
+          />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={onCoursesSearch}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+      </div>
 
-			<Grid container className={classes.root} spacing={2}>
-				{!isLoading &&
-					semester.courses &&
-					semester.courses.map((course) => (
-						<Grid item md={4} key={course._id}>
-							<Card className={classes.root}>
-								<CardContent>
-									<Typography variant="h4" component="p" color="textSecondary">
-										{course.subject.code}
-									</Typography>
-									<Typography variant="h5" component="p" color="textSecondary">
-										{course.subject.title}
-									</Typography>
-									<Typography variant="h6" component="p">
-										{course.instructor}
-									</Typography>
-								</CardContent>
-								<CardActions>
-									<Button>
-										<Link
-											to={`/courses/add/${course._id}`}
-											style={{
-												color: "rgba(0, 0, 0, 0.87)"
-											}}
-										>
-											<EditIcon />
-										</Link>
-									</Button>
+      <Grid container className={classes.root} spacing={2}>
+        {!isLoading &&
+          semester.courses &&
+          semester.courses.map((course) => (
+            <Grid item md={4} key={course._id}>
+              <Card className={classes.root}>
+                <CardContent>
+                  <Typography variant="h4" component="p" color="textSecondary">
+                    {course.subject.code}
+                  </Typography>
+                  <Typography variant="h5" component="p" color="textSecondary">
+                    {course.subject.title}
+                  </Typography>
+                  <Typography variant="h6" component="p">
+                    {course.instructor}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button>
+                    <Link
+                      to={`/courses/add/${course._id}`}
+                      style={{
+                        color: "rgba(0, 0, 0, 0.87)"
+                      }}
+                    >
+                      <EditIcon />
+                    </Link>
+                  </Button>
 
-									<Button onClick={() => confirmDeleteCourse(course._id)}>
-										<DeleteIcon />
-									</Button>
-								</CardActions>
-							</Card>
-						</Grid>
-					))}
-			</Grid>
+                  <Button onClick={() => confirmDeleteCourse(course._id)}>
+                    <DeleteIcon />
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+      </Grid>
 
-			{!isLoading && semester.courses.length > 0 && (
-				<div className={style.paginate}>
-					<Pagination
-						count={totalPages}
-						page={page}
-						siblingCount={1}
-						boundaryCount={1}
-						showFirstButton={true}
-						shape="rounded"
-						color="primary"
-						onChange={onPageChange}
-					/>
-				</div>
-			)}
+      {!isLoading && semester.courses.length > 0 && (
+        <div className={style.paginate}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            siblingCount={1}
+            boundaryCount={1}
+            showFirstButton={true}
+            shape="rounded"
+            color="primary"
+            onChange={onPageChange}
+          />
+        </div>
+      )}
 
-			{isLoading && (
-				<div style={{ textAlign: "center" }}>
-					<CircularProgress disableShrink />
-				</div>
-			)}
-		</Layout>
-	);
+      {isLoading && (
+        <div style={{ textAlign: "center" }}>
+          <CircularProgress disableShrink />
+        </div>
+      )}
+    </Layout>
+  );
 }
 
 const mapStateToProps = (state) => ({
-	semesterState: state.semester.semester,
-	isLoading: state.semester.isLoading,
-	success: state.course.success
+  semesterState: state.semester.semester,
+  isLoading: state.semester.isLoading,
+  success: state.course.success,
+  keyword: state.semester.search,
+  currentPage: state.semester.semester.page
 });
 
 export default connect(mapStateToProps, { LoadSemester, DeleteCourse })(
-	Courses
+  Courses
 );
