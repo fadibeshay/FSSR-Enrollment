@@ -1,10 +1,16 @@
 import {
-  // YEAR_LOADING,
   SEMESTER_LOADING,
   SEMESTER_LOADED,
   SEMESTER_FAIL,
   LOGOUT_SUCCESS,
-  SEMESTER_UPDATED
+  SEMESTER_UPDATED,
+  COURSE_CREATED,
+  COURSE_UPDATED,
+  COURSE_UPDATED_CLEAR,
+  COURSE_DELETED,
+  COURSE_LOADING,
+  COURSE_LOADED,
+  COURSE_FAIL
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -17,8 +23,8 @@ const initialState = {
 
 const semesterReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case YEAR_LOADING:
     case SEMESTER_LOADING:
+    case COURSE_LOADING:
       return {
         ...state,
         message: "",
@@ -46,10 +52,67 @@ const semesterReducer = (state = initialState, action) => {
         success: false
       };
     case SEMESTER_FAIL:
+    case COURSE_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
+        success: false
+      };
+
+    case COURSE_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        success: false,
+        message: ""
+      };
+    case COURSE_CREATED:
+      return {
+        ...state,
+        isLoading: false,
+        semester: {
+          ...state.semester,
+          semester: {
+            ...state.semester.semester,
+            courses: [action.payload, ...state.semester.semester.courses]
+          }
+        },
+        success: true
+      };
+    case COURSE_UPDATED:
+      return {
+        ...state,
+        isLoading: false,
+        semester: {
+          ...state.semester,
+          semester: {
+            ...state.semester.semester,
+            courses: state.semester.semester.courses.map((c) =>
+              c._id !== action.payload._id ? c : action.payload
+            )
+          }
+        },
+        success: true
+      };
+    case COURSE_UPDATED_CLEAR:
+      return {
+        ...state,
+        success: false
+      };
+    case COURSE_DELETED:
+      return {
+        ...state,
+        isLoading: false,
+        semester: {
+          ...state.semester,
+          semester: {
+            ...state.semester.semester,
+            courses: state.semester.semester.courses.filter(
+              (c) => c._id !== action.payload
+            )
+          }
+        },
         success: false
       };
     case LOGOUT_SUCCESS:

@@ -91,13 +91,11 @@ function AddStudents({
     } else {
       window.scrollTo(0, 0);
     }
-    LoadDepartments();
 
     if (id) {
       if (!student._id || student._id !== id) {
+        LoadDepartments();
         LoadStudent(id);
-        setValue("department", "");
-        setValue("minor", "");
       } else {
         const dateFormat = new Date(student.birthday)
           .toISOString()
@@ -506,18 +504,17 @@ function AddStudents({
           fullWidth
           style={{ marginBottom: "1.5rem", marginTop: "1rem" }}
         >
-          <InputLabel id="demo-controlled-open-select-label">
-            Department
-          </InputLabel>
+          <InputLabel id="department">Department</InputLabel>
 
-          {(departments || student.major) && (
+          {departments.length > 0 && (
             <Controller
               name="department"
               control={control}
               defaultValue=""
               render={({ field: { onChange, value } }) => (
                 <Select
-                  labelId="demo-simple-select-label"
+                  defaultValue=""
+                  labelId="department"
                   id="department"
                   label="department"
                   required
@@ -545,7 +542,7 @@ function AddStudents({
         <FormControl fullWidth>
           <InputLabel id="minor">Minor</InputLabel>
 
-          {(departments || student.minor) && (
+          {departments.length > 0 && (
             <Controller
               name="minor"
               control={control}
@@ -553,6 +550,7 @@ function AddStudents({
               render={({ field: { onChange, value } }) => (
                 <Select
                   labelId="minor"
+                  defaultValue=""
                   id="minor"
                   label="minor"
                   fullWidth

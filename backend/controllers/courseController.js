@@ -34,7 +34,6 @@ const getCourseById = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const updateCourse = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id);
-  console.log(course);
 
   if (!course) {
     res.status(404);
@@ -70,8 +69,6 @@ const updateCourse = asyncHandler(async (req, res) => {
   const courseExists = semester.courses.find(
     (c) => c.subject.toString() === subject._id.toString()
   );
-
-  console.log(courseExists);
 
   if (
     courseExists &&
