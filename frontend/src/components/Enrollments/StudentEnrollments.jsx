@@ -14,7 +14,7 @@ import TableRow from "@material-ui/core/TableRow";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  LoadStudentEnrollments,
+  LoadStudentEnrollment,
   UpdateStudentEnrollment
 } from "../../redux/actions/enrollmentsActions";
 
@@ -59,7 +59,7 @@ function StudentEnrollments() {
 
   useEffect(() => {
     if (!enrollment._id) {
-      dispatch(LoadStudentEnrollments());
+      dispatch(LoadStudentEnrollment());
     } else {
       setCourses(
         enrollment.courses.map((c) => {

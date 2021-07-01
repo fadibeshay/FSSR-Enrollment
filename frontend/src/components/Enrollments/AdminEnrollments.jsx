@@ -69,6 +69,7 @@ function AdminEnrollments() {
   const { enrols, page, totalPages } = enrollments;
   const isLoading = useSelector((state) => state.enrollment.isLoading);
   const success = useSelector((state) => state.enrollment.success);
+  const keyword = useSelector((state) => state.enrollment.search);
   const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
 
@@ -77,8 +78,8 @@ function AdminEnrollments() {
   };
 
   useEffect(() => {
-    dispatch(LoadAdminEnrollments());
-  }, [dispatch, success]);
+    dispatch(LoadAdminEnrollments(keyword, page));
+  }, [dispatch, success, keyword, page]);
 
   const onEnrollmentsSearch = (e) => {
     setSearch(e.target.value);
@@ -102,10 +103,11 @@ function AdminEnrollments() {
     <div>
       <Paper component="form" className={classes.inputContainer}>
         <InputBase
+          defaultValue={keyword}
           className={classes.input}
           placeholder="Search Enrollments"
           inputProps={{ "aria-label": "Search Enrollments" }}
-          onChange={onEnrollmentsSearch}
+          onKeyUp={onEnrollmentsSearch}
         />
         <IconButton
           type="submit"

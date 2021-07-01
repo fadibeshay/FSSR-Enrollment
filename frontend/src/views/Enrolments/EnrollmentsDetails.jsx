@@ -23,43 +23,42 @@ import { Layout } from "../../container";
 import {
   AddCourseToEnrollment,
   ApproveEnrollment,
-  DeleteEnrollment,
-  LoadEnrollmentById,
+  RemoveCourseFromEnrol,
+  LoadEnrollmentById
 } from "../../redux/actions/enrollmentsActions";
 import { LoadSemester } from "../../redux/actions/semesterAction";
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650,
+    minWidth: 650
   },
   iconButton: {
-    padding: 10,
+    padding: 10
   },
   divider: {
     height: 28,
-    margin: 4,
+    margin: 4
   },
   studentContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: "10px",
+    paddingBottom: "10px"
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
     width: 250,
-    marginTop: "1rem",
+    marginTop: "1rem"
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
-  },
+    flex: 1
+  }
 }));
 
 function EnrollmentsDetails() {
   const classes = useStyles();
-  const [search, setSearch] = useState("");
   const [counter, setCounter] = useState(null);
 
   const { courses, student, isApproved, _id } = useSelector(
@@ -72,13 +71,14 @@ function EnrollmentsDetails() {
 
   useEffect(() => {
     dispatch(LoadEnrollmentById(id));
-  }, [id, LoadEnrollmentById, dispatch]);
+  }, [id, dispatch]);
 
   const approveEnrollment = (id, data) => {
     dispatch(ApproveEnrollment(id, { isApproved: data }));
   };
   const confirmDeleteCourse = (id, courseId) => {
-    window.confirm("Are You Sure?") && dispatch(DeleteEnrollment(id, courseId));
+    window.confirm("Are You Sure?") &&
+      dispatch(RemoveCourseFromEnrol(id, courseId));
   };
 
   const confirmAddCourse = (id, courseId) => {
@@ -88,8 +88,6 @@ function EnrollmentsDetails() {
 
   const onCoursesSearch = (e) => {
     e.preventDefault();
-
-    setSearch(e.target.value);
 
     if (counter) {
       clearTimeout(counter);

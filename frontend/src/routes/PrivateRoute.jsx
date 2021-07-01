@@ -12,7 +12,7 @@ function PrivateRoute({
   const history = useHistory();
 
   useEffect(() => {
-    if (!userState || Object.keys(userState).length == "") {
+    if (!userState || Object.keys(userState).length === 0) {
       LoadUser();
     } else if (isAdmin && userState.role !== "admin") {
       history.push("/");
@@ -36,7 +36,7 @@ function PrivateRoute({
 }
 
 const mapStateToProps = (state) => ({
-  userState: state.user.user,
+  userState: state.user.user
 });
 
 export default connect(mapStateToProps, { LoadUser })(PrivateRoute);

@@ -1,17 +1,18 @@
 import {
-  ENROLLMENTS_ADD_COURSE,
-  ENROLLMENTS_APPROVED,
+  ENROLLMENT_COURSE_ADDED,
+  ENROLLMENT_APPROVED,
   ENROLLMENTS_FAIL,
   ENROLLMENTS_LOADED,
   ENROLLMENTS_LOADING,
-  ENROLLMENTS_STUDENT_LOADED,
+  ENROLLMENT_STUDENT_LOADED,
   ENROLLMENT_COURSE_DELETED,
   LOGOUT_SUCCESS
 } from "../actions/actionTypes";
 
 const initialState = {
   enrollments: { enrols: [] },
-  enrollment: [],
+  enrollment: {},
+  search: "",
   message: "",
   isLoading: false,
   success: false
@@ -32,28 +33,29 @@ const enrollmentsReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         message: "",
-        enrollments: action.payload,
+        enrollments: action.payload.enrols,
+        search: action.payload.search,
         success: false
       };
 
-    case ENROLLMENTS_ADD_COURSE:
+    case ENROLLMENT_APPROVED:
       return {
         ...state,
         isLoading: false,
-        message: "",
-        enrollment: action.payload,
-        success: false
-      };
-
-    case ENROLLMENTS_APPROVED:
-      return {
-        ...state,
-        isLoading: false,
-        enrollment: action.payload,
+        enrollments: {
+          ...state.enrollments,
+          enrols: state.enrollments.enrols.map((e) =>
+            e._id === action.payload._id ? action.payload : e
+          )
+        },
+        enrollment:
+          state.enrollment._id === action.payload._id
+            ? action.payload
+            : state.enrollment,
         success: true
       };
 
-    case ENROLLMENTS_STUDENT_LOADED:
+    case ENROLLMENT_COURSE_ADDED:
       return {
         ...state,
         isLoading: false,
@@ -61,14 +63,6 @@ const enrollmentsReducer = (state = initialState, action) => {
         enrollment: action.payload,
         success: false
       };
-
-    // case COURSE_SELECTED:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     enrollment: action.payload,
-    //     success: true,
-    //   };
 
     case ENROLLMENT_COURSE_DELETED:
       return {
@@ -78,16 +72,14 @@ const enrollmentsReducer = (state = initialState, action) => {
         success: false
       };
 
-    // case DEPARTMENT_UPDATED:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     departments: state.departments.map((department) =>
-    //       department._id === action.payload._id ? action.payload : department
-    //     ),
-    //     department: action.payload,
-    //     success: true,
-    //   };
+    case ENROLLMENT_STUDENT_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        message: "",
+        enrollment: action.payload,
+        success: false
+      };
 
     case ENROLLMENTS_FAIL:
       return {
