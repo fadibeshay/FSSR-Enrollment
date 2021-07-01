@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import PeopleIcon from "@material-ui/icons/People";

@@ -204,6 +204,7 @@ const addSemToYear = asyncHandler(async (req, res) => {
     name,
     startDate,
     endDate,
+    courses: [],
     isEnrollAvail: Boolean(isEnrollAvail),
     acadYear: acadYear._id
   });

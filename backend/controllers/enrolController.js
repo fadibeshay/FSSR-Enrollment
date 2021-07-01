@@ -181,7 +181,8 @@ const getEnrols = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const currentSem = await Semester.findOne({ isEnrollAvail: true });
+  const currentSem = await Semester.findOne().sort({ createdAt: -1 }).limit(1);
+
   if (!currentSem) {
     res.status(403);
     throw new Error("Enrollment is not available.");

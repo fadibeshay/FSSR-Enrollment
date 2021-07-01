@@ -2,15 +2,17 @@ import {
   SEMESTER_LOADING,
   SEMESTER_LOADED,
   SEMESTER_FAIL,
-  LOGOUT_SUCCESS,
+  SEMESTER_CREATED,
   SEMESTER_UPDATED,
+  LOGOUT_SUCCESS,
   COURSE_CREATED,
   COURSE_UPDATED,
   COURSE_UPDATED_CLEAR,
   COURSE_DELETED,
   COURSE_LOADING,
   COURSE_LOADED,
-  COURSE_FAIL
+  COURSE_FAIL,
+  YEAR_CREATED
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -38,6 +40,17 @@ const semesterReducer = (state = initialState, action) => {
         message: "",
         semester: action.payload.semester,
         search: action.payload.search,
+        success: false
+      };
+    case SEMESTER_CREATED:
+      return {
+        ...state,
+        isLoading: false,
+        message: "",
+        semester: {
+          ...state.semester,
+          semester: { ...action.payload, current: true }
+        },
         success: false
       };
     case SEMESTER_UPDATED:
@@ -115,6 +128,7 @@ const semesterReducer = (state = initialState, action) => {
         },
         success: false
       };
+    case YEAR_CREATED:
     case LOGOUT_SUCCESS:
       return initialState;
     default:
