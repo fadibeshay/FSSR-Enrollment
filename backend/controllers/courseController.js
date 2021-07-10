@@ -5,6 +5,7 @@ import Course from "../models/courseModel.js";
 import Subject from "../models/subjectModel.js";
 import Enrolment from "../models/enrolModel.js";
 import Grade from "../models/gradeModel.js";
+import Student from "../models/studentModel.js";
 
 const gradesValidations = [
   check("grades", "No grades submitted.").isArray({ min: 1 })
@@ -210,11 +211,85 @@ const gradeStudents = asyncHandler(async (req, res) => {
   })(grades);
 });
 
+// @desc   Grade logged in student courses
+// @route  POST /api/courses/my
+// @access  Private
+const getMyCourses = asyncHandler(async (req, res) => {
+  if (req.user.role !== "student") {
+    res.status(403);
+    throw new Error("Courses are only allowed for students.");
+  }
+
+  const student = await Student.findOne({ user: req.user._id });
+
+  const enrols = await Enrolment.find({ student: student._id })
+    .sort("-createdAt")
+    .select("courses semester")
+    .populate({
+      path: "courses",
+      select: "subject",
+      populate: { path: "subject", select: "code title" }
+    })
+    .populate({
+      path: "semester",
+      select: "name acadYear",
+      populate: { path: "acadYear", select: "year" }
+    });
+
+  (async (enrols) => {
+    let grade;
+    let i = 0;
+    for (const enrol of enrols) {
+      let j = 0;
+      for (const course of enrol.courses) {
+        grade = await Grade.findOne({
+          course: course._id,
+          student: student._id
+        });
+
+        let letter;
+        if (grade.percent >= 95) {
+          letter = "A+";
+        } else if (grade.percent >= 90) {
+          letter = "A";
+        } else if (grade.percent >= 85) {
+          letter = "B+";
+        } else if (grade.percent >= 80) {
+          letter = "B";
+        } else if (grade.percent >= 75) {
+          letter = "C+";
+        } else if (grade.percent >= 70) {
+          letter = "C";
+        } else if (grade.percent >= 65) {
+          letter = "D+";
+        } else if (grade.percent >= 60) {
+          letter = "D";
+        } else if (grade.percent !== null && grade.percent < 60) {
+          letter = "F";
+        } else {
+          letter = null;
+        }
+
+        enrols[i].courses[j] = {
+          ...course.toObject(),
+          percent: grade.percent,
+          letter
+        };
+        j++;
+      }
+      i++;
+    }
+
+    res.json(enrols);
+  })(enrols);
+});
+
 export {
   gradesValidations,
   getCourseById,
   updateCourse,
   deleteCourse,
   getEnrolledStudents,
-  gradeStudents
+  gradeStudents,
+  getMyCourses
 };

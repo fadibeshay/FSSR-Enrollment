@@ -6,11 +6,14 @@ import {
   deleteCourse,
   getEnrolledStudents,
   gradeStudents,
-  gradesValidations
+  gradesValidations,
+  getMyCourses
 } from "../controllers/courseController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+router.route("/my").get(protect, getMyCourses);
 
 router
   .route("/:id")
