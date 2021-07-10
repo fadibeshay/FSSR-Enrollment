@@ -17,7 +17,7 @@ import {
   CircularProgress,
   TextField,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
 
 import { isEmpty } from "../../helper";
 import {
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ShowCourseStudents({}) {
+function ShowCourseStudents() {
   const classes = useStyles();
   const { id } = useParams();
   const courses = useSelector((state) => state.course.course);
@@ -62,7 +62,7 @@ function ShowCourseStudents({}) {
 
   useEffect(() => {
     dispatch(ShowStudentPerCourse(id));
-  }, [id, ShowStudentPerCourse]);
+  }, [id, dispatch]);
 
   useEffect(() => {
     // Remove old Grades
@@ -133,17 +133,22 @@ function ShowCourseStudents({}) {
 
                     <TableCell align="left">
                       <TextField
-                        id="standard-basic"
                         id={`${course.student._id}`}
                         name={`${course.student._id}`}
                         onChange={(e) => onChangeGrade(e, index)}
                         label="Add Grade"
                         type="number"
-                        value={grades[index]?.percent && grades[index].percent}
+                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        value={
+                          grades[index] && grades[index].percent !== null
+                            ? grades[index].percent
+                            : 0
+                        }
                         onInput={(e) => {
                           e.target.value = Math.max(0, parseInt(e.target.value))
                             .toString()
                             .slice(0, 3);
+                          if (e.target.value > 100) e.target.value = 0;
                         }}
                       />
                     </TableCell>

@@ -189,6 +189,7 @@ const gradeStudents = asyncHandler(async (req, res) => {
   (async (grades) => {
     let grade;
     for (const g of grades) {
+      g.percent = g.percent >= 0 && g.percent <= 100 ? g.percent : null;
       grade = await Grade.findOne({ course: course._id, student: g.student });
       if (grade) {
         grade.percent = g.percent;
