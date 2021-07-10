@@ -2,14 +2,15 @@ import {
   COURSE_LOADING,
   COURSE_LOADED,
   COURSE_FAIL,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  ADD_STUDENT_GRADE,
 } from "../actions/actionTypes";
 
 const initialState = {
   course: {},
   message: "",
   isLoading: false,
-  success: false
+  success: false,
 };
 
 const courseReducer = (state = initialState, action) => {
@@ -19,7 +20,7 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         message: "",
         isLoading: true,
-        success: false
+        success: false,
       };
     case COURSE_LOADED:
       return {
@@ -27,14 +28,23 @@ const courseReducer = (state = initialState, action) => {
         isLoading: false,
         message: "",
         course: action.payload,
-        success: false
+        success: false,
+      };
+
+    case ADD_STUDENT_GRADE:
+      return {
+        ...state,
+        course: action.payload,
+        message: "",
+        isLoading: false,
+        success: false,
       };
     case COURSE_FAIL:
       return {
         ...state,
         message: "",
         isLoading: false,
-        success: false
+        success: false,
       };
     case LOGOUT_SUCCESS:
       return initialState;

@@ -23,29 +23,29 @@ import { DeleteCourse } from "../../redux/actions/coursesAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 275
+    minWidth: 275,
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 250
+    width: 250,
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1
+    flex: 1,
   },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
-    transform: "scale(0.8)"
+    transform: "scale(0.8)",
   },
   title: {
-    fontSize: 14
+    fontSize: 14,
   },
   pos: {
-    marginBottom: 12
-  }
+    marginBottom: 12,
+  },
 }));
 
 function Courses({
@@ -55,7 +55,7 @@ function Courses({
   keyword,
   currentPage,
   LoadSemester,
-  DeleteCourse
+  DeleteCourse,
 }) {
   const classes = useStyles();
   const [search, setSearch] = useState("");
@@ -95,7 +95,7 @@ function Courses({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "10px"
+          marginBottom: "10px",
         }}
       >
         <Button variant="contained" color="primary">
@@ -129,23 +129,33 @@ function Courses({
           semester.courses.map((course) => (
             <Grid item md={4} key={course._id}>
               <Card className={classes.root}>
-                <CardContent>
-                  <Typography variant="h4" component="p" color="textSecondary">
-                    {course.subject.code}
-                  </Typography>
-                  <Typography variant="h5" component="p" color="textSecondary">
-                    {course.subject.title}
-                  </Typography>
-                  <Typography variant="h6" component="p">
-                    {course.instructor}
-                  </Typography>
-                </CardContent>
+                <Link to={`/courses/show/${course._id}`}>
+                  <CardContent>
+                    <Typography
+                      variant="h4"
+                      component="p"
+                      color="textSecondary"
+                    >
+                      {course.subject.code}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      component="p"
+                      color="textSecondary"
+                    >
+                      {course.subject.title}
+                    </Typography>
+                    <Typography variant="h6" component="p" color="textPrimary">
+                      {course.instructor}
+                    </Typography>
+                  </CardContent>
+                </Link>
                 <CardActions>
                   <Button>
                     <Link
                       to={`/courses/add/${course._id}`}
                       style={{
-                        color: "rgba(0, 0, 0, 0.87)"
+                        color: "rgba(0, 0, 0, 0.87)",
                       }}
                     >
                       <EditIcon />
@@ -190,7 +200,7 @@ const mapStateToProps = (state) => ({
   isLoading: state.semester.isLoading,
   success: state.course.success,
   keyword: state.semester.search,
-  currentPage: state.semester.semester.page
+  currentPage: state.semester.semester.page,
 });
 
 export default connect(mapStateToProps, { LoadSemester, DeleteCourse })(

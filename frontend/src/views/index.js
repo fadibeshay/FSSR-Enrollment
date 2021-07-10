@@ -25,10 +25,12 @@ export { default as Semesters } from "./Semesters/Semesters";
 export { default as AddSemesters } from "./Semesters/AddSemesters";
 export { default as SemestersCourses } from "./Semesters/SemestersCourses";
 
-// Departments
+// Courses
 export { default as Courses } from "./Courses/Courses";
 export { default as AddCourses } from "./Courses/AddCourses";
+export { default as ShowCourseStudents } from "./Courses/ShowCourseStudents";
+// export { default as AddCourseGrades } from "./Courses/AddCourseGrades";
 
-// Enrollemts
+// Enrollments
 export { default as Enrollments } from "./Enrolments/Enrollments";
 export { default as EnrollmentsDetails } from "./Enrolments/EnrollmentsDetails";

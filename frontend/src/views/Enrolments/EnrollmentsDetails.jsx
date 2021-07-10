@@ -24,37 +24,37 @@ import {
   AddCourseToEnrollment,
   ApproveEnrollment,
   RemoveCourseFromEnrol,
-  LoadEnrollmentById
+  LoadEnrollmentById,
 } from "../../redux/actions/enrollmentsActions";
 import { LoadSemester } from "../../redux/actions/semesterAction";
 const useStyles = makeStyles((theme) => ({
   table: {
-    minWidth: 650
+    minWidth: 650,
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   divider: {
     height: 28,
-    margin: 4
+    margin: 4,
   },
   studentContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: "10px"
+    paddingBottom: "10px",
   },
   inputContainer: {
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
     width: 250,
-    marginTop: "1rem"
+    marginTop: "1rem",
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1
-  }
+    flex: 1,
+  },
 }));
 
 function EnrollmentsDetails() {

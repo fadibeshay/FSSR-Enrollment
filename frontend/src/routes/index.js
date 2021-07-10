@@ -14,6 +14,7 @@ import {
   AddSemesters,
   Courses,
   AddCourses,
+  ShowCourseStudents,
   SemestersCourses,
   YearsSemester,
   Enrollments,
@@ -140,6 +141,12 @@ const routes = [
     path: ROUTE.COURSES_ADD,
     exact: true,
     component: AddCourses,
+    isAdmin: true,
+  },
+  {
+    path: ROUTE.SHOW_COURSES,
+    exact: true,
+    component: ShowCourseStudents,
     isAdmin: true,
   },
 

@@ -6,7 +6,8 @@ import {
   COURSE_UPDATED,
   COURSE_UPDATED_CLEAR,
   COURSE_DELETED,
-  COURSE_FAIL
+  COURSE_FAIL,
+  ADD_STUDENT_GRADE,
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { getMessage, clearMessage } from "./messageAction";
@@ -22,11 +23,11 @@ export const LoadCourse = (_id) => async (dispatch, getState) => {
     if (course) {
       dispatch({
         type: COURSE_LOADED,
-        payload: course
+        payload: course,
       });
     } else {
       dispatch({
-        type: COURSE_LOADING
+        type: COURSE_LOADING,
       });
 
       const config = headerConfig(getState);
@@ -35,7 +36,7 @@ export const LoadCourse = (_id) => async (dispatch, getState) => {
 
       dispatch({
         type: COURSE_LOADED,
-        payload: data
+        payload: data,
       });
     }
 
@@ -52,7 +53,7 @@ export const CreateCourse =
   async (dispatch, getState) => {
     try {
       dispatch({
-        type: COURSE_LOADING
+        type: COURSE_LOADING,
       });
 
       const config = headerConfig(getState);
@@ -65,7 +66,7 @@ export const CreateCourse =
 
       dispatch({
         type: COURSE_CREATED,
-        payload: data
+        payload: data,
       });
 
       dispatch(clearErrors());
@@ -81,7 +82,7 @@ export const CreateCourse =
 export const UpdateCourse = (department, id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: COURSE_LOADING
+      type: COURSE_LOADING,
     });
 
     const config = headerConfig(getState);
@@ -90,7 +91,7 @@ export const UpdateCourse = (department, id) => async (dispatch, getState) => {
 
     dispatch({
       type: COURSE_UPDATED,
-      payload: data
+      payload: data,
     });
 
     dispatch(clearErrors());
@@ -105,7 +106,7 @@ export const UpdateCourse = (department, id) => async (dispatch, getState) => {
 
 export const ClearUpdateSuccess = () => (dispatch) => {
   dispatch({
-    type: COURSE_UPDATED_CLEAR
+    type: COURSE_UPDATED_CLEAR,
   });
 };
 
@@ -118,7 +119,7 @@ export const DeleteCourse = (_id) => async (dispatch, getState) => {
 
     dispatch({
       type: COURSE_DELETED,
-      payload: _id
+      payload: _id,
     });
 
     dispatch(clearErrors());
@@ -127,6 +128,61 @@ export const DeleteCourse = (_id) => async (dispatch, getState) => {
     dispatch(clearMessage());
     dispatch(getErrors(err));
 
+    dispatch({ type: COURSE_FAIL });
+  }
+};
+
+// SHOW STUDENTS PER COURSE
+export const ShowStudentPerCourse = (_id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: COURSE_LOADING,
+    });
+
+    const config = headerConfig(getState);
+
+    const { data } = await axios.get(`/api/courses/${_id}/students`, config);
+
+    dispatch({
+      type: COURSE_LOADED,
+      payload: data,
+    });
+
+    dispatch(clearErrors());
+  } catch (err) {
+    dispatch(getErrors(err));
+    dispatch({ type: COURSE_FAIL });
+  }
+};
+
+// add Grades
+export const AddStudentsGrade = (_id, data) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: COURSE_LOADING,
+    });
+
+    const config = headerConfig(getState);
+
+    const dataRes = await axios.post(
+      `/api/courses/${_id}/grades`,
+      { grades: data },
+      config
+    );
+
+    console.log("action data", dataRes.data);
+
+    // dispatch({
+    //   type: ADD_STUDENT_GRADE,
+    //   payload: dataRes.data,
+    // });
+
+    dispatch(ShowStudentPerCourse(_id));
+
+    dispatch(clearErrors());
+    dispatch(getMessage("Grades Add successfully"));
+  } catch (err) {
+    dispatch(getErrors(err));
     dispatch({ type: COURSE_FAIL });
   }
 };

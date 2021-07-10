@@ -29,6 +29,7 @@ export const ROUTE = {
   // Courses
   COURSES: "/courses",
   COURSES_ADD: "/courses/add/:id?",
+  SHOW_COURSES: "/courses/show/:id",
 
   // Enrollments
   ENROLLMENTS: "/enrollments",
