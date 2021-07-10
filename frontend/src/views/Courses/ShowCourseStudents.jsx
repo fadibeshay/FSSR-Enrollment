@@ -82,7 +82,7 @@ function ShowCourseStudents({}) {
     window.confirm("Are You Sure?") && dispatch(AddStudentsGrade(id, grades));
   };
 
-  const onAddGrede = (e, index) => {
+  const onAddGrade = (e, index) => {
     const newGrade = grades;
     newGrade[index].percent = parseInt(e.target.value);
     setGrade([...newGrade]);
@@ -136,7 +136,7 @@ function ShowCourseStudents({}) {
                         id="standard-basic"
                         id={`${course.student._id}`}
                         name={`${course.student._id}`}
-                        onChange={(e) => onAddGrede(e, index)}
+                        onChange={(e) => onAddGrade(e, index)}
                         label="Add Grade"
                         type="number"
                         value={grades[index]?.percent && grades[index].percent}
