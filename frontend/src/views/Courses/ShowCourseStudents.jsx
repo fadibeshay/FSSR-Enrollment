@@ -62,7 +62,6 @@ function ShowCourseStudents({}) {
 
   useEffect(() => {
     dispatch(ShowStudentPerCourse(id));
-    // LoadSemester("current", keyword, currentPage || 1);
   }, [id, ShowStudentPerCourse]);
 
   useEffect(() => {

@@ -170,8 +170,6 @@ export const AddStudentsGrade = (_id, data) => async (dispatch, getState) => {
       config
     );
 
-    console.log("action data", dataRes.data);
-
     // dispatch({
     //   type: ADD_STUDENT_GRADE,
     //   payload: dataRes.data,
