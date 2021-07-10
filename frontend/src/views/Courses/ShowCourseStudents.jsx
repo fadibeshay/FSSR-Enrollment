@@ -61,11 +61,15 @@ function ShowCourseStudents({}) {
   const [grades, setGrade] = useState([]);
 
   useEffect(() => {
-    dispatch(ShowStudentPerCourse("60ce56f362bedc1274b43acf"));
+    dispatch(ShowStudentPerCourse(id));
     // LoadSemester("current", keyword, currentPage || 1);
   }, [id, ShowStudentPerCourse]);
 
   useEffect(() => {
+    // Remove old Grades
+    setGrade([]);
+
+    // Add New Grades
     if (!isLoading && !isEmpty(courses)) {
       setGrade(
         courses.map((course) => {
@@ -73,7 +77,7 @@ function ShowCourseStudents({}) {
         })
       );
     }
-  }, [courses, isLoading]);
+  }, [courses, isLoading, setGrade]);
 
   const onSubmit = (id) => {
     window.confirm("Are You Sure?") && dispatch(AddStudentsGrade(id, grades));
