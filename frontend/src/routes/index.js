@@ -170,6 +170,7 @@ const routes = [
     exact: true,
     component: Grades,
     isAdmin: false,
+    onlyUsers: true,
   },
 ];
 export default routes;
