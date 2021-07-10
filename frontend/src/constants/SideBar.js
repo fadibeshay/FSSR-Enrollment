@@ -69,6 +69,7 @@ export const sideBarLinks = [
     text: "grades",
     route: "/grades",
     isAdmin: false,
+    onlyUser: true,
     icon: <GradeIcon />,
   },
 ];
