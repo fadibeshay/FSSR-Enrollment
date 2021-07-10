@@ -110,7 +110,7 @@ function Layout({ window, children, user, errors, message }) {
                 activeClassName={style.active}
                 exact
                 style={
-                  user.role === "student" && sideLink.isAdmin
+                  user.role !== "admin" && sideLink.isAdmin
                     ? { display: "none" }
                     : null
                 }

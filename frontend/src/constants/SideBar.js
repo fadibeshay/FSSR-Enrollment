@@ -1,60 +1,74 @@
 // Icons
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import HomeIcon from "@material-ui/icons/Home";
+import PeopleIcon from "@material-ui/icons/People";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import ScheduleIcon from "@material-ui/icons/Schedule";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import GradeIcon from "@material-ui/icons/Grade";
 export const sideBarLinks = [
   {
-    text: 'Home',
-    route: '/',
+    text: "Home",
+    route: "/",
     isAdmin: false,
-    icon: <HomeIcon />
+    icon: <HomeIcon />,
   },
   {
-    text: 'Students',
-    route: '/students',
+    text: "Students",
+    route: "/students",
     isAdmin: true,
-    icon: <PeopleIcon />
+
+    icon: <PeopleIcon />,
   },
   {
-    text: 'Departments',
-    route: '/departments',
+    text: "Departments",
+    route: "/departments",
     isAdmin: true,
-    icon: <AccountBalanceIcon />
+
+    icon: <AccountBalanceIcon />,
   },
   {
-    text: 'Subjects',
-    route: '/subjects',
+    text: "Subjects",
+    route: "/subjects",
     isAdmin: true,
-    icon: <MenuBookIcon />
+
+    icon: <MenuBookIcon />,
   },
   {
-    text: 'Academic Years',
-    route: '/years',
+    text: "Academic Years",
+    route: "/years",
     isAdmin: true,
-    icon: <DateRangeIcon />
+
+    icon: <DateRangeIcon />,
   },
 
   {
-    text: 'Semesters',
-    route: '/semesters',
+    text: "Semesters",
+    route: "/semesters",
     isAdmin: true,
-    icon: <ScheduleIcon />
+
+    icon: <ScheduleIcon />,
   },
   {
-    text: 'Courses',
-    route: '/courses',
+    text: "Courses",
+    route: "/courses",
     isAdmin: true,
-    icon: <LibraryBooksIcon />
+
+    icon: <LibraryBooksIcon />,
   },
   {
-    text: 'Enrollments',
-    route: '/enrollments',
+    text: "Enrollments",
+    route: "/enrollments",
     isAdmin: false,
-    icon: <AddCircleOutlineIcon />
-  }
+
+    icon: <AddCircleOutlineIcon />,
+  },
+  {
+    text: "grades",
+    route: "/grades",
+    isAdmin: false,
+    icon: <GradeIcon />,
+  },
 ];

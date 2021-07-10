@@ -8,6 +8,7 @@ import {
   COURSE_DELETED,
   COURSE_FAIL,
   ADD_STUDENT_GRADE,
+  STUDENT_COURSES_GRADES,
 } from "./actionTypes";
 import { getErrors, clearErrors } from "./errorsAction";
 import { getMessage, clearMessage } from "./messageAction";
@@ -179,6 +180,28 @@ export const AddStudentsGrade = (_id, data) => async (dispatch, getState) => {
 
     dispatch(clearErrors());
     dispatch(getMessage("Grades Add successfully"));
+  } catch (err) {
+    dispatch(getErrors(err));
+    dispatch({ type: COURSE_FAIL });
+  }
+};
+
+export const GetStudentsGrades = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: COURSE_LOADING,
+    });
+
+    const config = headerConfig(getState);
+
+    const { data } = await axios.get(`/api/courses/my`, config);
+
+    dispatch({
+      type: STUDENT_COURSES_GRADES,
+      payload: data[0],
+    });
+
+    dispatch(clearErrors());
   } catch (err) {
     dispatch(getErrors(err));
     dispatch({ type: COURSE_FAIL });

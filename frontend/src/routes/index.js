@@ -21,6 +21,7 @@ import {
   EnrollmentsDetails,
   DepartmentsDetails,
   AddSubjectToDepartment,
+  Grades,
 } from "../views";
 
 const routes = [
@@ -161,6 +162,14 @@ const routes = [
     exact: true,
     component: EnrollmentsDetails,
     isAdmin: true,
+  },
+
+  // GRADES
+  {
+    path: ROUTE.GRADES,
+    exact: true,
+    component: Grades,
+    isAdmin: false,
   },
 ];
 export default routes;

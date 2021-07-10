@@ -4,6 +4,7 @@ import {
   COURSE_FAIL,
   LOGOUT_SUCCESS,
   ADD_STUDENT_GRADE,
+  STUDENT_COURSES_GRADES,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -23,6 +24,15 @@ const courseReducer = (state = initialState, action) => {
         success: false,
       };
     case COURSE_LOADED:
+      return {
+        ...state,
+        isLoading: false,
+        message: "",
+        course: action.payload,
+        success: false,
+      };
+
+    case STUDENT_COURSES_GRADES:
       return {
         ...state,
         isLoading: false,
