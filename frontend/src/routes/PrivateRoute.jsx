@@ -35,8 +35,4 @@ function PrivateRoute({ component: Component, isAdmin, onlyUsers, ...rest }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  userState: state.user.user,
-});
-
 export default withRouter(PrivateRoute);
