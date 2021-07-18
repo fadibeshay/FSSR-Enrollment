@@ -249,31 +249,33 @@ const getMyCourses = asyncHandler(async (req, res) => {
         });
 
         let letter;
-        if (grade.percent >= 95) {
-          letter = "A+";
-        } else if (grade.percent >= 90) {
-          letter = "A";
-        } else if (grade.percent >= 85) {
-          letter = "B+";
-        } else if (grade.percent >= 80) {
-          letter = "B";
-        } else if (grade.percent >= 75) {
-          letter = "C+";
-        } else if (grade.percent >= 70) {
-          letter = "C";
-        } else if (grade.percent >= 65) {
-          letter = "D+";
-        } else if (grade.percent >= 60) {
-          letter = "D";
-        } else if (grade.percent !== null && grade.percent < 60) {
-          letter = "F";
-        } else {
-          letter = null;
+        if (grade) {
+          if (grade.percent >= 95) {
+            letter = "A+";
+          } else if (grade.percent >= 90) {
+            letter = "A";
+          } else if (grade.percent >= 85) {
+            letter = "B+";
+          } else if (grade.percent >= 80) {
+            letter = "B";
+          } else if (grade.percent >= 75) {
+            letter = "C+";
+          } else if (grade.percent >= 70) {
+            letter = "C";
+          } else if (grade.percent >= 65) {
+            letter = "D+";
+          } else if (grade.percent >= 60) {
+            letter = "D";
+          } else if (grade.percent !== null && grade.percent < 60) {
+            letter = "F";
+          } else {
+            letter = null;
+          }
         }
 
         enrols[i].courses[j] = {
           ...course.toObject(),
-          percent: grade.percent,
+          percent: grade ? grade.percent : null,
           letter
         };
         j++;
