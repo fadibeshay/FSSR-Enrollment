@@ -20,6 +20,7 @@ function App() {
             exact={route.exact}
             component={route.component}
             isAdmin={route.isAdmin}
+            onlyUsers={route.onlyUsers}
           />
         ))}
 
